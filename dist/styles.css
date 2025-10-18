@@ -1,0 +1,1027 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/** 
+ * Following code has been commented with appropriate comments for your reference.
+ * Styling for the Header Navbar
+ */
+
+/* Styling for the main navigation bar */
+nav {
+    padding: 1.5rem;
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+}
+
+/* Styling for the dropdown menu */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    display: none;
+    min-width: 120px;
+    padding: 8px 0;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+/* Styling for the user welcome message */
+.welcome-user {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Display dropdown menu on hover */
+.welcome-user:hover .dropdown-menu {
+    display: block;
+}
+
+/* Styling for the items in the dropdown menu */
+.dropdown-menu li {
+    display: block;
+    width: 150px;
+    padding:5px;
+}
+
+/* Styling for links in the dropdown menu */
+.dropdown-menu li a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+/* Hover effect for links in the dropdown menu */
+.dropdown-menu li a:hover {
+    color: #2190ff;
+}
+
+/* Styling for the logo in the navbar */
+.nav__logo {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #0d213f;
+    cursor: pointer;
+}
+
+/* Styling for a span within the logo */
+.nav__logo span {
+    color: #3685fb;
+}
+
+/* Styling for the icon in the navbar */
+.nav__icon {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* Styling for the navigation links */
+.nav__links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Styling for individual links in the navigation */
+.link a {
+    padding: 0 1rem;
+    color: #0d213f;
+    transition: 0.3s;
+}
+
+/* Hover effect for individual links in the navigation */
+.link a:hover {
+    color: #3685fb;
+}
+
+/* Media queries for mobile responsiveness */
+@media (max-width: 768px) {
+    .nav__logo {
+        margin-right: auto;
+    }
+
+    .nav__icon {
+        display: block;
+    }
+
+    .nav__links {
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .nav__links.active {
+        display: flex;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        margin: auto;
+        background-color: #fff;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        animation: slideDown 0.5s ease-in-out; /* Animation effect */
+    }
+}
+
+/* Keyframes for slide down animation */
+@keyframes slideDown {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Button styles */
+.btn1 {
+    border: 2px solid #3685fb;
+    background-color: white;
+    color: black;
+    border-radius: 50px;
+}
+
+.btn1:hover {
+    background-color: #3685fb; /* Hover effect */
+    color: white; /* Hover effect */
+}
+
+.btn2 {
+    border: 2px solid #3685fb;
+    background-color: white;
+    color: black;
+    border-radius: 50px;
+    height:30px;
+    display:flex; /* Align items and justify content */
+    align-items:center; /* Align items and justify content */
+    justify-content:center; /* Align items and justify content */
+    margin-top:3px; /* Margin from top */
+}
+
+.btn2:hover {
+    background-color:#3685fb; /* Hover effect */
+    color:white; /* Hover effect */
+}
+  
+* {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+}
+.hero-section {
+    height: 100vh;
+    padding-top: 15rem;
+    background-color: transparent;
+    z-index: -1;
+}
+.hero-section .flex-hero {
+    flex-direction: column;
+    gap: 30px;
+    text-align:center;
+}
+
+.hero-section .flex-hero h1 {
+    font-size: 65px;
+    font-weight: 900;
+}
+.text-gradient {
+    background: linear-gradient(45deg,#2190FF 2.34%,#b673f8 100.78%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-section h4 {
+    font-size: 22px;
+    font-weight: 300;
+    text-align: center;
+    padding: 12px 14rem;
+    color:#969BA5;
+}
+
+.hero-section .button {
+    padding: 0.7rem 2rem;
+    border-radius: 25px;
+    background-color: #2190FF;
+    color: #fff;
+    border: 1px solid transparent;
+    width: 15%;
+    margin-top:15px;
+}
+
+.hero-section div:nth-child(2) {
+    margin-top: 4rem;
+}
+
+.hero-section .image {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0px;
+}
+
+
+
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+h1,
+h2 {
+    line-height: 1.3;
+    margin: 15px 0;
+}
+
+
+
+button {
+    transition: all 0.5s ease-in-out;
+    font-size: 1em;
+    padding: 1em;
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+.button:hover {
+    transform: scale(0.98);
+}
+
+
+@media screen and (max-width:980px) {
+    .hero-section h1 {
+        text-align: center;
+    }
+    .hero-section {
+        padding-top: 12rem;
+    }
+    .hero-section h4 {
+        font-size: 21px;
+        text-align: center;
+        padding: 0px 4rem;
+    }
+    .image {
+        width: 500px;
+    }
+    .hero-section .button{
+        margin-top:15px;
+        width: 45%;
+    }
+    
+}
+
+@media screen and (max-width:400px) {
+    .hero-section h1 {
+        font-size: 35px;
+    }
+
+    .hero-section {
+        padding-top: 10rem;
+    }
+    .hero-section h4 {
+        font-size: 16px;
+        padding: 0px 2rem;
+    }
+
+}
+
+
+
+button,
+a,
+li {
+    cursor: pointer;
+}
+
+/* Blob */
+
+
+/* Blobs */
+.flex-hero .blob-cont {
+    justify-content: center;
+    align-items: center;
+    position: static;
+    margin: 10px;
+}
+
+
+.blob {
+    border-radius: 100px;
+    filter: blur(60px);
+}
+
+.blue {
+    background-color: #2937a392;
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 55%;
+    bottom: 25%;
+    margin: auto;
+    height: 150px;
+    width: 200px;
+    animation: blobani 8s infinite ease;
+}
+.blue1 {
+    background-color: #2937a392;
+    position: absolute;
+    top:0;
+    left: 0;
+    right: -55%;
+    bottom: -25%;
+    margin: auto;
+    height: 150px;
+    width: 200px;
+    animation: blobani 8s infinite ease;
+}
+  
+  
+  @keyframes blobani {
+    0% {top: 0; left: 0; transform: scale(1);}
+    30% {top: 0; left: 0; transform: scale(1.2);}
+    60% {top: 0; left: 0; transform: scale(1.3);}
+    100% {top: 0; left: 0; transform: scale(1);}
+  }
+  
+/* Styles for the container element */
+.signup-container {
+    max-width: 900px; /* Set maximum width for the container */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 40px; /* Add padding inside the container */
+    margin-top: 10%; /* Set top margin as a percentage of the viewport height */
+    overflow: hidden; /* Hide any overflowing content */
+}
+
+/* Styles for the password visibility icon */
+.password-visibility {
+    position: relative; /* Set the position relative to its normal position */
+    top: -39px; /* Move the element 39 pixels up */
+    left: 92%; /* Move the element 92% to the right */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    font-size: 17px; /* Set font size */
+}
+
+/* Styles for the grid layout of the signup form */
+.signup-grid {
+    display: grid; /* Use grid layout for the element */
+    grid-template-columns: 0.1fr 1.5fr 8fr; /* Define columns with fractional widths */
+    grid-gap: 10px; /* Set the gap between grid items */
+}
+
+/* Styles for the main signup text */
+.signup-text {
+    margin-top: 30px; /* Add top margin */
+    grid-column: 1 / 4; /* Span across all three columns */
+    text-align: center; /* Center-align text */
+}
+
+/* Styles for additional signup text */
+.signup-text1 {
+    grid-column: -1 / 3; /* Span from second to third column from the end */
+    text-align: right; /* Right-align text */
+}
+
+.signup-text1 span {
+    color: #3c79a7; /* Set text color */
+    font-weight: 600; /* Set font weight to bold */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+/* Styles for the signup form section */
+.signup-form {
+    grid-column: 2 / 4; /* Span from second to fourth column */
+}
+
+/* Styles for the overall signup container */
+.signup {
+    flex: 1; /* Use flexible layout to fill available space */
+    background-color: #fff; /* Set background color to white */
+    padding: 40px; /* Add padding inside the element */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a box shadow with opacity */
+}
+
+/* Styles for the signup heading */
+.signup h1 {
+    margin-bottom: 20px; /* Add bottom margin to the heading */
+    text-align: center; /* Center-align text */
+    color: #3c79a7; /* Set text color */
+    letter-spacing: .1em; /* Add letter-spacing between characters */
+}
+
+/* Styles for the role text in signup */
+.signup-role {
+    font-size: 16px; /* Set font size */
+    margin-bottom: 10px; /* Add bottom margin */
+}
+
+/* Styles for form groups in the signup form */
+.form-group {
+    margin-bottom: 20px; /* Add bottom margin to form groups */
+}
+
+.form-group label {
+    display: block; /* Display labels as blocks */
+    margin-bottom: 5px; /* Add bottom margin to labels */
+    font-weight: bold; /* Set font weight to bold for labels */
+}
+
+/* Styles for form controls in the signup form */
+.form-control {
+    width: 40%; /* Set width of form controls */
+    padding: 8px; /* Add padding inside form controls */
+    font-size: 16px; /* Set font size */
+    border: 1px solid #ccc; /* Add border with color */
+    border-radius: 4px; /* Add border radius for rounded corners */
+}
+
+/* Styles for button group in the signup form */
+.btn-group {
+    margin-top: .0001px; /* Add a small top margin to button group */
+    margin-bottom: 20px; /* Add bottom margin to button group */
+}
+
+/* Styles for buttons in the signup form */
+.btn {
+    padding: 10px 20px; /* Set padding for buttons */
+    font-size: 16px; /* Set font size for buttons */
+    border: none; /* Remove button borders */
+    border-radius: 4px; /* Add border radius for rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+/* Styles for primary button in the signup form */
+.btn-primary {
+    background-color: #007bff; /* Set background color for primary button */
+    color: #fff; /* Set text color for primary button */
+}
+
+/* Styles for danger button in the signup form */
+.btn-danger {
+    background-color: #dc3545; /* Set background color for danger button */
+    color: #fff; /* Set text color for danger button */
+}
+.error { color: red; margin-left: 2rem; }
+/* Styles for the main container */
+.container {
+    max-width: 900px; /* Maximum width of the container */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 40px; /* Padding inside the container */
+    margin-top: 10%; /* Top margin of 10% */
+}
+
+/* Styles for form groups */
+.form-group {
+    margin-bottom: 20px; /* Bottom margin for spacing between form groups */
+}
+
+/* Styles for form group labels */
+.form-group label {
+    display: block; /* Make labels display as block elements */
+    margin-bottom: 5px; /* Bottom margin for spacing below labels */
+    font-weight: bold; /* Bold text for labels */
+}
+
+/* Styles for form controls */
+.form-control {
+    width: 40%; /* Width of form controls */
+    padding: 8px; /* Padding inside form controls */
+    font-size: 16px; /* Font size of form controls */
+    border: 1px solid #ccc; /* Border around form controls */
+    border-radius: 4px; /* Border radius for rounded corners */
+}
+
+/* Styles for button groups */
+.btn-group {
+    margin-top: .0001px; /* Top margin for spacing above button groups */
+    margin-bottom: 20px; /* Bottom margin for spacing below button groups */
+}
+
+/* Styles for buttons */
+.btn {
+    padding: 10px 20px; /* Padding inside buttons */
+    font-size: 16px; /* Font size of buttons */
+    border: none; /* No border for buttons */
+    border-radius: 4px; /* Border radius for rounded corners on buttons */
+    cursor: pointer; /* Cursor style on hover for buttons */
+}
+
+/* Styles for primary buttons */
+.btn-primary {
+    background-color: #007bff; /* Background color for primary buttons */
+    color: #fff; /* Text color for primary buttons */
+}
+
+/* Styles for danger (red) buttons */
+.btn-danger {
+    background-color: #dc3545; /* Background color for danger buttons */
+    color: #fff; /* Text color for danger buttons */
+}
+.notification-container {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.appointment-card {
+  background-color: #f0f9ff;
+  border: 1px solid #2190ff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  min-width: 250px;
+}
+
+.appointment-card__title {
+  color: #2190ff;
+  margin-bottom: 8px;
+}
+
+.appointment-card__content p {
+  margin: 4px 0;
+}
+
+.btn-close {
+  margin-top: 8px;
+  padding: 6px 12px;
+  background-color: #2190ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.searchpage-container {
+    max-width: 1200px;
+    margin: auto;
+    margin-top:10%;
+    color: #414146;
+    padding: 0 20px;
+    position: static;
+    width: 100%;
+}
+.searchpage-container img {
+    max-width: 100%;
+}
+.search-results-container .doctorcard{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 18px;
+    border-radius: 4px;
+    background-color: #fff;
+
+}
+
+.search-results-container>h2 {
+    text-align: left;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.search-results-container>h3 {
+    margin-top: 12px;
+    color: #2d2d32;
+    text-align: left;
+    font-size: 15px;
+}
+.location-search-box {
+    display: flex;
+    align-items: center;
+    width: 286px;
+    position: relative;
+}
+
+.location-search-box>img {
+    border: 1px solid #ddd;
+    border-right: none;
+    height: 40px;
+    padding-left: 5px;
+}
+
+.search-location-input-box {
+    height: 40px;
+    width: 100%;
+    padding: 6px 20px 5px 10px;
+    border: 1px solid #ddd;
+    border-left: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-location-input-results {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+    margin-top: 2px;
+    border: 1px solid #555;
+}
+
+.search-location-result-item {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 12px;
+    column-gap: 14px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.search-location-result-item>span:nth-of-type(1) {
+    border: 1px solid #f0f0f5;
+    border-radius: 50%;
+    padding: 8px;
+    background-color: #f0f0f5;
+}
+
+.search-location-result-item>span:nth-of-type(2)>div:nth-of-type(1) {
+    color: #414146;
+    font-size: 14px;
+}
+
+.search-location-result-item>span:nth-of-type(2)>div:nth-of-type(2) {
+    color: #787887;
+    font-size: 12px;
+}
+
+.search-location-result-item:hover {
+    background-color: #f0f0f5;
+
+}
+
+
+
+
+.doctor-search-box {
+    display: flex;
+    align-items: center;
+    width: 430px;
+    position: absolute;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    box-shadow: rgba(0, 0, 0,.1) 0 - 1px 0 0 inset;
+    border-radius: 5px;
+    height: 100vh;
+}
+
+.doctor-search-box>img {
+    border: 1px solid #ddd;
+    border-right: none;
+    height: 40px;
+    padding-left: 5px;
+}
+
+.search-doctor-input-box {
+    height: 40px;
+    width: 100%;
+    padding: 6px 20px 5px 10px;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-top-left-radius:5px;
+    border-bottom-left-radius:5px;
+    border-top-right-radius:0;
+    border-bottom-right-radius:0;
+    border:1px solid rgb(59, 58, 58);
+}
+
+.findiconimg{
+    width: 40px;
+    left: 0;
+    background-color: rgb(239, 234, 234);
+    height: 40px;
+    border: 1px solid rgb(59, 58, 58);
+    z-index: -99;
+
+}
+.search-doctor-input-results {
+    position: absolute;
+    top: 55%;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+    height: 420px;
+    margin-top: 2px;
+    border: 1px solid #555;
+}
+
+.search-doctor-result-item {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 12px;
+    column-gap: 14px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.search-doctor-result-item:hover {
+    background-color: #f0f0f5;
+}
+
+.search-doctor-result-item>span:nth-of-type(1) {
+    border: 1px solid #f0f0f5;
+    border-radius: 50%;
+    padding: 8px;
+    background-color: #f0f0f5;
+}
+
+.search-doctor-result-item>span:nth-of-type(2) {
+    font-size: 14px;
+    color: #414146;
+}
+
+.search-doctor-result-item>span:nth-of-type(3) {
+    font-size: 11px;
+    flex-grow: 1;
+    color: #787887;
+    text-align: right;
+    text-transform: uppercase;
+    justify-self: flex-end;
+}
+.home-search-container {
+    /* width: 712px; */
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+}
+
+.finddoctor{
+    /* height: 0 auto; */
+    overflow: hidden;
+} 
+.finddoctor .mainimg{
+    width: 312px;
+    height: 312px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 5px;
+}
+.popup-content{margin:auto;background:#fff;width:50%;padding:5px;border:1px solid #d7d7d7}[role=tooltip].popup-content{width:200px;box-shadow:0 0 3px rgba(0,0,0,.16);border-radius:5px}.popup-overlay{background:rgba(0,0,0,.5)}[data-popup=tooltip].popup-overlay{background:transparent}.popup-arrow{-webkit-filter:drop-shadow(0 -3px 3px rgba(0,0,0,.16));filter:drop-shadow(0 -3px 3px rgba(0,0,0,.16));color:#fff;stroke-width:2px;stroke:#d7d7d7;stroke-dasharray:30px;stroke-dashoffset:-54px;left:0;right:0;top:0;bottom:0}
+.doctor-card-container {
+    width: 300px;
+    height: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    display: inline-block;
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  .cancel-appointment {
+    background-color: red;
+  }
+  
+  .doctor-card-details-container {
+    padding: 20px;
+  }
+  
+  .doctor-card-profile-image-container {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .doctor-card-profile-image-container img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+  }
+  
+  .doctor-card-details {
+    text-align: center;
+  }
+  
+  .doctor-card-detail-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .doctor-card-detail-speciality {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .doctor-card-detail-experience {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .doctor-card-detail-location,
+  .doctor-card-detail-clinic,
+  .doctor-card-detail-consultationfees {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  .doctor-card-detail-consultationfees{
+    font-weight: bold;
+    
+  }
+  
+  .book-appoinment-btn {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .book-appoinment-btn div:nth-child(2) {
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content p {
+  margin-bottom: 20px;
+}
+
+.modal-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.doctorbg{
+  -webkit-scrollbar {
+    display: none;
+}
+
+
+
+}
+.modal-btn:hover {
+  background-color: #0d8af5;
+}
+
+.cancel-appointment-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-appointment-btn:hover {
+  background-color: #d63027;
+}
+.appointment-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  /* height: auto;
+  overflow-y: auto; */
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+button {
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+
+.btnslot{
+  background-color: green;
+  cursor: pointer;
+  /* color: rgb(249, 60, 60); */
+}
+
+.appointment-form {
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 10px;
+  background: #f9f9f9;
+  margin-top: 10px;
+}
+
+.appointment-form .form-group {
+  margin-bottom: 10px;
+}
+
+.appointment-form label {
+  display: block;
+  font-weight: 500;
+}
+
+.appointment-form input {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.9rem;
+}
+
+
