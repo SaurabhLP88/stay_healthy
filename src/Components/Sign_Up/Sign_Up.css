@@ -1,5 +1,5 @@
 /* Styles for the container element */
-.container {
+.signup-container {
     max-width: 900px; /* Set maximum width for the container */
     margin: 0 auto; /* Center the container horizontally */
     padding: 40px; /* Add padding inside the container */
@@ -115,3 +115,4 @@
     background-color: #dc3545; /* Set background color for danger button */
     color: #fff; /* Set text color for danger button */
 }
+.error { color: red; margin-left: 2rem; }
