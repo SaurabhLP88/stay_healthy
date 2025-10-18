@@ -1,0 +1,14 @@
+.review-container {max-width:500px; margin:40px auto; padding:25px; border-radius:15px; background:#f9fafc; box-shadow:0 4px 12px rgba(0, 0, 0, 0.1); font-family:"Poppins", sans-serif; text-align:center;}
+.review-title {color:#1e88e5; margin-bottom:15px;}
+.open-btn {background:#1e88e5; color:white; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; transition:background 0.3s ease;}
+.open-btn:hover {background:#1565c0;}
+.review-form {text-align:left;}
+.form-group {display:flex; flex-direction:column; margin-bottom:15px;}
+.form-group label {margin-bottom:6px; font-weight:600; color:#333;}
+.form-group input, .form-group textarea {padding:10px; border:1px solid #ccc; border-radius:6px; font-size:15px; resize:none; outline:none; transition:border 0.2s;}
+.form-group input:focus, .form-group textarea:focus {border-color:#1e88e5;}
+.submit-btn {background:#43a047; color:white; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; width:100%; font-weight:600; transition:background 0.3s ease;}
+.submit-btn:hover {background:#2e7d32;}
+.warning {color:#e53935; background:#ffebee; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center; font-weight:500;}
+.submitted-box {margin-top:25px; padding:15px; background:#e8f5e9; border-radius:10px; color:#2e7d32; text-align:left;}
+pre {background:#fff; padding:10px; border-radius:6px; overflow-x:auto; font-size:14px;}

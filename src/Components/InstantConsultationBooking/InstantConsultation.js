@@ -9,77 +9,109 @@ const InstantConsultation = () => {
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [isSearched, setIsSearched] = useState(false);
-    
+    const [bookings, setBookings] = useState([]);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        getDoctorsDetails();
+    }, [searchParams]);
+
     const getDoctorsDetails = () => {
         fetch('https://api.npoint.io/9a5543d36f1460da2f63')
         .then(res => res.json())
         .then(data => {
-            if (searchParams.get('speciality')) {
-                // window.reload()
-                const filtered = data.filter(doctor => doctor.speciality.toLowerCase() === searchParams.get('speciality').toLowerCase());
+            setDoctors(data);
 
+            if (searchParams.get('speciality')) {
+                const filtered = data.filter(
+                    doctor => doctor.speciality.toLowerCase() === searchParams.get('speciality').toLowerCase()
+                );
                 setFilteredDoctors(filtered);
-                
                 setIsSearched(true);
-                window.reload()
             } else {
                 setFilteredDoctors([]);
                 setIsSearched(false);
             }
-            setDoctors(data);
         })
         .catch(err => console.log(err));
     }
-    const handleSearch = (searchText) => {
 
-        if (searchText === '') {
+    const handleSearch = (searchText) => {
+        if (!searchText) {
             setFilteredDoctors([]);
             setIsSearched(false);
-            } else {
-                
+        } else {
             const filtered = doctors.filter(
-                (doctor) =>
-                // 
-                doctor.speciality.toLowerCase().includes(searchText.toLowerCase())
-                
+                doctor => doctor.speciality.toLowerCase().includes(searchText.toLowerCase())
             );
-                
             setFilteredDoctors(filtered);
             setIsSearched(true);
-            window.location.reload()
         }
     };
-    const navigate = useNavigate();
-    useEffect(() => {
-        getDoctorsDetails();
-        // const authtoken = sessionStorage.getItem("auth-token");
-        // if (!authtoken) {
-        //     navigate("/login");
-        // }
-    }, [searchParams])
+
+    const handleBook = (doctor) => {
+        const patientName = sessionStorage.getItem("email") || "Anonymous";
+
+        const appointmentData = {
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            patientName
+        };
+
+        // Save in state
+        setBookings(prev => [...prev, { doctor, appointmentData }]);
+
+        // Save in localStorage
+        localStorage.setItem("doctorData", JSON.stringify({ name: doctor.name }));
+        localStorage.setItem(doctor.name, JSON.stringify(appointmentData));
+
+        // Trigger Notification component
+        window.dispatchEvent(new Event("appointmentBooked"));
+
+        alert(`Appointment booked for ${patientName} with Dr. ${doctor.name}`);
+    };
+
+    const handleCancel = (doctor) => {
+        setBookings(prev => prev.filter(b => b.doctor.name !== doctor.name));
+        localStorage.removeItem(doctor.name);
+        window.dispatchEvent(new Event("appointmentCancelled"));
+        alert(`Appointment cancelled for Dr. ${doctor.name}`);
+    };
+
+    const isDoctorBooked = (doctor) => {
+        return bookings.some(b => b.doctor.name === doctor.name);
+    };
 
     return (
         <center>
-            <div  className="searchpage-container">
-            <FindDoctorSearch onSearch={handleSearch} />
-            <div className="search-results-container">
-            {isSearched ? (
-                <center>
-                    <h2>{filteredDoctors.length} doctors are available {searchParams.get('location')}</h2>
-                    <h3>Book appointments with minimum wait-time & verified doctor details</h3>
-                    {filteredDoctors.length > 0 ? (
-                    filteredDoctors.map(doctor => <DoctorCard className="doctorcard" {...doctor} key={doctor.name} />)
-                    ) : (
-                    <p>No doctors found.</p>
-                    )}
-                </center>
-                ) : (
-                ''
-                )}
+            <div className="searchpage-container">
+                <FindDoctorSearch onSearch={handleSearch} />
+                <div className="search-results-container">
+                    {isSearched ? (
+                        <center>
+                            <h2>{filteredDoctors.length} doctors are available {searchParams.get('location')}</h2>
+                            <h3>Book appointments with minimum wait-time & verified doctor details</h3>
+                            {filteredDoctors.length > 0 ? (
+                                filteredDoctors.map(doctor => (
+                                    <DoctorCard
+                                        className="doctorcard"
+                                        key={doctor.name}
+                                        doctor={doctor}
+                                        isBooked={isDoctorBooked(doctor)}
+                                        onBook={() => handleBook(doctor)}
+                                        onCancel={() => handleCancel(doctor)}
+                                    />
+                                ))
+                            ) : (
+                                <p>No doctors found.</p>
+                            )}
+                        </center>
+                    ) : ''}
+                </div>
             </div>
-        </div>
         </center>
     )
 }
 
-export default InstantConsultation
+export default InstantConsultation;

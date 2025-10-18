@@ -1,4 +1,3 @@
-// src/Components/BookingConsultation/BookingConsultation.js
 import React, { useState } from "react";
 import FindDoctorSearch from "../FindDoctorSearch/FindDoctorSearch"; // adjust path if needed
 import DoctorCard from "../DoctorCard/DoctorCard";
@@ -26,21 +25,31 @@ const BookingConsultation = () => {
       createdAt: new Date().toISOString(),
     };
 
-    // Optionally call backend API to persist booking:
-    // try {
-    //   await fetch("http://localhost:8181/api/bookings", { method: "POST", headers: { "Content-Type":"application/json" }, body: JSON.stringify(booking) });
-    // } catch(err) { console.error("Booking API failed", err); }
-
+    // Save booking in state
     setBookings((prev) => [...prev, booking]);
+
+    // Save doctor info & appointment in localStorage for Notification
+    localStorage.setItem("doctorData", JSON.stringify({ name: doctor.name }));
+    localStorage.setItem(doctor.name, JSON.stringify({
+      date: booking.appointmentDate,
+      time: booking.appointmentTime,
+      patientName: booking.patientName
+    }));
+
+    // Dispatch custom event to notify Notification component
+    window.dispatchEvent(new Event("appointmentBooked"));
+
     alert("Appointment booked for " + booking.patientName + " with " + booking.doctorName);
   };
 
   const handleCancel = async (doctor) => {
-    // remove booking(s) for that doctor (or specific booking id if tracked)
     setBookings((prev) => prev.filter((b) => b.doctorId !== (doctor.id || doctor._id || doctor.name)));
 
-    // Optionally call backend API to cancel
-    // await fetch(`http://localhost:8181/api/bookings/${bookingId}`, { method: "DELETE" });
+    // Optionally remove from localStorage
+    localStorage.removeItem(doctor.name);
+
+    // Optionally dispatch event if you want Notification to hide
+    window.dispatchEvent(new Event("appointmentCancelled"));
 
     alert(`Appointment cancelled for ${doctor.name}`);
   };
@@ -54,7 +63,6 @@ const BookingConsultation = () => {
     <div className="booking-consultation-page">
       <h2>Book a Consultation</h2>
 
-      {/* FindDoctorSearch: must call props.onResults(results) when it has results */}
       <FindDoctorSearch onResults={handleSearchResults} />
 
       <div className="search-results">
