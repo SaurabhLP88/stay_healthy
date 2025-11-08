@@ -1,0 +1,20 @@
+.signup-container {max-width:450px; margin:0 auto; padding:40px; margin-top:5%; overflow:hidden;}
+.password-visibility {position:relative; top:-39px; left:92%; cursor:pointer; font-size:17px;}
+.signup-grid {display:grid; grid-template-columns:0.1fr 1.5fr 8fr; grid-gap:10px;}
+.signup-text {margin-top:30px; grid-column:2 / 4; text-align:center;}
+.signup-text1 {grid-column:-1 / 2; text-align:center;}
+.signup-text1 span {color:#3c79a7; font-weight:600; cursor:pointer;}
+.signup-form {grid-column:2 / 4;}
+.signup {flex:1; background-color:#fff; padding:40px; box-shadow:0 0 10px rgba(0, 0, 0, 0.1);}
+.signup h1 {margin-bottom:20px; text-align:center; color:#3c79a7; letter-spacing:.1em;}
+.signup-role {font-size:16px; margin-bottom:10px;}
+.form-group {margin-bottom:20px;}
+.form-group label {display:block; margin-bottom:5px; font-weight:bold;}
+.btn-group {margin-top:.0001px; margin-bottom:20px;}
+.btn {padding:10px 20px; font-size:16px; border:none; border-radius:4px; cursor:pointer;}
+.btn-primary {background-color:#007bff; color:#fff;}
+.btn-danger {background-color:#dc3545; color:#fff;}
+.error {color:red; }
+.password-wrapper {position:relative;}
+.eye-icon {position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#666; transition:color 0.2s ease-in-out;}
+.eye-icon:hover {color:#2190FF;}

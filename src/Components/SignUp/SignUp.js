@@ -1,20 +1,29 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Sign_Up.css";
+import "./SignUp.css";
 
-function Sign_Up({ setLoggedIn }) {
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+function SignUp({ setLoggedIn }) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     name: "",
     phone: "",
     email: "",
     password: "",
-  });
+    role: "",
+  };
 
+  const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleReset = () => {
+    setFormData(initialFormState);
+    setErrors({});
   };
 
   const validate = () => {
@@ -29,6 +38,7 @@ function Sign_Up({ setLoggedIn }) {
     if (!formData.password) tempErrors.password = "Password is required";
     else if (formData.password.length < 6)
       tempErrors.password = "Password must be at least 6 characters";
+    if (!formData.role) tempErrors.role = "Please select your role";
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -45,22 +55,45 @@ function Sign_Up({ setLoggedIn }) {
     if (validate()) {
       await apiCallToRegister(formData); // replace with actual API
       sessionStorage.setItem("email", formData.email); // persist login
+      sessionStorage.setItem("role", formData.role); // store role
+      sessionStorage.setItem("name", formData.name);
       setLoggedIn(true); // update App state
       navigate("/"); // redirect to home
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(true);
+    setTimeout(() => setShowPassword(false), 3000); // revert after 3 seconds
+  };
+
   return (
-    <div className="signup-container" style={{ marginTop: "5%" }}>
+    <div className="signup-container">
       <div className="signup-grid">
         <div className="signup-text">
           <h1>Sign Up</h1>
         </div>
-        <div className="signup-text1" style={{ textAlign: "left" }}>
+        <div className="signup-text1">
           Already a member? <Link to="/login" style={{ color: "#2190FF" }}>Login</Link>
         </div>
         <div className="signup-form">
           <form onSubmit={handleSubmit}>
+
+            <div className="form-group">
+              <label htmlFor="role">Role</label>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="form-control"
+              >
+                <option value="">Select your role</option>
+                <option value="doctor">Doctor</option>
+                <option value="patient">Patient</option>
+              </select>
+              {errors.role && <span className="error">{errors.role}</span>}
+            </div>
+
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input
@@ -100,28 +133,27 @@ function Sign_Up({ setLoggedIn }) {
               {errors.email && <span className="error">{errors.email}</span>}
             </div>
 
-            <div className="form-group">
+            <div className="form-group password-field">
               <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                className="form-control"
-              />
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  className="form-control"
+                />
+                <span className="eye-icon" onClick={togglePasswordVisibility}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               {errors.password && <span className="error">{errors.password}</span>}
             </div>
 
             <div className="btn-group">
               <button type="submit" className="btn btn-primary">Submit</button>
-              <button
-                type="reset"
-                className="btn btn-danger"
-                onClick={() => setFormData({ name: "", phone: "", email: "", password: "" })}
-              >
-                Reset
-              </button>
+              <button type="reset" className="btn btn-danger" onClick={handleReset}>Reset</button>
             </div>
           </form>
         </div>
@@ -130,4 +162,4 @@ function Sign_Up({ setLoggedIn }) {
   );
 }
 
-export default Sign_Up;
+export default SignUp;

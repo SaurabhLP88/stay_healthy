@@ -1,4 +1,4 @@
-.reports-container {max-width:900px; margin:40px auto; padding:25px; background:#f9fafc; border-radius:15px; box-shadow:0 4px 10px rgba(0, 0, 0, 0.08); font-family:"Poppins", sans-serif;}
+.reports-container {max-width:900px; margin:40px auto; padding:25px; background:#f9fafc; border-radius:15px; box-shadow:0 4px 10px rgba(0, 0, 0, 0.08); }
 .reports-title {text-align:center; color:#1e88e5; margin-bottom:25px; font-weight:600;}
 .reports-table {width:100%; border-collapse:collapse; text-align:center;}
 .reports-table th, .reports-table td {border:1px solid #ddd; padding:12px 10px; font-size:15px;}

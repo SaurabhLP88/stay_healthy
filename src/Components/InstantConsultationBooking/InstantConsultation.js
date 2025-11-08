@@ -89,24 +89,25 @@ const InstantConsultation = () => {
                 <FindDoctorSearch onSearch={handleSearch} />
                 <div className="search-results-container">
                     {isSearched ? (
-                        <center>
-                            <h2>{filteredDoctors.length} doctors are available {searchParams.get('location')}</h2>
-                            <h3>Book appointments with minimum wait-time & verified doctor details</h3>
+                        <div className="search-results-cover">
+                            <h2 className="search-results-title">{filteredDoctors.length} doctors are available {searchParams.get('location')}</h2>
+                            <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>
                             {filteredDoctors.length > 0 ? (
                                 filteredDoctors.map(doctor => (
                                     <DoctorCard
-                                        className="doctorcard"
                                         key={doctor.name}
-                                        doctor={doctor}
-                                        isBooked={isDoctorBooked(doctor)}
+                                        name={doctor.name}
+                                        speciality={doctor.speciality}
+                                        experience={doctor.experience}
+                                        ratings={doctor.ratings}
+                                        image={doctor.image}
                                         onBook={() => handleBook(doctor)}
-                                        onCancel={() => handleCancel(doctor)}
                                     />
                                 ))
                             ) : (
                                 <p>No doctors found.</p>
                             )}
-                        </center>
+                        </div>
                     ) : ''}
                 </div>
             </div>

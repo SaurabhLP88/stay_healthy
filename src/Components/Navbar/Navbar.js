@@ -14,19 +14,35 @@ function Navbar({ loggedIn, setLoggedIn }) {
 
   const handleLogout = () => {
     setLoggedIn(false);
-    sessionStorage.removeItem("email"); // clear session
+    sessionStorage.clear();
+    localStorage.clear();
     navigate("/login");
   };
+
 
   const handleDropdown = () => setShowDropdown(!showDropdown);
 
   useEffect(() => {
-    const storedEmail = sessionStorage.getItem("email");
-    if (storedEmail) {
+    const name = sessionStorage.getItem("name") || localStorage.getItem("name");
+    const isLoggedIn =
+      sessionStorage.getItem("isLoggedIn") === "true" ||
+      localStorage.getItem("isLoggedIn") === "true";
+
+    if (isLoggedIn) {
       setLoggedIn(true);
-      setUsername(storedEmail);
+      setUsername(name || "");
+      console.log("Signed-in User Details:", { name, isLoggedIn });
+    } else {
+      setLoggedIn(false);
+      setUsername("");
     }
-  }, [setLoggedIn]);
+  }, [loggedIn]);
+
+
+  console.log("User details:", {
+    email: localStorage.    getItem("email"),
+    isLoggedIn: localStorage.getItem("isLoggedIn"),
+  });
 
   return (
     <nav className="navbar">

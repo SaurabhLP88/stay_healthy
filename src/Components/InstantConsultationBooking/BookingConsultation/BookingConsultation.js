@@ -61,10 +61,10 @@ const BookingConsultation = () => {
 
   return (
     <div className="booking-consultation-page">
-      <h2>Book a Consultation</h2>
 
       <FindDoctorSearch onResults={handleSearchResults} />
 
+      {/* Display search results 
       <div className="search-results">
         {doctors.length === 0 ? (
           <p>No doctors found yet. Try searching specialties like "cardiologist", "dermatologist".</p>
@@ -93,7 +93,8 @@ const BookingConsultation = () => {
             </div>
           ))
         )}
-      </div>
+      </div>*/}
+
     </div>
   );
 };

@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 function Login({ setLoggedIn }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,12 +33,23 @@ function Login({ setLoggedIn }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      // Replace this with your actual API call
       await apiCallToLogin(formData);
-      sessionStorage.setItem("email", formData.email); // persist login
+
+      // persist login status and name (use email as fallback)
+      sessionStorage.setItem("isLoggedIn", "true");
+      sessionStorage.setItem("name", formData.email.split("@")[0]);
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("name", formData.email.split("@")[0]);
+      localStorage.setItem("email", formData.email);
+
       setLoggedIn(true);
-      navigate("/"); // redirect to home
+      navigate("/");
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(true);
+    setTimeout(() => setShowPassword(false), 3000); // revert after 3 seconds
   };
 
   return (
@@ -64,16 +78,21 @@ function Login({ setLoggedIn }) {
               {errors.email && <span className="error">{errors.email}</span>}
             </div>
 
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                className="form-control"
-              />
+            <div className="form-group password-field">
+              <label htmlFor="password">Password</label>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  className="form-control"
+                />
+                <span className="eye-icon" onClick={togglePasswordVisibility}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               {errors.password && <span className="error">{errors.password}</span>}
             </div>
 

@@ -1,11 +1,6 @@
 .searchpage-container {
-    max-width: 1200px;
-    margin: auto;
-    margin-top:10%;
     color: #414146;
-    padding: 0 20px;
-    position: static;
-    width: 100%;
+    padding: 6em 20px 3em;
 }
 .searchpage-container img {
     max-width: 100%;
@@ -22,15 +17,13 @@
 
 }
 
-.search-results-container>h2 {
-    text-align: left;
+.search-results-title {
     font-size: 24px;
     font-weight: 700;
 }
 
-.search-results-container>h3 {
-    margin-top: 12px;
+.search-results-subtitle {
+    margin-bottom: 1em;
     color: #2d2d32;
-    text-align: left;
     font-size: 15px;
 }
