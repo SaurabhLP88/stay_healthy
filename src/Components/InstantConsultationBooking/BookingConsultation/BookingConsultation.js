@@ -4,6 +4,9 @@ import DoctorCard from "../DoctorCard/DoctorCard";
 import "./BookingConsultation.css";
 
 const BookingConsultation = () => {
+
+  console.log("BookingConsultation.js Loaded");
+
   const [doctors, setDoctors] = useState([]); // list from search
   const [bookings, setBookings] = useState([]); // array of {doctorId, appointmentData, bookedAt}
 

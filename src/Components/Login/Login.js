@@ -10,6 +10,8 @@ function Login({ setLoggedIn }) {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
+  console.log("Login.js Loaded");
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

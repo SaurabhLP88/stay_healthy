@@ -7,6 +7,7 @@ import exercise from "../../assets/images/exercise.svg";
 import sleep from "../../assets/images/sleep.svg";
 
 const HealthTips = () => {
+  console.log("HealthTips.js Loaded");
   const tips = [
     {
       id: 1,

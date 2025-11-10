@@ -5,6 +5,7 @@ import "./SignUp.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function SignUp({ setLoggedIn }) {
+  console.log("SignUp.js Loaded");
   const navigate = useNavigate();
   const initialFormState = {
     name: "",

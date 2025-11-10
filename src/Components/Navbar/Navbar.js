@@ -9,6 +9,7 @@ function Navbar({ loggedIn, setLoggedIn }) {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const navigate = useNavigate();
+  console.log("Navbar.js Loaded");
 
   const handleClick = () => setClick(!click);
 
@@ -73,10 +74,10 @@ function Navbar({ loggedIn, setLoggedIn }) {
         ) : (
           <>
             <li className="link">
-              <Link to="/signup"><button className="btn1">Sign Up</button></Link>
+              <Link to="/signup"><button className="btn2">Sign Up</button></Link>
             </li>
             <li className="link">
-              <Link to="/login"><button className="btn1">Login</button></Link>
+              <Link to="/login"><button className="btn2">Login</button></Link>
             </li>
           </>
         )}

@@ -1,4 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import "./Notification.css";
+
+const Notification = ({ title, message, onClose }) => {
+
+  console.log("Notification set Loaded:", {
+      title: title,
+      message: message,
+  });
+
+  return (
+    <div className="notification">
+      {/*<p align="right"><button className="close-btn" onClick={onClose}>x</button></p>*/}
+      <h5>{title}</h5>
+      <div className="notification-message" dangerouslySetInnerHTML={{ __html: message }}></div>
+    </div>
+  );
+};
+
+export default Notification;
+
+
+/*import React, { useEffect, useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import "./Notification.css";
 
@@ -59,4 +81,4 @@ const Notification = ({ children, loggedIn, setLoggedIn }) => {
   );
 };
 
-export default Notification;
+export default Notification;*/

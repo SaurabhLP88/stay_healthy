@@ -3,6 +3,7 @@ import './InstantConsultation.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import FindDoctorSearch from './FindDoctorSearch/FindDoctorSearch';
 import DoctorCard from './DoctorCard/DoctorCard';
+//import Notification from "../Notification/Notification";
 
 const InstantConsultation = () => {
     const [searchParams] = useSearchParams();
@@ -10,8 +11,11 @@ const InstantConsultation = () => {
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [isSearched, setIsSearched] = useState(false);
     const [bookings, setBookings] = useState([]);
+    const [notification, setNotification] = useState(null);
 
     const navigate = useNavigate();
+
+    console.log("InstantConsultation.js Loaded");
 
     useEffect(() => {
         getDoctorsDetails();
@@ -50,48 +54,111 @@ const InstantConsultation = () => {
         }
     };
 
-    const handleBook = (doctor) => {
-        const patientName = sessionStorage.getItem("email") || "Anonymous";
 
+    const handleBook = (newAppointment) => {
+        //console.log("handleBook called with:", doctor);
+
+        const patientName = sessionStorage.getItem("email");
+
+        //console.log("patientName:", patientName);
+
+        const doctor = {
+            name: newAppointment.doctorName,
+            speciality: newAppointment.doctorSpeciality
+        };
+
+        /*const {
+            patientName = sessionStorage.getItem("name"),
+            phoneNumber = sessionStorage.getItem("phoneNumber"),
+            appointmentDate = new Date().toLocaleDateString(),
+            appointmentTime = new Date().toLocaleTimeString()
+        } = newAppointment || {}; // safeguard if undefined
+
+        const patientName = sessionStorage.getItem("email") || "Anonymous";
         const appointmentData = {
             date: new Date().toLocaleDateString(),
             time: new Date().toLocaleTimeString(),
             patientName
+        };*/     
+        
+        const appointmentData = {
+            appointmentDate: newAppointment.appointmentDate,
+            appointmentTime: newAppointment.appointmentTime,
+            name: newAppointment.patientName,
+            phoneNumber: newAppointment.phoneNumber
         };
+
+        /*setNotification({
+            title: "Appointment Details",
+            message: `
+                <p><b>Doctor:</b> ${doctor.name}</p>
+                <p><b>Speciality:</b> ${doctor.speciality}</p>
+                <p><b>Patient:</b> ${appointmentData.name}</p>
+                <p><b>Phone:</b> ${appointmentData.phoneNumber}</p>
+                <p><b>Date:</b> ${appointmentData.appointmentDate}</p>
+                <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
+            `.trim()
+        });*/
+
+        const notificationData = {
+            title: "Appointment Details",
+            message: `
+                <p><b>Doctor:</b> ${doctor.name}</p>
+                <p><b>Speciality:</b> ${doctor.speciality}</p>
+                <p><b>Patient:</b> ${appointmentData.name}</p>
+                <p><b>Phone:</b> ${appointmentData.phoneNumber}</p>
+                <p><b>Date:</b> ${appointmentData.appointmentDate}</p>
+                <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
+            `.trim()
+        };
+
+        // Store notification in localStorage
+        localStorage.setItem('appointmentNotification', JSON.stringify(notificationData));
+        setNotification(notificationData);
+
+        // Debug: verify all fields
+        //console.log("📋 appointmentData:", appointmentData);
 
         // Save in state
         setBookings(prev => [...prev, { doctor, appointmentData }]);
+        //console.log("✅ Booking saved:", { doctor, appointmentData });
 
         // Save in localStorage
         localStorage.setItem("doctorData", JSON.stringify({ name: doctor.name }));
         localStorage.setItem(doctor.name, JSON.stringify(appointmentData));
+        //console.log("💾 Saved to localStorage:", doctor.name, appointmentData);
 
-        // Trigger Notification component
-        window.dispatchEvent(new Event("appointmentBooked"));
+        // Trigger Notification
+        window.dispatchEvent(new Event("appointmentBooked"));        
 
-        alert(`Appointment booked for ${patientName} with Dr. ${doctor.name}`);
+        /*console.log("🔔 Notification set:", {
+            title: "Appointment Details",
+            ...appointmentData
+        });*/
+
+        alert(`Appointment booked for ${appointmentData.name} with ${doctor.name}`);
     };
 
-    const handleCancel = (doctor) => {
+    /*const handleCancel = (doctor) => {
         setBookings(prev => prev.filter(b => b.doctor.name !== doctor.name));
         localStorage.removeItem(doctor.name);
         window.dispatchEvent(new Event("appointmentCancelled"));
-        alert(`Appointment cancelled for Dr. ${doctor.name}`);
+        alert(`Appointment cancelled for ${doctor.name}`);
     };
 
     const isDoctorBooked = (doctor) => {
         return bookings.some(b => b.doctor.name === doctor.name);
-    };
+    };*/
 
     return (
-        <center>
-            <div className="searchpage-container">
-                <FindDoctorSearch onSearch={handleSearch} />
-                <div className="search-results-container">
-                    {isSearched ? (
-                        <div className="search-results-cover">
-                            <h2 className="search-results-title">{filteredDoctors.length} doctors are available {searchParams.get('location')}</h2>
-                            <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>
+        <div className="searchpage-container">
+            <FindDoctorSearch onSearch={handleSearch} />
+            <div className="search-results-container">
+                {isSearched ? (
+                    <div className="search-results-cover">
+                        <h2 className="search-results-title">{filteredDoctors.length} doctors are available {searchParams.get('location')}</h2>
+                        <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>
+                        <div className="doctor-results-container">
                             {filteredDoctors.length > 0 ? (
                                 filteredDoctors.map(doctor => (
                                     <DoctorCard
@@ -101,17 +168,27 @@ const InstantConsultation = () => {
                                         experience={doctor.experience}
                                         ratings={doctor.ratings}
                                         image={doctor.image}
-                                        onBook={() => handleBook(doctor)}
+                                        onBook={(appointmentData) => handleBook(appointmentData)}
+                                        setNotification={setNotification}
                                     />
                                 ))
                             ) : (
                                 <p>No doctors found.</p>
                             )}
                         </div>
-                    ) : ''}
-                </div>
+                    </div>
+                ) : ''}
             </div>
-        </center>
+        
+
+        {/*{notification && (
+            <Notification
+            title={notification.title}
+            message={notification.message}
+            onClose={() => setNotification(null)}
+            />
+        )}*/}
+        </div>
     )
 }
 

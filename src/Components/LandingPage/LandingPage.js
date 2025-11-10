@@ -18,6 +18,7 @@ const LandingPage = () => {
     const section = document.getElementById("services");
     if (section) section.scrollIntoView({ behavior: "smooth" });
   };
+  console.log("LandingPage.js Loaded");
 
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";

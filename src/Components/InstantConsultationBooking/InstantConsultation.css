@@ -1,29 +1,6 @@
-.searchpage-container {
-    color: #414146;
-    padding: 6em 20px 3em;
-}
-.searchpage-container img {
-    max-width: 100%;
-}
-.search-results-container .doctorcard{
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    padding: 18px;
-    border-radius: 4px;
-    background-color: #fff;
-
-}
-
-.search-results-title {
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.search-results-subtitle {
-    margin-bottom: 1em;
-    color: #2d2d32;
-    font-size: 15px;
-}
+.searchpage-container {color:#414146; padding:6em 20px 3em;}
+.searchpage-container img {max-width:100%;}
+.search-results-container .doctorcard {display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom:20px; padding:18px; border-radius:4px; background-color:#fff;}
+.search-results-title {font-size:24px; font-weight:700; text-align:center;}
+.search-results-subtitle {margin-bottom:1em; color:#2d2d32; font-size:15px; text-align:center;}
+.doctor-results-container {display:grid; grid-template-columns:repeat(4, 1fr); max-width:1200px; margin:0 auto; gap:20px;}
