@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/stay_healthy/static/css/main.b3de244a.css",
-    "main.js": "/stay_healthy/static/js/main.bbf791e0.js",
+    "main.css": "/stay_healthy/static/css/main.f5f2936f.css",
+    "main.js": "/stay_healthy/static/js/main.f74f120d.js",
     "static/js/845.620824ad.chunk.js": "/stay_healthy/static/js/845.620824ad.chunk.js",
     "static/media/doctor1.png": "/stay_healthy/static/media/doctor1.b38e0e26ee079d87416d.png",
     "static/media/sleep.svg": "/stay_healthy/static/media/sleep.28e69ad87026fd3f9bf5964937b79893.svg",
@@ -13,12 +13,12 @@
     "static/media/self.svg": "/stay_healthy/static/media/self.e0a907f1cf8affb704fa37977eac80ae.svg",
     "static/media/water.svg": "/stay_healthy/static/media/water.1adc2b656516eab112d4a1a0ec763027.svg",
     "index.html": "/stay_healthy/index.html",
-    "main.b3de244a.css.map": "/stay_healthy/static/css/main.b3de244a.css.map",
-    "main.bbf791e0.js.map": "/stay_healthy/static/js/main.bbf791e0.js.map",
+    "main.f5f2936f.css.map": "/stay_healthy/static/css/main.f5f2936f.css.map",
+    "main.f74f120d.js.map": "/stay_healthy/static/js/main.f74f120d.js.map",
     "845.620824ad.chunk.js.map": "/stay_healthy/static/js/845.620824ad.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b3de244a.css",
-    "static/js/main.bbf791e0.js"
+    "static/css/main.f5f2936f.css",
+    "static/js/main.f74f120d.js"
   ]
 }
