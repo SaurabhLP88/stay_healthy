@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./Components/Home/Home";
 import LandingPage from "./Components/LandingPage/LandingPage";
@@ -13,10 +13,11 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   console.log("App.js Loaded");
+  //basename={process.env.PUBLIC_URL}
 
   return (
     <div className="App">
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <HashRouter basename="/">
         <Home loggedIn={loggedIn} setLoggedIn={setLoggedIn}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -27,7 +28,7 @@ function App() {
             <Route path="/health-tips" element={<HealthTips />} />
           </Routes>
         </Home>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }
