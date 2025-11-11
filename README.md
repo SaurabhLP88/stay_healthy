@@ -53,23 +53,23 @@ The **StayHealthy** platform allows users to:
 
 To run this project locally, follow these steps:
 
-```bash
+
 # Clone the repository
-git clone https://github.com/<your-username>/StayHealthy.git
+`git clone https://github.com/SaurabhLP88/StayHealthy.git`
 
 # Navigate into the project folder
-cd StayHealthy
+`cd StayHealthy`
 
 # Install backend dependencies
-npm install
+`npm install`
 
 # Install frontend dependencies (if separate)
-cd client
-npm install
+`cd client`
+`npm install`
 
 # Start the backend server
-cd ..
-npm start
+`cd ..`
+`npm start`
 
 Then open your browser and visit:
 
@@ -78,14 +78,10 @@ http://localhost:3000
 🧠 Learning Objectives
 
 This project demonstrates your ability to:
-
-Design and implement a full-stack web application.
-
-Develop and integrate RESTful APIs.
-
-Work with databases and authentication systems.
-
-Deploy and maintain a production-ready application.
+- Design and implement a full-stack web application.
+- Develop and integrate RESTful APIs.
+- Work with databases and authentication systems.
+- Deploy and maintain a production-ready application.
 
 📁 Project Structure
 StayHealthy/
@@ -100,16 +96,16 @@ StayHealthy/
 
 🌐 Live Demo & Repository
 
-Live Demo: StayHealthy Live
+Live Demo: [StayHealthy Live](https://saurabhlp88.github.io/stay_healthy/)
 
-Repository: StayHealthy on GitHub
+Repository: [StayHealthy on GitHub](https://github.com/SaurabhLP88/stay_healthy.git)
 
 👨‍💻 Author
 
 Saurabh Lakhanpal
-Full Stack Developer | HTML | CSS | JavaScript | React | Node.js
-📧 [Your Email Here]
-🔗 GitHub Profile
+Full Stack Developer | Front End Developer
+📧 [firsty111@gmail.com]
+🔗 [GitHub Profile](https://github.com/SaurabhLP88/)
 
 📜 License
 
@@ -117,8 +113,6 @@ This project is licensed under the MIT License
 .
 
 EOF
-
-
 ---
 
 ### 💡 How to use:
