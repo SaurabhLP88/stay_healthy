@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./AppointmentForm.css";
 
 const AppointmentForm = ({ doctorName, onSubmit }) => {
@@ -20,11 +21,11 @@ const AppointmentForm = ({ doctorName, onSubmit }) => {
   const [appointmentDate, setAppointmentDate] = useState("");
   const [appointmentTime, setAppointmentTime] = useState("");
   const [errors, setErrors] = useState({});
+  const location = useLocation();
 
-  const validateForm = () => {
-    //console.log("Validating:", { name, phoneNumber, appointmentDate, appointmentTime });
+  // 🟩 Validation for Instant Consultation
+  const validateInstantForm = () => {
     const newErrors = {};
-
     if (!name.trim()) newErrors.name = "Full name is required.";
     else if (!/^[A-Za-z\s]+$/.test(name))
       newErrors.name = "Name should contain only letters.";
@@ -33,9 +34,17 @@ const AppointmentForm = ({ doctorName, onSubmit }) => {
     else if (!/^\d{10}$/.test(phoneNumber))
       newErrors.phoneNumber = "Enter a valid 10-digit phone number.";
 
-    if (!appointmentDate) newErrors.appointmentDate = "Select an appointment date.";
+    return newErrors;
+  };
 
-    if (!appointmentTime) newErrors.appointmentTime = "Select a time slot.";
+  // 🟦 Validation for Book Consultation
+  const validateBookingForm = () => {
+    const newErrors = validateInstantForm();
+
+    if (!appointmentDate)
+      newErrors.appointmentDate = "Select an appointment date.";
+    if (!appointmentTime)
+      newErrors.appointmentTime = "Select a time slot.";
 
     return newErrors;
   };
@@ -45,8 +54,13 @@ const AppointmentForm = ({ doctorName, onSubmit }) => {
 
     //console.log("Form submitted");
 
-    const newErrors = validateForm();
+   const validationFn =
+      location.pathname === "/instant-consultation"
+        ? validateInstantForm
+        : validateBookingForm;
     //console.log("Validation errors:", newErrors);
+
+    const newErrors = validationFn();
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -59,8 +73,14 @@ const AppointmentForm = ({ doctorName, onSubmit }) => {
       doctorName,
       patientName: name,
       phoneNumber,
-      appointmentDate,
-      appointmentTime,
+      appointmentDate:
+        location.pathname === "/instant-consultation"
+          ? new Date().toLocaleDateString() // auto-fill today for instant
+          : appointmentDate,
+      appointmentTime:
+        location.pathname === "/instant-consultation"
+          ? new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : appointmentTime,
     });
 
     // Clear form
@@ -87,34 +107,38 @@ const AppointmentForm = ({ doctorName, onSubmit }) => {
           <input className="form-control" type="tel" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Enter 10-digit mobile number" />
           {errors.phoneNumber && <span className="error-text">{errors.phoneNumber}</span>}
         </div>
+        
+        {location.pathname !== "/instant-consultation" && (
+        <>
+          <div className="form-group">
+            <label htmlFor="appointmentDate">Appointment Date:</label>
+            <input className="form-control" type="date" id="appointmentDate" value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} />
+            {errors.appointmentDate && (
+              <span className="error-text">{errors.appointmentDate}</span>
+            )}
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="appointmentDate">Appointment Date:</label>
-          <input className="form-control" type="date" id="appointmentDate" value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} />
-          {errors.appointmentDate && (
-            <span className="error-text">{errors.appointmentDate}</span>
-          )}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="appointmentTime">Time Slot:</label>
-          <select
-            id="appointmentTime"
-            className="form-control"
-            value={appointmentTime}
-            onChange={(e) => setAppointmentTime(e.target.value)}            
-          >
-            <option value="">-- Select a Time Slot --</option>
-            {timeSlots.map((slot, index) => (
-              <option key={index} value={slot}>
-                {slot}
-              </option>
-            ))}
-          </select>
-          {errors.appointmentTime && (
-            <span className="error-text">{errors.appointmentTime}</span>
-          )}
-        </div>
+          <div className="form-group">
+            <label htmlFor="appointmentTime">Time Slot:</label>
+            <select
+              id="appointmentTime"
+              className="form-control"
+              value={appointmentTime}
+              onChange={(e) => setAppointmentTime(e.target.value)}            
+            >
+              <option value="">-- Select a Time Slot --</option>
+              {timeSlots.map((slot, index) => (
+                <option key={index} value={slot}>
+                  {slot}
+                </option>
+              ))}
+            </select>
+            {errors.appointmentTime && (
+              <span className="error-text">{errors.appointmentTime}</span>
+            )}
+          </div>
+            </>
+        )}
 
         <button type="submit" className="btn btn-primary">Book Now</button>
       </form>

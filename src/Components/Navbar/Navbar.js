@@ -66,18 +66,18 @@ function Navbar({ loggedIn, setLoggedIn }) {
 
         {loggedIn ? (
           <>
-            {username && <li className="link">Hello, {username}</li>}
-            <li className="link">
-              <button className="btn2" onClick={handleLogout}>Logout</button>
+            {username && <li><span>Hello, {username}</span></li>}
+            <li>
+              <a className="btn2" href="#" onClick={(e) => {e.preventDefault(); handleLogout();}}>Logout</a>
             </li>
           </>
         ) : (
           <>
-            <li className="link">
-              <Link to="/signup"><button className="btn2">Sign Up</button></Link>
+            <li>
+              <Link to="/signup" className="btn2">Sign Up</Link>
             </li>
-            <li className="link">
-              <Link to="/login"><button className="btn2">Login</button></Link>
+            <li>
+              <Link to="/login" className="btn2">Login</Link>
             </li>
           </>
         )}

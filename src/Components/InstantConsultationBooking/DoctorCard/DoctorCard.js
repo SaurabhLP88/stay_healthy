@@ -53,7 +53,7 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
     }    
   };
 
-  const handleCancel = () => {
+  const handleCancel = (appointmentId, close) => {
     /*const updatedAppointments = appointments.filter((appointment) => appointment.id !== appointmentId);
     setAppointments(updatedAppointments);*/
 
@@ -65,7 +65,7 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
     localStorage.removeItem('name');
     // You might want to trigger some parent callback here
     window.dispatchEvent(new Event("appointmentCancelled"));
-
+    if (close) close();
   };
 
   const handleFormSubmit = (appointmentData) => {
@@ -159,7 +159,9 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
                       <div className="bookedInfo" key={appointment.id}>
                         <p><strong>Name:</strong> {appointment.patientName}</p>
                         <p><strong>Phone Number:</strong> {appointment.phoneNumber}</p>
-                        <button className='btn btn-primary' onClick={() => handleCancel(appointment.id)}>Cancel Appointment</button>
+                        <p><strong>Date of Appointment:</strong> {appointment.appointmentDate}</p>
+                        <p><strong>Time Slot:</strong> {appointment.appointmentTime}</p>
+                        <button className='btn btn-primary' onClick={() => handleCancel(appointment.id, close)}>Cancel Appointment</button>
                       </div>
                     ))}
                   </div>

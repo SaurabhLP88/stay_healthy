@@ -173,6 +173,8 @@ nav {
     align-items:center; /* Align items and justify content */
     justify-content:center; /* Align items and justify content */
     margin-top:3px; /* Margin from top */
+    padding: 0 1rem;
+    transition: 0.3s;
 }
 
 .btn2:hover {

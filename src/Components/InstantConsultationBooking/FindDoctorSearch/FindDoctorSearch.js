@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { FaSearch, FaUserMd } from 'react-icons/fa';
 
 import './FindDoctorSearch.css';
 
 import instant from '../../../assets/images/instant.svg';
+import book from "../../../assets/images/book.svg";
+import doctor from "../../../assets/images/self.svg";
 
 const initSpeciality = [
     'Dentist', 'Gynecologist/obstetrician', 'General Physician', 'Dermatologist', 'Ear-nose-throat (ent) Specialist', 'Homeopath', 'Ayurveda'
@@ -18,21 +20,39 @@ const FindDoctorSearch = () => {
     const [searchDoctor, setSearchDoctor] = useState('');
     const [specialities, setSpecialities] = useState(initSpeciality);
     const navigate = useNavigate();
+    const location = useLocation();
+
     const handleDoctorSelect = (speciality) => {
         setSearchDoctor(speciality);
         setDoctorResultHidden(true);
-        navigate(`/instant-consultation?speciality=${speciality}`);
+
+        if (location.pathname === "/instant-consultation") {
+            navigate(`/instant-consultation?speciality=${speciality}`);
+        } else if (location.pathname === "/book-consultation") {
+            navigate(`/book-consultation?speciality=${speciality}`);
+        } else {  }
+
         window.location.reload();
     }
     return (
         <div className="finddoctor">
-            <h1 className="finddoctor-title">Find a doctor at your own ease</h1>
+            <h1 className="finddoctor-title">
+                {location.pathname === "/instant-consultation"
+                    ? "Instant Consultation — Connect with a Doctor Now"
+                    : location.pathname === "/book-consultation"
+                    ? "Book an Appointment with Your Preferred Doctor"
+                    : "Find a Doctor at Your Own Ease"}
+            </h1>            
             
-            {window.location.pathname !== "/instant-consultation" && (
-                <div className="doctor-image">
-                    <img src={instant} alt="Instant Consultation" />
-                </div>
-            )}        
+            <div className="doctor-image">
+                {location.pathname === "/instant-consultation" ? (
+                <img src={instant} alt="Instant Consultation" />
+                ) : location.pathname === "/book-consultation" ? (
+                <img src={book} alt="Book an Appointment" />
+                ) : (
+                <img src={doctor} alt="Instant Consultation" />
+                )}
+            </div>
 
             <div className="home-search-container">
                 <div className="doctor-search-box">

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import './InstantConsultation.css';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import FindDoctorSearch from './FindDoctorSearch/FindDoctorSearch';
 import DoctorCard from './DoctorCard/DoctorCard';
 //import Notification from "../Notification/Notification";
+
+import './InstantConsultation.css';
 
 const InstantConsultation = () => {
     const [searchParams] = useSearchParams();
@@ -14,6 +15,7 @@ const InstantConsultation = () => {
     const [notification, setNotification] = useState(null);
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     console.log("InstantConsultation.js Loaded");
 
@@ -57,9 +59,7 @@ const InstantConsultation = () => {
 
     const handleBook = (newAppointment) => {
         //console.log("handleBook called with:", doctor);
-
-        const patientName = sessionStorage.getItem("email");
-
+        //const patientName = sessionStorage.getItem("email");
         //console.log("patientName:", patientName);
 
         const doctor = {
@@ -81,12 +81,20 @@ const InstantConsultation = () => {
             patientName
         };*/     
         
-        const appointmentData = {
-            appointmentDate: newAppointment.appointmentDate,
-            appointmentTime: newAppointment.appointmentTime,
-            name: newAppointment.patientName,
-            phoneNumber: newAppointment.phoneNumber
-        };
+        const appointmentData =
+            location.pathname === "/instant-consultation"
+                ? {
+                    name: newAppointment.patientName,
+                    phoneNumber: newAppointment.phoneNumber,
+                    appointmentDate: new Date().toLocaleDateString(),
+                    appointmentTime: new Date().toLocaleTimeString()
+                }
+                : {
+                    name: newAppointment.patientName,
+                    phoneNumber: newAppointment.phoneNumber,
+                    appointmentDate: newAppointment.appointmentDate,
+                    appointmentTime: newAppointment.appointmentTime
+                };
 
         /*setNotification({
             title: "Appointment Details",
@@ -107,8 +115,14 @@ const InstantConsultation = () => {
                 <p><b>Speciality:</b> ${doctor.speciality}</p>
                 <p><b>Patient:</b> ${appointmentData.name}</p>
                 <p><b>Phone:</b> ${appointmentData.phoneNumber}</p>
-                <p><b>Date:</b> ${appointmentData.appointmentDate}</p>
-                <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
+                ${
+                location.pathname !== "/instant-consultation"
+                    ? `
+                    <p><b>Date:</b> ${appointmentData.appointmentDate}</p>
+                    <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
+                    `
+                    : ""
+                }
             `.trim()
         };
 
