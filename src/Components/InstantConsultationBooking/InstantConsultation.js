@@ -170,26 +170,30 @@ const InstantConsultation = () => {
             <div className="search-results-container">
                 {isSearched ? (
                     <div className="search-results-cover">
-                        <h2 className="search-results-title">{filteredDoctors.length} doctors are available {searchParams.get('location')}</h2>
-                        <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>
-                        <div className="doctor-results-container">
-                            {filteredDoctors.length > 0 ? (
-                                filteredDoctors.map(doctor => (
-                                    <DoctorCard
-                                        key={doctor.name}
-                                        name={doctor.name}
-                                        speciality={doctor.speciality}
-                                        experience={doctor.experience}
-                                        ratings={doctor.ratings}
-                                        image={doctor.image}
-                                        onBook={(appointmentData) => handleBook(appointmentData)}
-                                        setNotification={setNotification}
-                                    />
-                                ))
-                            ) : (
-                                <p>No doctors found.</p>
-                            )}
-                        </div>
+                        <h2 className="search-results-title">{filteredDoctors.length} doctors are available</h2>
+                                                
+                        {filteredDoctors.length > 0 ? (
+                            <>
+                                <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>
+                                <div className="doctor-results-container">
+                                    {filteredDoctors.map(doctor => (
+                                        <DoctorCard
+                                            key={doctor.name}
+                                            name={doctor.name}
+                                            speciality={doctor.speciality}
+                                            experience={doctor.experience}
+                                            ratings={doctor.ratings}
+                                            image={doctor.image}
+                                            onBook={(appointmentData) => handleBook(appointmentData)}
+                                            setNotification={setNotification}
+                                        />
+                                    ))}                                
+                                </div>
+                            </>
+                        ) : (
+                            <p className='text-center'>No doctors found for  {searchParams.get('speciality')}.</p>
+                        )}
+                       
                     </div>
                 ) : ''}
             </div>

@@ -8,6 +8,8 @@ import Login from "./Components/Login/Login";
 import InstantConsultation from "./Components/InstantConsultationBooking/InstantConsultation";
 import BookingConsultation from "./Components/InstantConsultationBooking/BookingConsultation/BookingConsultation";
 import HealthTips from "./Components/HealthTips/HealthTips";
+import Reviews from "./Components/Reviews/Reviews";
+import Reports from "./Components/Reports/Reports";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -26,6 +28,8 @@ function App() {
             <Route path="/instant-consultation" element={<InstantConsultation />} />
             <Route path="/book-consultation" element={<BookingConsultation />} />
             <Route path="/health-tips" element={<HealthTips />} />
+            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/reports" element={<Reports />} />
           </Routes>
         </Home>
       </HashRouter>

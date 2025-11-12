@@ -1,7 +1,8 @@
 import React from "react";
-import "./ReportsLayout.css";
+import "./Reports.css";
+import sampleReport from "../../assets/documents/Sample-Report.pdf";
 
-function ReportsLayout() {
+function Reports() {
   // Sample data — replace with your actual data later
   const reportsData = [
     { id: 1, name: "Dr. Arjun Mehta", specialty: "Cardiologist" },
@@ -10,12 +11,21 @@ function ReportsLayout() {
     { id: 4, name: "Dr. Neha Kapoor", specialty: "Pediatrician" },
   ];
 
+  // Open PDF in new tab
   const handleView = (doctor) => {
-    alert(`Viewing report for ${doctor.name}`);
+     alert(`Viewing report for ${doctor.name}`);
+    window.open(sampleReport, "_blank");
   };
 
+  // Download PDF
   const handleDownload = (doctor) => {
     alert(`Downloading report for ${doctor.name}`);
+    const link = document.createElement("a");
+    link.href = sampleReport;
+    link.download = "Sample-Report.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -39,20 +49,20 @@ function ReportsLayout() {
               <td>{index + 1}</td>
               <td>{doctor.name}</td>
               <td>{doctor.specialty}</td>
-              <td>
+              <td width='18%'>
                 <button
                   className="view-btn"
                   onClick={() => handleView(doctor)}
                 >
-                  View
+                  View Report
                 </button>
               </td>
-              <td>
+              <td width='18%'>
                 <button
                   className="download-btn"
                   onClick={() => handleDownload(doctor)}
                 >
-                  Download
+                  Download Report
                 </button>
               </td>
             </tr>
@@ -63,4 +73,4 @@ function ReportsLayout() {
   );
 }
 
-export default ReportsLayout;
+export default Reports;

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import './ReviewForm.css';
 
+const ReviewForm = ({ onSubmit }) => {
 
-function GiveReviews() {
+  console.log("ReviewForm.js Loaded");
+
   const [showForm, setShowForm] = useState(false);
   const [submittedMessage, setSubmittedMessage] = useState('');
   const [showWarning, setShowWarning] = useState(false);
@@ -16,18 +19,15 @@ function GiveReviews() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }));
+    setFormData({ ...formData, [e.target.name] : e.target.value });
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmittedMessage(JSON.stringify(formData, null, 2)); // JSON formatında göstermek için
     if (formData.name && formData.review && formData.rating > 0) {
       setShowWarning(false);
+      onSubmit(formData);
+      setFormData({ name: '', review: '', rating: 0 });
     } else {
       setShowWarning(true);
     }
@@ -35,13 +35,12 @@ function GiveReviews() {
   
   return (
     <div className="review-container">
-      <h2 className="review-title">Share Your Feedback</h2>
 
-      {!showForm ? (
+      {/*{!showForm ? (
         <button className="open-btn" onClick={handleButtonClick}>
           Open Feedback Form
         </button>
-      ) : (
+      ) : (*/}
         <form className="review-form" onSubmit={handleSubmit}>
           <h3>Give Your Review</h3>
 
@@ -74,22 +73,24 @@ function GiveReviews() {
 
           <div className="form-group">
             <label htmlFor="rating">Rating (1–5):</label>
-            <input
-              type="number"
-              id="rating"
-              name="rating"
-              min="1"
-              max="5"
-              value={formData.rating}
-              onChange={handleChange}
-            />
+            <div className="stars">
+              {[1, 2, 3, 4, 5].map((num) => (
+                <span
+                  key={num}
+                  className={`star ${formData.rating >= num ? "active" : ""}`}
+                  onClick={() => setFormData({ ...formData, rating: num })}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
           </div>
 
           <button type="submit" className="submit-btn">
             Submit Feedback
           </button>
         </form>
-      )}
+      {/* })} */}
 
       {submittedMessage && (
         <div className="submitted-box">
@@ -97,8 +98,9 @@ function GiveReviews() {
           <pre>{submittedMessage}</pre>
         </div>
       )}
+        
     </div>
   );
 }
 
-export default GiveReviews;
+export default ReviewForm;

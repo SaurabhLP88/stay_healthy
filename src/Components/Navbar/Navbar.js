@@ -66,7 +66,14 @@ function Navbar({ loggedIn, setLoggedIn }) {
 
         {loggedIn ? (
           <>
-            {username && <li><span>Hello, {username}</span></li>}
+            {username && 
+              <li className="welcome-user"><span>Hello, {username}</span>
+                <ul className="dropdown-menu">
+                  <li><Link to="/profile">Your Profile</Link></li>
+                  <li><Link to="/reports">Your Reports</Link></li>
+                </ul>
+              </li>
+            }
             <li>
               <a className="btn2" href="#" onClick={(e) => {e.preventDefault(); handleLogout();}}>Logout</a>
             </li>

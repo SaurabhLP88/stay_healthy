@@ -18,100 +18,99 @@ const BookingConsultation = () => {
   console.log("BookingConsultation.js Loaded");
 
   useEffect(() => {
-          getDoctorsDetails();
-      }, [searchParams]);
-  
-      const getDoctorsDetails = () => {
-          fetch('https://api.npoint.io/9a5543d36f1460da2f63')
-          .then(res => res.json())
-          .then(data => {
-              setDoctors(data);
-  
-              if (searchParams.get('speciality')) {
-                  const filtered = data.filter(
-                      doctor => doctor.speciality.toLowerCase() === searchParams.get('speciality').toLowerCase()
-                  );
-                  setFilteredDoctors(filtered);
-                  setIsSearched(true);
-              } else {
-                  setFilteredDoctors([]);
-                  setIsSearched(false);
-              }
-          })
-          .catch(err => console.log(err));
-      }
-  
-      const handleSearch = (searchText) => {
-          if (!searchText) {
-              setFilteredDoctors([]);
-              setIsSearched(false);
-          } else {
-              const filtered = doctors.filter(
-                  doctor => doctor.speciality.toLowerCase().includes(searchText.toLowerCase())
+      getDoctorsDetails();
+  }, [searchParams]);
+
+  const getDoctorsDetails = () => {
+      fetch('https://api.npoint.io/9a5543d36f1460da2f63')
+      .then(res => res.json())
+      .then(data => {
+          setDoctors(data);
+
+          if (searchParams.get('speciality')) {
+              const filtered = data.filter(
+                  doctor => doctor.speciality.toLowerCase() === searchParams.get('speciality').toLowerCase()
               );
               setFilteredDoctors(filtered);
               setIsSearched(true);
+          } else {
+              setFilteredDoctors([]);
+              setIsSearched(false);
           }
+      })
+      .catch(err => console.log(err));
+  }
+  
+  const handleSearch = (searchText) => {
+      if (!searchText) {
+          setFilteredDoctors([]);
+          setIsSearched(false);
+      } else {
+          const filtered = doctors.filter(
+              doctor => doctor.speciality.toLowerCase().includes(searchText.toLowerCase())
+          );
+          setFilteredDoctors(filtered);
+          setIsSearched(true);
+      }
+  };  
+  
+  const handleBook = (newAppointment) => {
+      //console.log("handleBook called with:", doctor);
+
+      const patientName = sessionStorage.getItem("email");
+
+      //console.log("patientName:", patientName);
+
+      const doctor = {
+          name: newAppointment.doctorName,
+          speciality: newAppointment.doctorSpeciality
       };
-  
-  
-      const handleBook = (newAppointment) => {
-          //console.log("handleBook called with:", doctor);
-  
-          const patientName = sessionStorage.getItem("email");
-  
-          //console.log("patientName:", patientName);
-  
-          const doctor = {
-              name: newAppointment.doctorName,
-              speciality: newAppointment.doctorSpeciality
-          };
-          
-          const appointmentData = {
-              appointmentDate: newAppointment.appointmentDate,
-              appointmentTime: newAppointment.appointmentTime,
-              name: newAppointment.patientName,
-              phoneNumber: newAppointment.phoneNumber
-          };
-  
-          const notificationData = {
-              title: "Appointment Details",
-              message: `
-                  <p><b>Doctor:</b> ${doctor.name}</p>
-                  <p><b>Speciality:</b> ${doctor.speciality}</p>
-                  <p><b>Patient:</b> ${appointmentData.name}</p>
-                  <p><b>Phone:</b> ${appointmentData.phoneNumber}</p>
-                  <p><b>Date:</b> ${appointmentData.appointmentDate}</p>
-                  <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
-              `.trim()
-          };
-  
-          // Store notification in localStorage
-          localStorage.setItem('appointmentNotification', JSON.stringify(notificationData));
-          setNotification(notificationData);
-  
-          // Debug: verify all fields
-          //console.log("📋 appointmentData:", appointmentData);
-  
-          // Save in state
-          setBookings(prev => [...prev, { doctor, appointmentData }]);
-          //console.log("✅ Booking saved:", { doctor, appointmentData });
-  
-          // Save in localStorage
-          localStorage.setItem("doctorData", JSON.stringify({ name: doctor.name }));
-          localStorage.setItem(doctor.name, JSON.stringify(appointmentData));
-          //console.log("💾 Saved to localStorage:", doctor.name, appointmentData);
-  
-          // Trigger Notification
-          window.dispatchEvent(new Event("appointmentBooked"));        
-  
-          /*console.log("🔔 Notification set:", {
-              title: "Appointment Details",
-              ...appointmentData
-          });*/
-  
-          alert(`Appointment booked for ${appointmentData.name} with ${doctor.name}`);
+      
+      const appointmentData = {
+          appointmentDate: newAppointment.appointmentDate,
+          appointmentTime: newAppointment.appointmentTime,
+          name: newAppointment.patientName,
+          phoneNumber: newAppointment.phoneNumber
       };
+
+      const notificationData = {
+          title: "Appointment Details",
+          message: `
+              <p><b>Doctor:</b> ${doctor.name}</p>
+              <p><b>Speciality:</b> ${doctor.speciality}</p>
+              <p><b>Patient:</b> ${appointmentData.name}</p>
+              <p><b>Phone:</b> ${appointmentData.phoneNumber}</p>
+              <p><b>Date:</b> ${appointmentData.appointmentDate}</p>
+              <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
+          `.trim()
+      };
+
+      // Store notification in localStorage
+      localStorage.setItem('appointmentNotification', JSON.stringify(notificationData));
+      setNotification(notificationData);
+
+      // Debug: verify all fields
+      //console.log("📋 appointmentData:", appointmentData);
+
+      // Save in state
+      setBookings(prev => [...prev, { doctor, appointmentData }]);
+      //console.log("✅ Booking saved:", { doctor, appointmentData });
+
+      // Save in localStorage
+      localStorage.setItem("doctorData", JSON.stringify({ name: doctor.name }));
+      localStorage.setItem(doctor.name, JSON.stringify(appointmentData));
+      //console.log("💾 Saved to localStorage:", doctor.name, appointmentData);
+
+      // Trigger Notification
+      window.dispatchEvent(new Event("appointmentBooked"));        
+
+      /*console.log("🔔 Notification set:", {
+          title: "Appointment Details",
+          ...appointmentData
+      });*/
+
+      alert(`Appointment booked for ${appointmentData.name} with ${doctor.name}`);
+  };
 
   return (
 
@@ -120,11 +119,12 @@ const BookingConsultation = () => {
       <div className="search-results-container">
           {isSearched ? (
               <div className="search-results-cover">
-                  <h2 className="search-results-title">{filteredDoctors.length} doctors are available {searchParams.get('location')}</h2>
-                  <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>
-                  <div className="doctor-results-container">
-                      {filteredDoctors.length > 0 ? (
-                          filteredDoctors.map(doctor => (
+                  <h2 className="search-results-title">{filteredDoctors.length} doctors are available</h2>                              
+                    {filteredDoctors.length > 0 ? (
+                      <>
+                        <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>      
+                        <div className="doctor-results-container">
+                          {filteredDoctors.map(doctor => (
                               <DoctorCard
                                   key={doctor.name}
                                   name={doctor.name}
@@ -135,11 +135,12 @@ const BookingConsultation = () => {
                                   onBook={(appointmentData) => handleBook(appointmentData)}
                                   setNotification={setNotification}
                               />
-                          ))
-                      ) : (
-                          <p>No doctors found.</p>
-                      )}
-                  </div>
+                          ))}
+                        </div>
+                      </>                      
+                    ) : (
+                        <p className='text-center'>No doctors found for {searchParams.get('speciality')}.</p>
+                    )}                  
               </div>
           ) : ''}
       </div>
