@@ -3,7 +3,7 @@ import './ReviewForm.css';
 
 const ReviewForm = ({ onSubmit }) => {
 
-  console.log("ReviewForm.js Loaded");
+  //console.log("ReviewForm.js Loaded");
 
   const [showForm, setShowForm] = useState(false);
   const [submittedMessage, setSubmittedMessage] = useState('');

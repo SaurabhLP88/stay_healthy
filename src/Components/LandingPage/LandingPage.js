@@ -18,11 +18,11 @@ const LandingPage = () => {
     const section = document.getElementById("services");
     if (section) section.scrollIntoView({ behavior: "smooth" });
   };
-  console.log("LandingPage.js Loaded");
+  //console.log("LandingPage.js Loaded");
 
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-  console.log("User logged in status:", isLoggedIn);
+  const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+  //console.log("User logged in status:", isLoggedIn);
   const handleNavigate = (path) => {
     if (isLoggedIn) {
       navigate(path);
@@ -83,7 +83,7 @@ const LandingPage = () => {
               <h3>Book an Appointment</h3>
             </div>
 
-            <Link to="/instant-consultation" className="service-card">
+            <Link to="/self-check" className="service-card">
               <img src={self} alt="Self Checkup" />
               <h3>Self Checkup</h3>
             </Link>

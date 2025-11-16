@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import "./AppointmentForm.css";
 
 const AppointmentForm = ({ doctorName, onSubmit }) => {
-  console.log("AppointmentForm.js Loaded");
+  //console.log("AppointmentForm.js Loaded");
 
   const timeSlots = [
     "09:00 AM - 09:30 AM",

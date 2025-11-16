@@ -17,7 +17,7 @@ const InstantConsultation = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    console.log("InstantConsultation.js Loaded");
+    //console.log("InstantConsultation.js Loaded");
 
     useEffect(() => {
         getDoctorsDetails();

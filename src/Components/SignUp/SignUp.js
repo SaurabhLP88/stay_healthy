@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { API_URL } from "../../config";
+
 import "./SignUp.css";
 
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function SignUp({ setLoggedIn }) {
-  console.log("SignUp.js Loaded");
+  //console.log("SignUp.js Loaded");
   const navigate = useNavigate();
   const initialFormState = {
     name: "",
@@ -47,25 +49,53 @@ function SignUp({ setLoggedIn }) {
 
   // Mock API call
   const apiCallToRegister = async (data) => {
-    console.log("Form submitted:", data);
-    return new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      console.log("Sending to backend:", data);
+      const response = await fetch(`${API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      console.log("Raw response:", response);
+      console.log("Result JSON:", result);
+
+      if (response.ok && result.authtoken) {
+        sessionStorage.setItem("auth-token", result.authtoken);
+        return result;
+      } else {
+        alert(result.error || result.message || "Registration failed");
+        return null;
+      }
+      
+    } catch (error) {
+      console.error("Signup error:", error);
+      return null;
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      await apiCallToRegister(formData); // replace with actual API
-      sessionStorage.setItem("email", formData.email); // persist login
-      sessionStorage.setItem("role", formData.role); // store role
-      sessionStorage.setItem("name", formData.name);
-      setLoggedIn(true); // update App state
-      navigate("/"); // redirect to home
+      const result = await apiCallToRegister(formData);
+      if (result) {
+        alert("Registration successful! Please login from the Login page.");
+        //sessionStorage.setItem("auth-token", result.authtoken);
+        sessionStorage.setItem("email", result.email); // persist login
+        //sessionStorage.setItem("role", result.role); // store role
+        sessionStorage.setItem("phone", result.phone); 
+        sessionStorage.setItem("name", result.name);
+        //setLoggedIn(true); // update App state       
+        setFormData(initialFormState); // Clear form        
+        navigate("/login"); // Redirect user to login page
+      }
     }
+    console.log("Submitting formData:", formData);
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(true);
-    setTimeout(() => setShowPassword(false), 3000); // revert after 3 seconds
+    setShowPassword(prev => !prev);
   };
 
   return (
@@ -89,8 +119,8 @@ function SignUp({ setLoggedIn }) {
                 className="form-control"
               >
                 <option value="">Select your role</option>
-                <option value="doctor">Doctor</option>
-                <option value="patient">Patient</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Patient">Patient</option>
               </select>
               {errors.role && <span className="error">{errors.role}</span>}
             </div>

@@ -4,7 +4,7 @@ import ReviewForm from "../ReviewForm/ReviewForm";
 
 const Reviews = () => {
 
-    console.log("Reviews.js Loaded");
+  //console.log("Reviews.js Loaded");
 
   const [reviews, setReviews] = useState([
     { id: 1, doctorName: "Dr. Priya Sharma", speciality: "Dermatologist", review: "" },

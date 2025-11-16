@@ -15,7 +15,7 @@ const BookingConsultation = () => {
 
   const navigate = useNavigate();
 
-  console.log("BookingConsultation.js Loaded");
+  //console.log("BookingConsultation.js Loaded");
 
   useEffect(() => {
       getDoctorsDetails();

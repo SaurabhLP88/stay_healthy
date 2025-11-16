@@ -14,7 +14,7 @@ const initSpeciality = [
 
 const FindDoctorSearch = () => {
 
-    console.log("FindDoctorSearch.js Loaded");
+    //console.log("FindDoctorSearch.js Loaded");
 
     const [doctorResultHidden, setDoctorResultHidden] = useState(true);
     const [searchDoctor, setSearchDoctor] = useState('');

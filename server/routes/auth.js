@@ -40,13 +40,14 @@ passport.deserializeUser(function (id, cb) {
 router.post('/register',[
     body('email', "Please Enter a Vaild Email").isEmail(),
     body('name', "Username should be at least 4 characters.").isLength({ min: 4 }),
-    body('password', "Password Should Be At Least 8 Characters.").isLength({ min: 8 }),
+    body('password', "Password Should Be At Least 6 Characters.").isLength({ min: 6 }),
     body('phone', "Phone Number Should Be 10 Digits.").isLength({ min: 10 }),
+    body('role', "Role is required").notEmpty(),
 ], async (req, res) => {
 
-    const error = validationResult(req);
-    if(!error.isEmpty()){
-        return res.status(400).json({error: error.array()});
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()});
     }
 
     try {
@@ -59,6 +60,7 @@ router.post('/register',[
         const hash = await bcrypt.hash(req.body.password, salt);
         
         const newUser =  await UserSchema.create({
+            role: req.body.role,
             email: req.body.email,
             name: req.body.name,
             password: hash,
@@ -71,7 +73,7 @@ router.post('/register',[
                 id: newUser.id,
             }
         }
-        const authtoken = jwt.sign(payload, JWT_SECRET);
+        const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
         res.json({ authtoken });
 
     } catch (error) {
@@ -95,8 +97,8 @@ router.post('/login', [
         const theUser = await UserSchema.findOne({ email: req.body.email }); // <-- Change req.body.username to req.body.name
             // console.log('my',theUser.name);
         // req.session.name=theUser.name
-        req.session.email = req.body.email; // <-- Change req.body.username to req.body.name
-        console.log(req.session.email);
+        //req.session.email = req.body.email; // <-- Change req.body.username to req.body.name
+        //console.log(req.session.email);
         // console.log(req.session.name);
         if (theUser) {
             let checkHash = await bcrypt.compare(req.body.password, theUser.password);
@@ -106,8 +108,13 @@ router.post('/login', [
                         id: theUser.id
                     }
                 }
-                const authtoken = jwt.sign(payload, JWT_SECRET);
-                return res.status(200).json({ authtoken });
+                const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+                res.status(200).json({
+                    authtoken,
+                    name: theUser.name,
+                    email: theUser.email
+                });
+
             } else {
                 return res.status(403).json({ error: "Invalid Credentials" });
             }
@@ -132,7 +139,7 @@ router.put('/update', [
     try {
         const { name } = req.body;
 
-        const existingUser = await UserSchema.findOne({ username: name });
+        const existingUser = await UserSchema.findOne({name });
         if (!existingUser) {
             return res.status(404).json({ error: "User not found" });
         }
@@ -148,7 +155,7 @@ router.put('/update', [
             },
         };
 
-        const authtoken = jwt.sign(payload, JWT_SECRET);
+        const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
         res.json({ authtoken });
     } catch (error) {
         console.error(error);
@@ -193,38 +200,44 @@ router.put('/user', [
     ], async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ errors: errors.array() });
         }
     
         try {
-        const email = req.headers.email; // Extract the email from the request headers
-    
-        if (!email) {
-            return res.status(400).json({ error: "Email not found in the request headers" });
-        }
-    
-        const existingUser = await UserSchema.findOne({ email });
-        if (!existingUser) {
-            return res.status(404).json({ error: "User not found" });
-        }
-    
-        existingUser.name = req.body.name;
-        existingUser.phone = req.body.phone;
-        existingUser.updatedAt = Date();
-    
-        const updatedUser = await existingUser.save();
-    
-        const payload = {
-            user: {
-            id: updatedUser.id,
-            },
-        };
-    
-        const authtoken = jwt.sign(payload, JWT_SECRET);
-        res.json({ authtoken });
+            const email = req.headers.email; // Extract the email from the request headers
+        
+            if (!email) {
+                return res.status(400).json({ error: "Email not found in the request headers" });
+            }
+        
+            const existingUser = await UserSchema.findOne({ email });
+            if (!existingUser) {
+                return res.status(404).json({ error: "User not found" });
+            }
+        
+            existingUser.name = req.body.name;
+            existingUser.phone = req.body.phone;
+
+            if (req.body.password && req.body.password.trim() !== "") {
+                const salt = await bcrypt.genSalt(10);
+                existingUser.password = await bcrypt.hash(req.body.password, salt);
+            }
+
+            existingUser.updatedAt = Date();
+        
+            const updatedUser = await existingUser.save();
+        
+            const payload = {
+                user: {
+                id: updatedUser.id,
+                },
+            };
+        
+            const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+            res.json({ authtoken });
         } catch (error) {
-        console.error(error);
-        return res.status(500).send("Internal Server Error");
+            console.error(error);
+            return res.status(500).send("Internal Server Error");
         }
 });
 

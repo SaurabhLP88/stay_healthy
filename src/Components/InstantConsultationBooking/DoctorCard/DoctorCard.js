@@ -19,12 +19,12 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
       try {
           return savedAppointment ? [JSON.parse(savedAppointment)] : [];
       } catch (error) {
-          console.error('Error parsing saved appointment:', error);
+          //console.error('Error parsing saved appointment:', error);
           return [];
       }
   });
 
-  console.log("Doctor Set Loaded");
+  //console.log("Doctor Set Loaded");
 
   /*useEffect(() => {
     // Check localStorage on mount and when appointments change

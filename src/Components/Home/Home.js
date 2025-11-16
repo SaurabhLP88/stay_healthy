@@ -9,7 +9,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [notification, setNotification] = useState(null);
 
-  console.log("Home.js Loaded");
+  //console.log("Home.js Loaded");
 
   useEffect(() => {
     // Load notification on mount

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 
+import Setauthtoken from "./Setauthtoken";
 import Home from "./Components/Home/Home";
 import LandingPage from "./Components/LandingPage/LandingPage";
 import SignUp from "./Components/SignUp/SignUp";
@@ -10,11 +11,13 @@ import BookingConsultation from "./Components/InstantConsultationBooking/Booking
 import HealthTips from "./Components/HealthTips/HealthTips";
 import Reviews from "./Components/Reviews/Reviews";
 import Reports from "./Components/Reports/Reports";
+import ProfileForm from "./Components/ProfileCard/ProfileCard";
+import SelfCheck from "./Components/SelfCheck/SelfCheck";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  console.log("App.js Loaded");
+  //console.log("App.js Loaded");
   //basename={process.env.PUBLIC_URL}
 
   return (
@@ -22,6 +25,7 @@ function App() {
       <HashRouter basename="/">
         <Home loggedIn={loggedIn} setLoggedIn={setLoggedIn}>
           <Routes>
+            <Route path="/setauthtoken/:authtoken" element={<Setauthtoken />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/signup" element={<SignUp setLoggedIn={setLoggedIn} />} />
             <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
@@ -30,6 +34,8 @@ function App() {
             <Route path="/health-tips" element={<HealthTips />} />
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/profile" element={<ProfileForm />} />
+            <Route path="/self-check" element={<SelfCheck />} />
           </Routes>
         </Home>
       </HashRouter>

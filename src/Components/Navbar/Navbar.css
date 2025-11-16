@@ -5,8 +5,9 @@ nav {padding:1.5rem; position:fixed; top:0%; left:50%; transform:translateX(-50%
 .dropdown-menu li {display:block;}
 .dropdown-menu li a {color:#333; text-decoration:none; display:block; transition:color 0.3s ease; padding:5px 10px;}
 .dropdown-menu li a:hover {color:#2190ff;}
-.nav__logo {font-size:2rem; font-weight:600; color:#0d213f; cursor:pointer;}
-.nav__logo span {color:#3685fb;}
+.nav__logo {font-size:2rem; font-weight:600;}
+.nav__logo a {color:#3685fb; cursor:pointer; text-decoration:none;} 
+.nav__logo a:hover {color:#3685fb; text-decoration:none;}
 .nav__icon {display:none; font-size:2rem; cursor:pointer;}
 .nav__links {list-style:none; display:flex; align-items:center; gap:1rem; font-size:1rem; font-weight:500;}
 .link a {padding:0 1rem; color:#0d213f; transition:0.3s;}

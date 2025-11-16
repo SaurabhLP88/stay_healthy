@@ -9,14 +9,13 @@ function Navbar({ loggedIn, setLoggedIn }) {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const navigate = useNavigate();
-  console.log("Navbar.js Loaded");
+  //console.log("Navbar.js Loaded");
 
   const handleClick = () => setClick(!click);
 
   const handleLogout = () => {
     setLoggedIn(false);
     sessionStorage.clear();
-    localStorage.clear();
     navigate("/login");
   };
 
@@ -24,34 +23,31 @@ function Navbar({ loggedIn, setLoggedIn }) {
   const handleDropdown = () => setShowDropdown(!showDropdown);
 
   useEffect(() => {
-    const name = sessionStorage.getItem("name") || localStorage.getItem("name");
-    const isLoggedIn =
-      sessionStorage.getItem("isLoggedIn") === "true" ||
-      localStorage.getItem("isLoggedIn") === "true";
+    const name = sessionStorage.getItem("name");
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
 
     if (isLoggedIn) {
       setLoggedIn(true);
       setUsername(name || "");
-      console.log("Signed-in User Details:", { name, isLoggedIn });
+      //console.log("Signed-in User Details:", { name, isLoggedIn });
     } else {
       setLoggedIn(false);
       setUsername("");
     }
-  }, [loggedIn]);
+  }, [loggedIn, sessionStorage.getItem("name")]);
 
 
-  console.log("User details:", {
+  /*console.log("User details:", {
     email: localStorage.    getItem("email"),
     isLoggedIn: localStorage.getItem("isLoggedIn"),
-  });
+  });*/
 
   return (
     <nav className="navbar">
       <div className="nav__logo">
         <Link to="/">
-          StayHealthy <i style={{ color: "#2190FF" }} className="fa fa-user-md"></i>
+          StayHealthy <i className="fa fa-user-md"></i>
         </Link>
-        <span>.</span>
       </div>
 
       <div className="nav__icon" onClick={handleClick}>
