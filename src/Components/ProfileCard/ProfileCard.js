@@ -10,6 +10,7 @@ const ProfileForm = () => {
   const [updatedDetails, setUpdatedDetails] = useState({ password: "" });
   const [editMode, setEditMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordChanged, setPasswordChanged] = useState(false);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -32,7 +33,7 @@ const ProfileForm = () => {
         const response = await fetch(`${API_URL}/api/auth/user`, {
           headers: {
             "Authorization": `Bearer ${authtoken}`,
-            "Email": email, // Add the email to the headers
+            "email": email, // Add the email to the headers
           },
         });
         if (response.ok) {
@@ -94,12 +95,13 @@ const ProfileForm = () => {
       }
 
       const payload = { ...updatedDetails };
+      if (!payload.password) delete payload.password;
       const response = await fetch(`${API_URL}/api/auth/user`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${authtoken}`,
           "Content-Type": "application/json",
-          "Email": email,
+          "email": email,
         },
         body: JSON.stringify(payload),
       });
@@ -109,13 +111,22 @@ const ProfileForm = () => {
         sessionStorage.setItem("name", updatedDetails.name);
         sessionStorage.setItem("phone", updatedDetails.phone);
 
-        setUserDetails(updatedDetails);
+        setUserDetails({
+          ...userDetails,
+          name: updatedDetails.name,
+          phone: updatedDetails.phone,
+        });
         setEditMode(false);
         
-        sessionStorage.setItem("name", updatedDetails.name); // Force navbar to refresh immediately
-        sessionStorage.setItem("phone", updatedDetails.phone);
-        
-        alert(`Profile Updated Successfully!`); // Display success message to the user
+        if (updatedDetails.password) {
+          setPasswordChanged(true);
+          alert("Password updated successfully! Please login again.");
+          sessionStorage.clear();
+          navigate("/login");
+          return;
+        }
+
+        alert("Profile Updated Successfully!");
         navigate("/");
       } else {
         // Handle error case

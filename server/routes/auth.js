@@ -234,7 +234,10 @@ router.put('/user', [
             };
         
             const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
-            res.json({ authtoken });
+            res.json({ 
+                authtoken,
+                passwordChanged: !!req.body.password    // true if password was updated
+            });
         } catch (error) {
             console.error(error);
             return res.status(500).send("Internal Server Error");

@@ -56,8 +56,10 @@ function Navbar({ loggedIn, setLoggedIn }) {
 
       <ul className={click ? "nav__links active" : "nav__links"}>
         <li className="link"><Link to="/">Home</Link></li>
-        <li className="link"><Link to="/search/doctors">Appointments</Link></li>
-        <li className="link"><Link to="/healthblog">Health Blog</Link></li>
+        {loggedIn && (
+          <li className="link"><Link to="/appointments">Appointments</Link></li>
+        )}
+        <li className="link"><Link to="/health-blog">Health Blog</Link></li>
         <li className="link"><Link to="/reviews">Reviews</Link></li>
 
         {loggedIn ? (

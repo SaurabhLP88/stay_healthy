@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { API_URL } from "../../config";
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import FindDoctorSearch from './FindDoctorSearch/FindDoctorSearch';
 import DoctorCard from './DoctorCard/DoctorCard';
@@ -24,7 +25,8 @@ const InstantConsultation = () => {
     }, [searchParams]);
 
     const getDoctorsDetails = () => {
-        fetch('https://api.npoint.io/9a5543d36f1460da2f63')
+        //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
+        fetch(`${API_URL}/api/doctors`)
         .then(res => res.json())
         .then(data => {
             setDoctors(data);

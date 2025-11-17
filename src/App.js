@@ -13,6 +13,8 @@ import Reviews from "./Components/Reviews/Reviews";
 import Reports from "./Components/Reports/Reports";
 import ProfileForm from "./Components/ProfileCard/ProfileCard";
 import SelfCheck from "./Components/SelfCheck/SelfCheck";
+import Appointments from "./Components/Appointments/Appointments"
+import HealthBlog from "./Components/HealthBlog/HealthBlog"
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -31,11 +33,13 @@ function App() {
             <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
             <Route path="/instant-consultation" element={<InstantConsultation />} />
             <Route path="/book-consultation" element={<BookingConsultation />} />
+            <Route path="/appointments" element={<Appointments />} />
             <Route path="/health-tips" element={<HealthTips />} />
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/profile" element={<ProfileForm />} />
             <Route path="/self-check" element={<SelfCheck />} />
+            <Route path="/health-blog" element={<HealthBlog />} />
           </Routes>
         </Home>
       </HashRouter>

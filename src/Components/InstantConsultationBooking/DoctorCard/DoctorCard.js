@@ -24,6 +24,8 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
       }
   });
 
+  const starRating = "⭐".repeat(ratings);
+
   //console.log("Doctor Set Loaded");
 
   /*useEffect(() => {
@@ -115,7 +117,7 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
           <div className="doctor-card-detail-name">{name}</div>
           <div className="doctor-card-detail-speciality">{speciality}</div>
           <div className="doctor-card-detail-experience">{experience} years experience</div>
-          <div className="doctor-card-detail-consultationfees">Ratings: {ratings}</div>
+          <div className="doctor-card-detail-consultationfees">Ratings: {starRating}</div>
         </div>
       </div>
 
@@ -147,7 +149,7 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
                   <div className="doctor-card-detail-name">{name}</div>
                   <div className="doctor-card-detail-speciality">{speciality}</div>
                   <div className="doctor-card-detail-experience">{experience} years experience</div>
-                  <div className="doctor-card-detail-consultationfees">Ratings: {ratings}</div>
+                  <div className="doctor-card-detail-consultationfees">Ratings: {starRating}</div>
                 </div>
               </div>             
 

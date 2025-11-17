@@ -1,0 +1,22 @@
+.healthblog-container {max-width:1100px; margin:auto; padding:8em 15px 2em;}
+.hb-title {font-size:32px; font-weight:bold; text-align:center;}
+.hb-subtitle {text-align:center; font-size:16px; margin-bottom:20px; color:#555;}
+.hb-searchbar {text-align:center; margin-bottom:20px;}
+.hb-searchbar input {width:60%; padding:10px 12px; border-radius:8px; border:1px solid #ccc; font-size:15px;}
+.hb-categories {display:flex; gap:10px; overflow-x:auto; padding-bottom:10px; margin-bottom:20px;}
+.hb-category-btn {padding:8px 15px; background:#e8e8e8; border:none; border-radius:20px; cursor:pointer; white-space:nowrap;}
+.hb-category-btn.active {background:#0066ff; color:white;}
+.hb-videos-section { margin-bottom: 30px; }
+.hb-videos-grid {display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;}
+.hb-video-card {background:white; padding:15px; border-radius:12px; box-shadow:0 2px 6px rgba(0, 0, 0, 0.1);}
+.hb-video-card img {width:100%; height:200px; border-radius:8px; object-fit:contain; margin-bottom:10px;}
+.read-more-btn, .watch-btn {margin-top:10px; padding:8px; width:100%; border:none; border-radius:8px; cursor:pointer;}
+.watch-btn {background:#0066ff; color:white;}
+.load-more-container {text-align:center; margin:20px 0;}
+.load-more-btn {padding:10px 20px; background:#004ecc; color:white; border:none; border-radius:8px; cursor:pointer; width: auto;}
+.tips-title {margin-bottom:20px; font-size:26px;}
+.hb-tips-section {margin-bottom:15px;}
+.hb-tips-list {margin-bottom:15px;}
+.hb-tip-card {background:white; padding:12px 15px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0, 0, 0, 0.1);}
+.hb-tip-header {display:flex; justify-content:space-between; cursor:pointer;}
+.hb-tip-content {margin-top:10px; color:#444;}

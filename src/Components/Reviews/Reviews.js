@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Reviews.css";
 import ReviewForm from "../ReviewForm/ReviewForm";
 
 const Reviews = () => {
 
   //console.log("Reviews.js Loaded");
-
-  const [reviews, setReviews] = useState([
-    { id: 1, doctorName: "Dr. Priya Sharma", speciality: "Dermatologist", review: "" },
-    { id: 2, doctorName: "Dr. Richard Pearson", speciality: "General Physician", review: "" },
-    { id: 3, doctorName: "Dr. Anjali Verma", speciality: "Gynecologist", review: "" },
-  ]);
-
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [tempReview, setTempReview] = useState("");
   const [rating, setRating] = useState(0);
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/appointments/closed")  // update URL according to backend
+      .then(res => res.json())
+      .then(data => setReviews(data))
+      .catch(err => console.error("Error fetching reviews:", err));
+  }, []);
 
   const handleOpenReview = (doctor) => {
     setSelectedDoctor(doctor);
@@ -37,6 +38,10 @@ const Reviews = () => {
     <div className="reviews-container">
       <h2 className="reviews-title">Reviews</h2>
 
+      {reviews.length === 0 ? (
+        <p className="no-reviews">No reviews available</p>
+      ) : (
+
       <table className="reviews-table">
         <thead>
           <tr>
@@ -45,6 +50,7 @@ const Reviews = () => {
             <th>Speciality</th>
             <th>Provide Review</th>
             <th>Review Given</th>
+            <th>Rating</th>
           </tr>
         </thead>
         <tbody>
@@ -52,7 +58,9 @@ const Reviews = () => {
             <tr key={doctor.id}>
               <td>{index + 1}</td>
               <td>{doctor.doctorName}</td>
-              <td>{doctor.speciality}</td>
+              <td>{doctor.speciality}</td>              
+              <td>{doctor.review || "—"}</td>
+              <td>{doctor.rating ? `(${ "⭐".repeat(doctor.rating) })` : "—"}</td>
               <td>
                 <button
                     className={`review-btn ${doctor.review ? "disabled-btn" : ""}`}
@@ -62,19 +70,12 @@ const Reviews = () => {
                     {doctor.review ? "Reviewed" : "Give Review"}
                 </button>
               </td>
-              <td>
-                {doctor.review ? (
-                    <>
-                    {doctor.review} ({"⭐".repeat(doctor.rating || 0)})
-                    </>
-                ) : (
-                    "—"
-                )}
-                </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      )}
 
       {selectedDoctor && (
         <div className="review-modal" onClick={() => setSelectedDoctor(null)}>

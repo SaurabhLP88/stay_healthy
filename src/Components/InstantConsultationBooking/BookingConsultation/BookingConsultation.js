@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { API_URL } from "../../../config";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import FindDoctorSearch from "../FindDoctorSearch/FindDoctorSearch"; // adjust path if needed
 import DoctorCard from "../DoctorCard/DoctorCard";
@@ -22,7 +23,8 @@ const BookingConsultation = () => {
   }, [searchParams]);
 
   const getDoctorsDetails = () => {
-      fetch('https://api.npoint.io/9a5543d36f1460da2f63')
+      //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
+      fetch(`${API_URL}/api/doctors`)
       .then(res => res.json())
       .then(data => {
           setDoctors(data);
@@ -38,7 +40,7 @@ const BookingConsultation = () => {
               setIsSearched(false);
           }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   }
   
   const handleSearch = (searchText) => {

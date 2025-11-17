@@ -1,27 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Reports.css";
 import sampleReport from "../../assets/documents/Sample-Report.pdf";
 
 function Reports() {
-  // Sample data — replace with your actual data later
-  const reportsData = [
-    { id: 1, name: "Dr. Arjun Mehta", specialty: "Cardiologist" },
-    { id: 2, name: "Dr. Priya Sharma", specialty: "Dermatologist" },
-    { id: 3, name: "Dr. Karan Patel", specialty: "Neurologist" },
-    { id: 4, name: "Dr. Neha Kapoor", specialty: "Pediatrician" },
-  ];
+  const [reportsData, setReportsData] = useState([]);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/appointments/reports");
+        const data = await res.json();
+        setReportsData(data); 
+      } catch (err) {
+        console.error("Error fetching reports:", err);
+      }
+    };
+
+    fetchReports();
+  }, []);
 
   // Open PDF in new tab
   const handleView = (doctor) => {
      alert(`Viewing report for ${doctor.name}`);
-    window.open(sampleReport, "_blank");
+    window.open(doctor.reportUrl, "_blank");
   };
 
   // Download PDF
   const handleDownload = (doctor) => {
     alert(`Downloading report for ${doctor.name}`);
     const link = document.createElement("a");
-    link.href = sampleReport;
+    link.href = doctor.reportUrl;
     link.download = "Sample-Report.pdf";
     document.body.appendChild(link);
     link.click();
@@ -32,6 +40,7 @@ function Reports() {
     <div className="reports-container">
       <h2 className="reports-title">Reports Overview</h2>
 
+      {reportsData.length > 0 ? (
       <table className="reports-table">
         <thead>
           <tr>
@@ -69,6 +78,9 @@ function Reports() {
           ))}
         </tbody>
       </table>
+      ) : (
+        <p className="no-report-msg">No reports available.</p>
+      )}
     </div>
   );
 }

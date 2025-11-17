@@ -9,21 +9,15 @@ const connectToMongo = async (retryCount) => {
         //await mongoose.connect(mongoURI, { dbName: 'stayhealthybeta1'});
         await mongoose.connect(mongoURI);
         console.info('Connected to Mongo Successfully')
-
         return;
     } catch (error) {
         console.error(error);
-
         const nextRetryCount = count + 1;
-
         if (nextRetryCount >= MAX_RETRIES) {
             throw new Error('Unable to connect to Mongo!');
         }
-
         console.info(`Retrying, retry count: ${nextRetryCount}`)
-
         return await connectToMongo(nextRetryCount);
-
     }
 };
 

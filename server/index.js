@@ -15,6 +15,7 @@ connectToMongo();
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use("/api/doctors", require("./routes/doctorRoutes"));
 
 app.use(express.static(path.join(__dirname, "..", "build")));
 
