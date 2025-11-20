@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { API_URL } from "../../../config";
 import "./AppointmentForm.css";
 
-const AppointmentForm = ({ doctorName, onSubmit }) => {
+const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
   //console.log("AppointmentForm.js Loaded");
 
   const timeSlots = [
@@ -49,46 +50,74 @@ const AppointmentForm = ({ doctorName, onSubmit }) => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =  async (e) => {
     e.preventDefault();
 
-    //console.log("Form submitted");
+    console.log("Form submitted");
 
    const validationFn =
       location.pathname === "/instant-consultation"
         ? validateInstantForm
         : validateBookingForm;
-    //console.log("Validation errors:", newErrors);
+
+    /*console.log("Using validation function:", 
+      location.pathname === "/instant-consultation"
+        ? "validateInstantForm"
+        : "validateBookingForm"
+    );*/
 
     const newErrors = validationFn();
+    console.log("Validation result:", newErrors);
 
     if (Object.keys(newErrors).length > 0) {
+      
+      console.log("Errors found, not submitting");
       setErrors(newErrors);
-      //console.log("Errors found, not submitting");
       return;
     }
 
-    //console.log("No errors, submitting data");
-    onSubmit({
+    //console.log("Validation passed, preparing form data");
+
+    const formData = {
       doctorName,
+      doctorSpeciality,
       patientName: name,
       phoneNumber,
       appointmentDate:
         location.pathname === "/instant-consultation"
-          ? new Date().toLocaleDateString() // auto-fill today for instant
+          ? new Date().toLocaleDateString()
           : appointmentDate,
       appointmentTime:
         location.pathname === "/instant-consultation"
           ? new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
           : appointmentTime,
-    });
+    };
 
-    // Clear form
-    setName("");
-    setPhoneNumber("");
-    setAppointmentDate("");
-    setAppointmentTime("");
-    setErrors({});
+    try {
+      // If parent provided an onSubmit handler, delegate (prevent duplicate POST)
+      if (onSubmit) {
+        console.log("Delegating save to parent via onSubmit:", formData);
+        onSubmit(formData);
+      } else {
+        console.log("No onSubmit prop — posting directly from AppointmentForm:", formData);
+        console.warn("Appointment saved from AppointmentForm");
+      }
+
+      alert("Appointment booked successfully!");
+
+      // Reset form
+      setName("");
+      setPhoneNumber("");
+      setAppointmentDate("");
+      setAppointmentTime("");
+      setErrors({});
+    } catch (err) {
+      console.error("Error saving appointment:", err);
+      alert("Could not save appointment, please try again.");
+    }
+
+
+
   };
 
   return (

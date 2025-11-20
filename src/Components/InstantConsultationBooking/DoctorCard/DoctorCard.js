@@ -1,32 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import Popup from 'reactjs-popup';
-import { v4 as uuidv4 } from 'uuid';
+import { API_URL } from '../../../config';
+//import { v4 as uuidv4 } from 'uuid';
 
 import AppointmentForm from '../AppointmentForm/AppointmentForm';
 
 import 'reactjs-popup/dist/index.css';
 import './DoctorCard.css';
 
-import picture from '../../../assets/images/doctor1.png';
+//import picture from '../../../assets/images/doctor1.png';
 
-const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
+const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) => {
+
+  //console.log("Doctor Set Loaded");
+  //console.log("DoctorCard props:", { image, name, speciality, experience, ratings, onBook });
+
   const [showModal, setShowModal] = useState(false);
-  const storageKey = `appointment_${name}_${speciality}`;
-  const [appointments, setAppointments] = useState(() => {
-      // Debug: Check what's in localStorage
-      const savedAppointment = localStorage.getItem(storageKey);
-      //console.log(`Initializing appointments for ${name}:`, savedAppointment);
-      try {
-          return savedAppointment ? [JSON.parse(savedAppointment)] : [];
-      } catch (error) {
-          //console.error('Error parsing saved appointment:', error);
-          return [];
-      }
-  });
+  const [doctor, setDoctor] = useState(null);
+  const [appointments, setAppointments] = useState([]);
 
   const starRating = "⭐".repeat(ratings);
 
-  //console.log("Doctor Set Loaded");
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      const token = sessionStorage.getItem("auth-token");
+      if (!token) return;
+
+      try {
+        const res = await fetch(`${API_URL}/api/appointments/my`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          console.error("Failed to fetch appointments:", res.status, res.statusText);
+          return;
+        }
+
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          console.error("Expected JSON, got:", contentType);
+          return;
+        }
+
+        const data = await res.json();
+        setAppointments(data);
+      } catch (err) {
+        console.error("Failed to fetch appointments:", err);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
 
   /*useEffect(() => {
     // Check localStorage on mount and when appointments change
@@ -41,77 +65,86 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
 
   const handleBookingClick = () => {
     
-    if (appointments && appointments.length > 0) {
+    if (appointments.length > 0) {
       setAppointments([]);
-      localStorage.removeItem(storageKey);
+      /*localStorage.removeItem(storageKey);
       localStorage.removeItem('appointmentNotification');
       localStorage.removeItem('doctorData');
       localStorage.removeItem('name');
-      window.dispatchEvent(new Event("appointmentCancelled"));
+      window.dispatchEvent(new Event("appointmentCancelled"));*/      
       setShowModal(false);  // Don't open modal, just close
     } else {
       // If no appointment (Book Appointment button), open the modal to book
       setShowModal(true);
-    }    
-  };
-
-  const handleCancel = (appointmentId, close) => {
-    /*const updatedAppointments = appointments.filter((appointment) => appointment.id !== appointmentId);
-    setAppointments(updatedAppointments);*/
-
-    setAppointments([]);
-    // Remove from localStorage
-    localStorage.removeItem(storageKey);
-    localStorage.removeItem('appointmentNotification');
-    localStorage.removeItem('doctorData');
-    localStorage.removeItem('name');
-    // You might want to trigger some parent callback here
-    window.dispatchEvent(new Event("appointmentCancelled"));
-    if (close) close();
-  };
-
-  const handleFormSubmit = (appointmentData) => {
-    const newAppointment = {
-      id: uuidv4(),
-      doctorName: name,
-      doctorSpeciality: speciality,
-      ...appointmentData,
-    };
-
-    // Call parent onBook function to save booking globally & trigger notification
-    if (onBook) {
-      onBook(newAppointment);
     }
-    //console.log('Saving new appointment:', newAppointment);
+    //console.log("Book/Cancel button clicked");
+    console.log("Current appointments state:", appointments);
+    //console.log("Local storage:", localStorage.getItem(storageKey));
+  };
 
-    localStorage.setItem(storageKey, JSON.stringify(newAppointment));
-    setAppointments([newAppointment]);
+  const handleCancel = async (appointmentId, close) => {
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) return;
 
-    //console.log(`Verification - appointment in localStorage:`, localStorage.getItem(storageKey));
+    try {
+      const res = await fetch(`${API_URL}/api/appointments/cancel/${appointmentId}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      const result = await res.json();
+      if (res.ok) {
+        setAppointments([]); // update state after cancel
+        window.dispatchEvent(new Event("appointmentCancelled"));
+        if (close) close();
+      } else {
+        console.error(result.error);
+        alert("Failed to cancel appointment");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
+    }
+  };
 
-    setShowModal(false);
-    //alert(`Appointment booked successfully with Dr. ${name}`);
+  const handleFormSubmit = async (appointmentData) => {
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) return alert("Please login first");
 
-    /*setNotification({
-      title: "Appointment Details",
-      message: `
-        Doctor: ${name}
-        Speciality: ${speciality}
-        Patient: ${appointmentData.patientName}
-        Phone: ${appointmentData.phoneNumber}
-        Date: ${appointmentData.appointmentDate}
-        Time: ${appointmentData.appointmentTime}
-      `,
-    });*/
+    try {
+      const res = await fetch(`${API_URL}/api/appointments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          //id: uuidv4(),
+          doctorName: name,
+          doctorSpeciality: speciality,
+          ...appointmentData,
+        })
+      });
 
-    
+      const result = await res.json();
+      if (res.ok) {
+        setAppointments([result.appointment]); // update state
+        alert(`Appointment booked successfully with Dr. ${name}`);
+        if (onBook) onBook(result.appointment); // trigger parent callback
+      } else {
+        console.error(result.error);
+        alert("Failed to book appointment");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
+    }
   };
 
   return (
     <div className="doctor-card-container">
       <div className="doctor-card-details-container">
         <div className="doctor-card-profile-image-container">
-          <img src={picture} alt="Instant Consultation" />
+          <img src={image} alt="Instant Consultation" />
         </div>
         <div className="doctor-card-details">
           <div className="doctor-card-detail-name">{name}</div>
@@ -125,8 +158,8 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
         <Popup
           trigger={            
 
-            <button className={`btn btn-primary book-appointment-btn ${ appointments && appointments.length > 0 ? 'cancel-appointment' : ''}`}  onClick={handleBookingClick}>
-              {appointments && appointments.length > 0 ? (
+            <button className={`btn btn-primary book-appointment-btn ${ appointments.length > 0 ? 'cancel-appointment' : ''}`}  onClick={handleBookingClick}>
+              {appointments.length > 0 ? (
                 <div>Cancel Appointment</div>
               ) : (
                 <div>Book Appointment</div>
@@ -143,7 +176,7 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
             <div className="appointment-main">
               <div className="doctor-card-details-container">
                 <div className="doctor-card-profile-image-container">
-                  <img src={picture} alt="Instant Consultation" />
+                  <img src={image} alt="Instant Consultation" />
                 </div>
                 <div className="doctor-card-details">
                   <div className="doctor-card-detail-name">{name}</div>
@@ -172,7 +205,8 @@ const DoctorCard = ({ name, speciality, experience, ratings, onBook }) => {
                 <AppointmentForm
                   doctorName={name}
                   doctorSpeciality={speciality}
-                  onSubmit={(data) => {
+                  onSubmit={(data) => { 
+                    console.log("handleFormSubmit:", data);
                     handleFormSubmit(data);
                     close();
                   }}

@@ -1,11 +1,11 @@
-import React from "react";
-import "./SelfCheck.css";
+import { useEffect, useState } from "react";
+import { API_URL } from "../../config";
 import MethodCard from "./MethodCard";
-
+import "./SelfCheck.css";
 import self from "../../assets/images/self.svg";
 
 const SelfCheck = () => {
-  const methods = [
+  /*const methods = [
     {
       title: "Blood Pressure Check",
       image: self,
@@ -30,7 +30,16 @@ const SelfCheck = () => {
       description:
         "Use a digital thermometer under your tongue or armpit. Normal body temperature is 97°F–99°F. Track changes over 2–3 days for fever patterns."
     }
-  ];
+  ];*/
+
+  const [methods, setMethods] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/selfCheck`)
+      .then(res => res.json())
+      .then(data => setMethods(data))
+      .catch(err => console.error("Error loading methods:", err));
+  }, []);
 
   return (
     <div className="self-checkup">
@@ -59,14 +68,19 @@ const SelfCheck = () => {
         <h2 className="methods-title">Self Checkup Methods</h2>
 
         <div className="methods-grid">
-            {methods.map((method, index) => (
-            <MethodCard
-                key={index}
-                title={method.title}
-                image={method.image}
-                description={method.description}
-            />
-            ))}
+            {methods.map((method, index) => {
+              const imagePath = require(`../../assets/images/${method.image}`);
+
+              return (
+                <MethodCard
+                    key={index}
+                    title={method.title}
+                    //image={`${API_URL}/assets/images/${method.image}`}
+                    image={imagePath}
+                    description={method.description}
+                />
+              )
+            })}
         </div>
       </div>
     </div>

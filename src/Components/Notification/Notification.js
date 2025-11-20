@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
 import "./Notification.css";
 
 const Notification = ({ title, message, onClose }) => {
 
-  /*console.log("Notification set Loaded:", {
+  console.log("Notification set Loaded:", {
       title: title,
       message: message,
-  });*/
+  });
 
   return (
     <div className="notification">
