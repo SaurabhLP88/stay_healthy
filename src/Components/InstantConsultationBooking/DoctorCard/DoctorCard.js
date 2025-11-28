@@ -16,7 +16,7 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
   //console.log("DoctorCard props:", { image, name, speciality, experience, ratings, onBook });
 
   const [showModal, setShowModal] = useState(false);
-  const [doctor, setDoctor] = useState(null);
+  //const [doctor, setDoctor] = useState(null);
   const [appointments, setAppointments] = useState([]);
 
   const starRating = "⭐".repeat(ratings);
@@ -43,14 +43,24 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
         }
 
         const data = await res.json();
-        setAppointments(data);
+
+        const doctorAppointments = data.filter(
+          (a) => a.doctorName === name && a.doctorSpeciality === speciality
+        );
+        setAppointments(doctorAppointments);
       } catch (err) {
         console.error("Failed to fetch appointments:", err);
       }
     };
 
     fetchAppointments();
-  }, []);
+ }, [name, speciality]);
+
+  useEffect(() => {
+    if (appointments.length === 0) {
+      //window.dispatchEvent(new Event("notification-deleted"));
+    }
+  }, [appointments]);
 
   /*useEffect(() => {
     // Check localStorage on mount and when appointments change
@@ -64,21 +74,22 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
   }, [name, speciality, appointments]);*/
 
   const handleBookingClick = () => {
+    setShowModal(true);
+    //console.log("Current appointments state:", appointments);
     
-    if (appointments.length > 0) {
+    /*if (appointments.length > 0) {
       setAppointments([]);
-      /*localStorage.removeItem(storageKey);
-      localStorage.removeItem('appointmentNotification');
-      localStorage.removeItem('doctorData');
-      localStorage.removeItem('name');
-      window.dispatchEvent(new Event("appointmentCancelled"));*/      
+      //localStorage.removeItem(storageKey);
+      //localStorage.removeItem('appointmentNotification');
+      //localStorage.removeItem('doctorData');
+      //localStorage.removeItem('name');
+      //window.dispatchEvent(new Event("appointmentCancelled"));    
       setShowModal(false);  // Don't open modal, just close
     } else {
       // If no appointment (Book Appointment button), open the modal to book
       setShowModal(true);
-    }
+    }*/
     //console.log("Book/Cancel button clicked");
-    console.log("Current appointments state:", appointments);
     //console.log("Local storage:", localStorage.getItem(storageKey));
   };
 
@@ -93,8 +104,8 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
       });
       const result = await res.json();
       if (res.ok) {
-        setAppointments([]); // update state after cancel
-        window.dispatchEvent(new Event("appointmentCancelled"));
+        setAppointments(prev => prev.filter(a => a._id !== appointmentId));
+        window.dispatchEvent(new Event("notification-deleted"));
         if (close) close();
       } else {
         console.error(result.error);
@@ -111,24 +122,35 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
     if (!token) return alert("Please login first");
 
     try {
-      const res = await fetch(`${API_URL}/api/appointments`, {
+
+      /*const safeData = {
+        doctorName: name,
+        doctorSpeciality: speciality,
+        patientName: appointmentData.patientName,
+        phoneNumber: appointmentData.phoneNumber,
+        appointmentDate: appointmentData.appointmentDate,
+        appointmentTime: appointmentData.appointmentTime,
+      };*/
+
+      const payload = {
+        doctorName: name,
+        doctorSpeciality: speciality,
+        ...appointmentData
+      };
+
+      const res = await fetch(`${API_URL}/api/appointments/book`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          //id: uuidv4(),
-          doctorName: name,
-          doctorSpeciality: speciality,
-          ...appointmentData,
-        })
+        body: JSON.stringify(payload)
       });
 
       const result = await res.json();
       if (res.ok) {
         setAppointments([result.appointment]); // update state
-        alert(`Appointment booked successfully with Dr. ${name}`);
+        alert(`Appointment booked successfully with ${name}`);
         if (onBook) onBook(result.appointment); // trigger parent callback
       } else {
         console.error(result.error);
@@ -138,6 +160,7 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
       console.error(err);
       alert("Server error");
     }
+    
   };
 
   return (
@@ -191,12 +214,12 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
                   <div className='appointment-confirmation'>
                     <h3>Appointment Booked!</h3>
                     {appointments.map((appointment) => (
-                      <div className="bookedInfo" key={appointment.id}>
+                      <div className="bookedInfo" key={appointment._id}>
                         <p><strong>Name:</strong> {appointment.patientName}</p>
                         <p><strong>Phone Number:</strong> {appointment.phoneNumber}</p>
                         <p><strong>Date of Appointment:</strong> {appointment.appointmentDate}</p>
                         <p><strong>Time Slot:</strong> {appointment.appointmentTime}</p>
-                        <button className='btn btn-primary' onClick={() => handleCancel(appointment.id, close)}>Cancel Appointment</button>
+                        <button className='btn btn-primary' onClick={() => handleCancel(appointment._id, close)}>Cancel Appointment</button>
                       </div>
                     ))}
                   </div>
@@ -206,7 +229,7 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
                   doctorName={name}
                   doctorSpeciality={speciality}
                   onSubmit={(data) => { 
-                    console.log("handleFormSubmit:", data);
+                    //console.log("handleFormSubmit:", data);
                     handleFormSubmit(data);
                     close();
                   }}

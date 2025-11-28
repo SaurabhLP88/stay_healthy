@@ -170,26 +170,29 @@ const InstantConsultation = () => {
         <div className="searchpage-container">
             <FindDoctorSearch onSearch={handleSearch} />
             <div className="search-results-container">
-                {isSearched ? (
+                {/* {isSearched ? ( */}
                     <div className="search-results-cover">
-                        <h2 className="search-results-title">{filteredDoctors.length} doctors are available</h2>
+                        <h2 className="search-results-title">{(isSearched ? filteredDoctors : doctors).length} doctors are available</h2>
                                                 
-                        {filteredDoctors.length > 0 ? (
+                        {(isSearched ? filteredDoctors : doctors).length > 0 ? (
                             <>
                                 <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>
                                 <div className="doctor-results-container">
-                                    {filteredDoctors.map(doctor => (
-                                        <DoctorCard
-                                            key={doctor.name}
-                                            name={doctor.name}
-                                            speciality={doctor.speciality}
-                                            experience={doctor.experience}
-                                            ratings={doctor.ratings}
-                                            image={doctor.image}
-                                            onBook={(appointmentData) => handleBook(appointmentData)}
-                                            setNotification={setNotification}
-                                        />
-                                    ))}                                
+                                    {(isSearched ? filteredDoctors : doctors).map((doctor, index) => {
+                                        const imagePath = require(`../../assets/images/${doctor.image}`);
+                                        return (
+                                            <DoctorCard
+                                                key={index}
+                                                name={doctor.name}
+                                                speciality={doctor.speciality}
+                                                experience={doctor.experience}
+                                                ratings={doctor.ratings}
+                                                image={imagePath}
+                                                onBook={(appointmentData) => handleBook(doctor, appointmentData)}
+                                                //setNotification={setNotification}
+                                            />
+                                        )
+                                    })}
                                 </div>
                             </>
                         ) : (
@@ -197,7 +200,7 @@ const InstantConsultation = () => {
                         )}
                        
                     </div>
-                ) : ''}
+                {/* }) : ''} */}
             </div>
         
 

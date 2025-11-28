@@ -8,19 +8,20 @@ import "./BookingConsultation.css";
 
 const BookingConsultation = () => {
 
-  const [username, setUsername] = useState("");
+  //const [username, setUsername] = useState("");
   const [searchParams] = useSearchParams();
   const [doctors, setDoctors] = useState([]);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
-  const [bookings, setBookings] = useState([]);
+  //const [bookings, setBookings] = useState([]);
   //const [notification, setNotification] = useState(null);
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   //console.log("BookingConsultation.js Loaded");
 
   useEffect(() => {
+    //console.log("BookingConsultation.js useEffect");
       getDoctorsDetails();
   }, [searchParams]);
 
@@ -34,6 +35,7 @@ const BookingConsultation = () => {
   }, []);*/
 
   const getDoctorsDetails = () => {
+    //console.log("BookingConsultation.js getDoctorsDetails");
       //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
       fetch(`${API_URL}/api/doctors`)
       .then(res => res.json())
@@ -55,6 +57,7 @@ const BookingConsultation = () => {
   }
   
   const handleSearch = (searchText) => {
+    //console.log("BookingConsultation.js handleSearch");
       if (!searchText) {
           setFilteredDoctors([]);
           setIsSearched(false);
@@ -77,37 +80,21 @@ const BookingConsultation = () => {
       ...appointmentData
     };
 
-    console.log("📤 Sending booking payload:", payload);
+    //console.log("📤 Sending booking payload:", payload);
+    const token = sessionStorage.getItem("auth-token"); // your auth-token
 
-    try {
-      const res = await fetch(`${API_URL}/api/appointments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
+    //console.log("auth-token:", token);
+    if (!token || token.split('.').length !== 3) {
+      console.warn("auth-token is missing or not a JWT");
+      // handle: force login or show message
+    }
 
-      if (!res.ok) {
-        const text = await res.text();
-        console.error("❌ Server Error Response:", text);
-        throw new Error("Failed to save appointment");
-      }
-
-      const saved = await res.json();
-      console.log("✅ Appointment saved in DB:", saved);
-
-      const userId = sessionStorage.getItem("auth-token"); // your auth-token
-      if (!userId) {
-        console.warn("No auth-token found in sessionStorage!");
-        return;
-      }
-
-      // ---- Trigger notification creation ----
-      // ---- create notification on server ----
+    try {      
       const notifRes = await fetch(`${API_URL}/api/notifications`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${userId}` // send token in header
+          "Authorization": `Bearer ${token}` // send token in header
         },
         body: JSON.stringify({
           title: "Appointment Booked",
@@ -130,12 +117,12 @@ const BookingConsultation = () => {
         // backend returns { success: true, notify } per your route — normalize
         const created = notifResJson.notify ?? notifResJson.notification ?? notifResJson;
 
-        console.log("🔔 Notification created (server response normalized):", created);
+        //console.log("🔔 Notification created (server response normalized):", created);
 
         // store as fallback (so Home can read it if it missed the event)
-        try {
+        /*try {
           localStorage.setItem("latest_notification", JSON.stringify(created));
-        } catch (err) { console.warn("localStorage set failed:", err); }
+        } catch (err) { console.warn("localStorage set failed:", err); }*/
 
         // dispatch a clear, well-named event and include the created notification as detail
         window.dispatchEvent(new CustomEvent("new-notification", { detail: created }));
@@ -151,20 +138,19 @@ const BookingConsultation = () => {
     }
   };
 
-
   return (
 
     <div className="searchpage-container">
       <FindDoctorSearch onSearch={handleSearch} />
       <div className="search-results-container">
-          {isSearched ? (
+          {/* {isSearched ? ( */}
               <div className="search-results-cover">
-                  <h2 className="search-results-title">{filteredDoctors.length} doctors are available</h2>                              
-                    {filteredDoctors.length > 0 ? (
+                  <h2 className="search-results-title">{(isSearched ? filteredDoctors : doctors).length} doctors are available</h2>                              
+                    {(isSearched ? filteredDoctors : doctors).length > 0 ? (
                       <>
                         <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>      
                         <div className="doctor-results-container">
-                          {filteredDoctors.map((doctor, index) => {
+                          {(isSearched ? filteredDoctors : doctors).map((doctor, index) => {
                             const imagePath = require(`../../../assets/images/${doctor.image}`);
                             //console.log('doctor appointment:', doctor);
                             return (
@@ -177,6 +163,7 @@ const BookingConsultation = () => {
                                   image={imagePath}
                                   //onBook={(appointmentData) => handleBook(appointmentData)}
                                   onBook={(appointmentData) => handleBook(doctor, appointmentData)}
+                                  //onBook={null}
                                   //setNotification={setNotification}
                               />
 
@@ -194,7 +181,7 @@ const BookingConsultation = () => {
                         <p className='text-center'>No doctors found for {searchParams.get('speciality')}.</p>
                     )}                  
               </div>
-          ) : ''}
+          {/*) : null} */}
       </div>
     
 

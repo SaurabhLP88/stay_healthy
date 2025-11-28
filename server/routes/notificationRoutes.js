@@ -3,9 +3,7 @@ const jwt = require("jsonwebtoken");
 const Notification = require("../models/Notification");
 const router = express.Router();
 
-/**
- * Helper to extract userId from JWT
- */
+// Helper to extract userId from JWT
 const getUserIdFromToken = (req) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) throw new Error("No token provided");
@@ -14,9 +12,7 @@ const getUserIdFromToken = (req) => {
   return decoded.user.id; // adjust if your payload structure differs
 };
 
-/**
- * CREATE NOTIFICATION
- */
+// CREATE NOTIFICATION
 router.post("/", async (req, res) => {
   try {
     const userId = getUserIdFromToken(req);
@@ -41,9 +37,29 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * GET LATEST NOTIFICATION (optional)
- */
+// CLEAR ALL NOTIFICATIONS
+router.post("/clear", async (_, res) => {
+  try {
+    await Notification.deleteMany({});
+    return res.json({ success: true });
+  } catch (err) {
+    return res.status(500).json({ error: "Failed to clear notifications" });
+  }
+});
+
+/*
+// GET ALL NOTIFICATIONS FOR LOGGED-IN USER
+router.get("/", async (req, res) => {
+  try {
+    const userId = getUserIdFromToken(req);
+    const notifications = await Notification.find({ userId }).sort({ createdAt: -1 });
+    return res.json(notifications);
+  } catch (err) {
+    return res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+});
+
+// GET LATEST NOTIFICATION (optional)
 router.get("/latest", async (req, res) => {
   try {
     const latest = await Notification.findOne().sort({ createdAt: -1 });
@@ -53,9 +69,7 @@ router.get("/latest", async (req, res) => {
   }
 });
 
-/**
- * GET UNREAD NOTIFICATIONS FOR LOGGED-IN USER
- */
+// GET UNREAD NOTIFICATIONS FOR LOGGED-IN USER
 router.get("/unread", async (req, res) => {
   try {
     const userId = getUserIdFromToken(req);
@@ -67,9 +81,7 @@ router.get("/unread", async (req, res) => {
   }
 });
 
-/**
- * MARK ONE NOTIFICATION AS READ
- */
+// MARK ONE NOTIFICATION AS READ
 router.patch("/read/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -80,9 +92,7 @@ router.patch("/read/:id", async (req, res) => {
   }
 });
 
-/**
- * MARK ALL NOTIFICATIONS AS READ FOR LOGGED-IN USER
- */
+// MARK ALL NOTIFICATIONS AS READ FOR LOGGED-IN USER
 router.patch("/read-all", async (req, res) => {
   try {
     const userId = getUserIdFromToken(req);
@@ -92,30 +102,6 @@ router.patch("/read-all", async (req, res) => {
     res.status(500).json({ error: "Failed to mark all as read" });
   }
 });
-
-/**
- * CLEAR ALL NOTIFICATIONS
- */
-router.post("/clear", async (_, res) => {
-  try {
-    await Notification.deleteMany({});
-    return res.json({ success: true });
-  } catch (err) {
-    return res.status(500).json({ error: "Failed to clear notifications" });
-  }
-});
-
-/**
- * GET ALL NOTIFICATIONS FOR LOGGED-IN USER
- */
-router.get("/", async (req, res) => {
-  try {
-    const userId = getUserIdFromToken(req);
-    const notifications = await Notification.find({ userId }).sort({ createdAt: -1 });
-    return res.json(notifications);
-  } catch (err) {
-    return res.status(500).json({ error: "Failed to fetch notifications" });
-  }
-});
+*/
 
 module.exports = router;

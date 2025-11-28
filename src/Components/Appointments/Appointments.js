@@ -47,7 +47,7 @@ const Appointments = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/appointments/user?email=${encodeURIComponent(email)}`, {
+      const res = await fetch(`${API_URL}/api/appointments/my`, {
         headers: {
           "Authorization": `Bearer ${authtoken}`,
           "Content-Type": "application/json",
@@ -72,8 +72,8 @@ const Appointments = () => {
         const p = priority(a) - priority(b);
         if (p !== 0) return p;
         // fallback by date ascending
-        const da = new Date(a.date || a.datetime || a.createdAt || null);
-        const db = new Date(b.date || b.datetime || b.createdAt || null);
+        const da = new Date(a.appointmentDate);
+        const db = new Date(b.appointmentDate);
         return da - db;
       });
       setAppointments(sorted);
@@ -100,8 +100,8 @@ const Appointments = () => {
     if (!ok) return;
     setBusyId(appointmentId);
     try {
-      const res = await fetch(`${API_URL}/api/appointments/${appointmentId}/cancel`, {
-        method: "POST",
+      const res = await fetch(`${API_URL}/api/appointments/cancel/${appointmentId}`, {
+        method: "DELETE",
         headers: {
           "Authorization": `Bearer ${authtoken}`,
           "Content-Type": "application/json",
@@ -141,7 +141,6 @@ const Appointments = () => {
         </div>
 
       <section className="appointments-card">
-        
 
         {loading ? (
           <div className="appt-loading">Loading appointments…</div>
@@ -153,17 +152,20 @@ const Appointments = () => {
           </div>
         ) : (
             <>
-            <div className="top-actions">
+            {/* 
+              <div className="top-actions">
                 <button className="action-btn" onClick={handleOpenReviews}>Your Reviews</button>
                 <button className="action-btn" onClick={handleOpenReports}>Your Reports</button>
                 <button className="action-btn muted" onClick={handleGotoCancelCenter}>Cancel Appointment</button>
-            </div>
+              </div> 
+          */}
           <div className="table-wrap">
             <table className="appt-table" role="table" aria-label="Your appointments">
               <thead>
                 <tr>
+                  <th>Patient</th>
                   <th>Doctor</th>
-                  <th>Specialty</th>
+                  <th>Speciality</th>
                   <th>Date</th>
                   <th>Time</th>
                   <th>Status</th>
@@ -173,32 +175,30 @@ const Appointments = () => {
 
               <tbody>
                 {appointments.map((a) => {
-                  const doctor = a.doctor || a.doctorDetails || {};
-                  const doctorName = doctor.name || a.doctorName || "Doctor";
-                  const specialty = doctor.speciality || doctor.specialty || a.specialty || "-";
-                  const apptDate = a.date || a.datetime || a.scheduledAt || "";
-                  const apptTime = a.time || a.slotTime || a.datetime || "";
+                  //const doctor = a.doctor || a.doctorDetails || {};
+                  const doctorName = a.doctorName || "Doctor";
+                  const specialty = a.doctorSpeciality || "-";
+                  const apptDate = a.appointmentDate || "";
+                  const apptTime = a.appointmentTime || "";
                   return (
                     <tr key={a._id || a.id}>
+
                       <td>
                         <div className="doc-cell">
-                          <div className="doc-name">{doctorName}</div>
-                          <div className="doc-small">{doctor.hospital || doctor.clinic || ""}</div>
+                          <div className="doc-name">{a.patientName}</div>
+                          <div className="doc-small">{a.phoneNumber}</div>
                         </div>
                       </td>
-
+                      <td>{doctorName}</td>
                       <td>{specialty}</td>
-
                       <td>{formatDate(apptDate)}</td>
-
                       <td>{formatTime(apptTime)}</td>
-
                       <td><StatusPill status={a.status || "Pending"} /></td>
-
                       <td className="actions-cell">
                         <button
-                          className="btn small"
-                          onClick={() => handleBookAgain(doctor.id || doctor._id || a.doctorId)}
+                          className="btn btn-primary small"
+                          //onClick={() => handleBookAgain(doctor.id || doctor._id || a.doctorId)}
+                          onClick={() => handleBookAgain(a.doctorId)}
                         >
                           Book Again
                         </button>

@@ -5,7 +5,7 @@ const Appointment = require("../models/Appointment");
 const Notification = require("../models/Notification");
 
 // Create appointment
-router.post("/", async (req, res) => {
+/*router.post("/", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ error: "No token provided" });
@@ -21,26 +21,40 @@ router.post("/", async (req, res) => {
     console.error("Error saving appointment:", error);
     res.status(500).json({ error: "Server error" });
   }
-});
+});*/
 
 router.post("/book", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ error: "No token provided" });
+
     const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.user.id;
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      console.error("JWT verify failed:", err);
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    // support both shapes: { id } or { user: { id } }
+    const userId = decoded.id || (decoded.user && decoded.user.id);
+    if (!userId) {
+      console.error("Decoded token has no user id:", decoded);
+      return res.status(401).json({ error: "Invalid token payload" });
+    }
 
     const appointment = await Appointment.create({ ...req.body, userId });
 
-    await Notification.create({
+    /*await Notification.create({
       userId,
       title: "Appointment Booked",
       message: `Your appointment with Dr. ${req.body.doctorName} is confirmed`
-    });
+    });*/
 
     return res.json({ success: true, appointment });
   } catch (err) {
+    console.error("Booking failed (unexpected):", err);
     return res.status(500).json({ error: "Booking failed" });
   }
 });
@@ -75,6 +89,10 @@ router.delete("/cancel/:id", async (req, res) => {
     if (!appointment) return res.status(404).json({ error: "Appointment not found" });
 
     await appointment.remove();
+    await Notification.deleteOne({
+      userId,
+      message: { $regex: appointment.doctorName, $options: "i" }
+    });
     res.json({ success: true });
   } catch (err) {
     console.error("Error cancelling appointment:", err);

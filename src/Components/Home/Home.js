@@ -12,9 +12,9 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
 
   //console.log("Home.js Loaded");  
 
-  const loadUnreadNotification = async () => {
+  /*const loadUnreadNotification = async () => {
     try {
-      const userId = sessionStorage.getItem("auth-token"); // use same auth-token
+      const userId = sessionStorage.getItem("userId"); // use same auth-token
       if (!userId) {
         console.warn("No auth-token found in sessionStorage!");
         return;
@@ -35,17 +35,66 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
     } catch (err) {
       console.error("[Home] Error fetching unread:", err);
     }
+  };*/
+  
+  const loadExistingAppointment = async () => {
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/appointments/my`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+
+      const data = await res.json();
+      if (data.length > 0) {
+        const appt = data[data.length - 1];
+        const detail = {
+          title: "Appointment Confirmed",
+          message: `
+            <p><b>Doctor:</b> ${appt.doctorName}</p>
+            <p><b>Speciality:</b> ${appt.doctorSpeciality}</p>
+            <p><b>Patient:</b> ${appt.patientName}</p>
+            <p><b>Phone:</b> ${appt.phoneNumber}</p>
+            <p><b>Date:</b> ${appt.appointmentDate}</p>
+            <p><b>Time:</b> ${appt.appointmentTime}</p>
+          `.trim()
+        };
+
+        setNotification(detail);
+        //console.log("detailss", detail);
+      }
+    } catch (err) {
+      console.error("Failed to load appointment", err);
+    }
   };
 
   useEffect(() => {
-    loadUnreadNotification();
-    const handler = (e) => setNotification(e.detail);
+    
+    const handler = (e) => { 
+      setNotification(e.detail); 
+      //console.log("handler Fired");
+    }
     window.addEventListener("new-notification", handler);
 
-    return () => window.removeEventListener("new-notification", handler);
+    const handleDelete = () => {
+      setNotification(null);
+      //console.log("handleDelete Fired");
+    }
+    window.addEventListener("notification-deleted", handleDelete);
+
+    //console.log("useEffect Fired");
+    if (!notification) {
+      loadExistingAppointment();
+    }
+
+    return () => {
+      window.removeEventListener("new-notification", handler);
+      window.removeEventListener("notification-deleted", handleDelete);
+    };
   }, []);
 
-  const markAsRead = async () => {
+  /*const markAsRead = async () => {
     if (!notification?._id) return setNotification(null);
 
     try {
@@ -57,7 +106,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
     } catch (err) {
       console.error("Error marking notification as read:", err);
     }
-  };
+  };*/
 
 
   return (    
@@ -68,7 +117,8 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
         <Notification
           title={notification.title}
           message={notification.message}
-          onClose={markAsRead}         
+          //onClose={markAsRead}
+          onClose={() => setNotification(null)}
         />
       )}
 

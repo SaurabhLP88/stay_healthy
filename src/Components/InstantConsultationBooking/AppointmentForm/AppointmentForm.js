@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { API_URL } from "../../../config";
+//import { API_URL } from "../../../config";
 import "./AppointmentForm.css";
 
 const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {

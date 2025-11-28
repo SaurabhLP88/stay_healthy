@@ -3,14 +3,14 @@ const mongoose = require("mongoose");
 const NotificationSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user", 
+    ref: "User", 
   },
   title: String,
   message: String,
-  isRead: {
+  /*isRead: {
     type: Boolean,
     default: false
-  },
+  },*/
   createdAt: {
     type: Date,
     default: Date.now

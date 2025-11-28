@@ -6,24 +6,25 @@
 .action-btn {background:#2563eb; color:#fff; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; font-weight:600;}
 .action-btn.muted {background:#0ea5a2;}
 .action-btn:focus {outline:2px solid rgba(37,99,235,0.25);}
-.appointments-card {background:#fff; border-radius:12px; box-shadow:0 6px 18px rgba(15,23,42,0.1); padding:15px;}
+.appointments-card {background:#fff; border-radius:12px; box-shadow:0 0px 18px rgba(15,23,42,0.3); padding:15px;}
 
 .appt-loading, .appt-empty, .appt-error { color:#374151; text-align:center; font-weight: 700; }
 .table-wrap {overflow-x:auto;}
 .appt-table {width:100%; border-collapse:collapse; min-width:820px;}
-.appt-table thead th {text-align:left; padding:10px 12px; font-size:13px; color:#374151; border-bottom:1px solid #e6e9ef;}
-.appt-table tbody td {padding:12px; border-bottom:1px solid #f1f5f9; vertical-align:middle; font-size:14px; color:#111827;}
+.appt-table thead th {text-align:left; padding:10px 5px; font-size:16px; color:#374151; border-bottom:1px solid #e6e9ef;}
+.appt-table tbody td {padding:5px; border-bottom:1px solid #f1f5f9; vertical-align:middle; font-size:13px; color:#111827;}
 .doc-cell .doc-name {font-weight:600;}
 .doc-cell .doc-small {font-size:12px; color:#6b7280;}
-.pill {display:inline-block; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:600; color:white; text-transform:capitalize;}
-.pill-blue {background:#2563eb;}
-.pill-green {background:#16a34a;}
-.pill-red {background:#ef4444;}
-.pill-gray {background:#6b7280;}
-.actions-cell .btn {margin-right:8px; padding:6px 10px; border-radius:8px; border:none; cursor:pointer; font-weight:600; font-size:13px;}
+.pill { font-size:16px; font-weight:700; text-transform:capitalize;}
+.pill-blue {color:#2563eb;}
+.pill-green {color:#16a34a;}
+.pill-red {color:#ef4444;}
+.pill-gray {color:#6b7280;}
+.actions-cell .btn {margin-right:8px; margin-top: 0; padding:6px 10px; border-radius:8px; border:none; cursor:pointer; font-weight:600; font-size:13px; width: auto;}
 .actions-cell .btn.small {padding:6px 8px;}
 .actions-cell .btn.outline {background:transparent; border:1px solid #e6e9ef; color:#0f172a; text-decoration:none; display:inline-block; line-height:1; padding:6px 8px;}
 .actions-cell .btn.danger {background:#ef4444; color:#fff; border:none;}
+.actions-cell .btn.primary {background:#2563eb; color:#fff; border:none;}
 
 @media (max-width: 880px) {
 .appointments-header {flex-direction:column; align-items:flex-start; gap:6px;}
