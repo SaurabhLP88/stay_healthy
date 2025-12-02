@@ -17,9 +17,10 @@ function Login({ setLoggedIn }) {
 
   useEffect(() => {
     if (sessionStorage.getItem("isLoggedIn") === "true") {
+      setLoggedIn(true);
       navigate("/");
     }
-  }, [navigate]);
+  }, [navigate, setLoggedIn]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -73,14 +74,16 @@ function Login({ setLoggedIn }) {
       sessionStorage.setItem("isLoggedIn", "true");
       sessionStorage.setItem("email", result.email || formData.email);
       sessionStorage.setItem("name", result.name || formData.email.split("@")[0]);
+      //sessionStorage.setItem("email", result.user.email);
+      //sessionStorage.setItem("name", result.user.name);
       //localStorage.setItem("isLoggedIn", "true");
       //localStorage.setItem("name", formData.email.split("@")[0]);
       //localStorage.setItem("email", formData.email);
-
-      setLoggedIn(true);
+      if (typeof setLoggedIn === "function") {
+        setLoggedIn(true);
+      }
       navigate("/");
-    }
-    
+    }    
   };
 
   const togglePasswordVisibility = () => {
@@ -144,8 +147,8 @@ function Login({ setLoggedIn }) {
                   </button>
                 </div>
 
-                <div className="login-text">
-                  <a href="#" onClick={(e) => { e.preventDefault(); setShowForgot(true); }}>Forgot Password?</a>
+                <div className="link-text">
+                  <button type="button" onClick={(e) => { e.preventDefault(); setShowForgot(true); }}>Forgot Password?</button>
                 </div>
               </form>
             </div>
@@ -153,8 +156,8 @@ function Login({ setLoggedIn }) {
           </>
         ) : (
           <>            
-            <div className="forgot-text">
-              <a href="#" onClick={(e) => { e.preventDefault(); setShowForgot(false); }}>Login Again? </a>
+            <div className="link-text">
+              <button type="button" onClick={(e) => { e.preventDefault(); setShowForgot(false); }}>Login Again? </button>
             </div>
             <div className="forgot-form">
               <form>

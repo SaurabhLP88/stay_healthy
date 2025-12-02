@@ -13,6 +13,7 @@ const BookingConsultation = () => {
   const [doctors, setDoctors] = useState([]);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
+  const [selectedSpeciality, setSelectedSpeciality] = useState("");
   //const [bookings, setBookings] = useState([]);
   //const [notification, setNotification] = useState(null);
 
@@ -20,10 +21,17 @@ const BookingConsultation = () => {
 
   //console.log("BookingConsultation.js Loaded");
 
+  const speciality = searchParams.get("speciality");
+
   useEffect(() => {
     //console.log("BookingConsultation.js useEffect");
-      getDoctorsDetails();
-  }, [searchParams]);
+    getDoctorsDetails();
+
+    if (speciality) {
+      setSelectedSpeciality(speciality);
+    }
+
+  }, [searchParams, speciality]);
 
   /*useEffect(() => {
     fetch(`${API_URL}/api/appointments`)
@@ -33,6 +41,12 @@ const BookingConsultation = () => {
         console.log("Bookings from DB:", data);
       });
   }, []);*/
+
+  const formatDate = (d) => {
+    if (!d) return "";
+    const [year, month, day] = d.split("-");
+    return `${day}/${month}/${year}`;
+  };
 
   const getDoctorsDetails = () => {
     //console.log("BookingConsultation.js getDoctorsDetails");
@@ -71,14 +85,14 @@ const BookingConsultation = () => {
   };  
   
   const handleBook = async (doctor, appointmentData) => {
-    console.log("📌 Booking appointment...");
+    console.log("Booking appointment...");
 
-    const payload = {
+    /*const payload = {
       doctorId: doctor._id,
       doctorName: doctor.name,
       doctorSpeciality: doctor.speciality,
       ...appointmentData
-    };
+    };*/
 
     //console.log("📤 Sending booking payload:", payload);
     const token = sessionStorage.getItem("auth-token"); // your auth-token
@@ -103,7 +117,7 @@ const BookingConsultation = () => {
               <p><b>Speciality:</b> ${doctor.speciality}</p>
               <p><b>Patient:</b> ${appointmentData.patientName}</p>
               <p><b>Phone:</b> ${appointmentData.phoneNumber}</p>
-              <p><b>Date:</b> ${appointmentData.appointmentDate}</p>
+              <p><b>Date:</b> ${formatDate(appointmentData.appointmentDate)}</p>
               <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
           `.trim()
         })
@@ -145,7 +159,7 @@ const BookingConsultation = () => {
       <div className="search-results-container">
           {/* {isSearched ? ( */}
               <div className="search-results-cover">
-                  <h2 className="search-results-title">{(isSearched ? filteredDoctors : doctors).length} doctors are available</h2>                              
+                  <h2 className="search-results-title"><span style={{ color: "#2190FF" }}>{(isSearched ? filteredDoctors : doctors).length}</span> {selectedSpeciality} doctors are available</h2>                              
                     {(isSearched ? filteredDoctors : doctors).length > 0 ? (
                       <>
                         <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>      
@@ -156,11 +170,13 @@ const BookingConsultation = () => {
                             return (
                               <DoctorCard
                                   key={index}
+                                  doctorId={doctor._id}
                                   name={doctor.name}
                                   speciality={doctor.speciality}
                                   experience={doctor.experience}
                                   ratings={doctor.ratings}
                                   image={imagePath}
+                                  bookingType="scheduled"
                                   //onBook={(appointmentData) => handleBook(appointmentData)}
                                   onBook={(appointmentData) => handleBook(doctor, appointmentData)}
                                   //onBook={null}

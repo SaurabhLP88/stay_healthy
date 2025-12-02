@@ -12,17 +12,46 @@ const InstantConsultation = () => {
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [isSearched, setIsSearched] = useState(false);
-    const [bookings, setBookings] = useState([]);
-    const [notification, setNotification] = useState(null);
+    const [selectedSpeciality, setSelectedSpeciality] = useState("");
+    //const [bookings, setBookings] = useState([]);
+    //const [notification, setNotification] = useState(null);
 
-    const navigate = useNavigate();
-    const location = useLocation();
+    //const navigate = useNavigate();
+    //const location = useLocation();
 
     //console.log("InstantConsultation.js Loaded");
 
     useEffect(() => {
         getDoctorsDetails();
     }, [searchParams]);
+
+    const formatDate = (d) => {
+        if (!d) return "";
+
+        // If backend sends YYYY-MM-DD
+        if (d.includes("-")) {
+            const [year, month, day] = d.split("-");
+            return `${day}/${month}/${year}`;
+        }
+
+        // If frontend sends DD/MM/YYYY or M/D/YYYY
+        if (d.includes("/")) {
+            const parts = d.split("/");
+            if (parts.length === 3) {
+                // Indian format DD/MM/YYYY
+                if (Number(parts[0]) > 12) {
+                    const [day, month, year] = parts;
+                    return `${day}/${month}/${year}`;
+                }
+
+                // US format M/D/YYYY  → convert
+                const [month, day, year] = parts;
+                return `${day}/${month}/${year}`;
+            }
+        }
+
+        return d;
+    };
 
     const getDoctorsDetails = () => {
         //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
@@ -58,31 +87,58 @@ const InstantConsultation = () => {
         }
     };
 
+    const handleBook = async (doctor, appointmentData) => {
+        console.log("📌 Instant booking...");
 
-    const handleBook = (newAppointment) => {
-        //console.log("handleBook called with:", doctor);
-        //const patientName = sessionStorage.getItem("email");
-        //console.log("patientName:", patientName);
+        /*const payload = {
+            doctorId: doctor._id,
+            doctorName: doctor.name,
+            doctorSpeciality: doctor.speciality,
+            ...appointmentData
+        };*/
 
+        const token = sessionStorage.getItem("auth-token");
+
+        try {
+            const notifRes = await fetch(`${API_URL}/api/notifications`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                title: "Appointment Booked",
+                message: `
+                    <p><b>Doctor:</b> ${doctor.name}</p>
+                    <p><b>Speciality:</b> ${doctor.speciality}</p>
+                    <p><b>Patient:</b> ${appointmentData.patientName}</p>
+                    <p><b>Phone:</b> ${appointmentData.phoneNumber}</p>
+                    <p><b>Date:</b> ${formatDate(appointmentData.appointmentDate)}</p>
+                    <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
+                `.trim()
+            })
+            });
+
+            const notifJson = await notifRes.json();
+            const created = notifJson.notify ?? notifJson.notification ?? notifJson;
+
+            // Fire global event
+            window.dispatchEvent(
+            new CustomEvent("new-notification", { detail: created })
+            );
+
+            alert(`Instant Appointment booked for ${appointmentData.patientName} with ${doctor.name}`);
+
+        } catch (err) {
+            console.error("❌ Instant Booking Error:", err);
+        }
+    };
+
+    /*const handleBook = (newAppointment) => {
         const doctor = {
             name: newAppointment.doctorName,
             speciality: newAppointment.doctorSpeciality
         };
-
-        /*const {
-            patientName = sessionStorage.getItem("name"),
-            phoneNumber = sessionStorage.getItem("phoneNumber"),
-            appointmentDate = new Date().toLocaleDateString(),
-            appointmentTime = new Date().toLocaleTimeString()
-        } = newAppointment || {}; // safeguard if undefined
-
-        const patientName = sessionStorage.getItem("email") || "Anonymous";
-        const appointmentData = {
-            date: new Date().toLocaleDateString(),
-            time: new Date().toLocaleTimeString(),
-            patientName
-        };*/     
-        
         const appointmentData =
             location.pathname === "/instant-consultation"
                 ? {
@@ -97,18 +153,6 @@ const InstantConsultation = () => {
                     appointmentDate: newAppointment.appointmentDate,
                     appointmentTime: newAppointment.appointmentTime
                 };
-
-        /*setNotification({
-            title: "Appointment Details",
-            message: `
-                <p><b>Doctor:</b> ${doctor.name}</p>
-                <p><b>Speciality:</b> ${doctor.speciality}</p>
-                <p><b>Patient:</b> ${appointmentData.name}</p>
-                <p><b>Phone:</b> ${appointmentData.phoneNumber}</p>
-                <p><b>Date:</b> ${appointmentData.appointmentDate}</p>
-                <p><b>Time:</b> ${appointmentData.appointmentTime}</p>
-            `.trim()
-        });*/
 
         const notificationData = {
             title: "Appointment Details",
@@ -145,15 +189,9 @@ const InstantConsultation = () => {
         //console.log("💾 Saved to localStorage:", doctor.name, appointmentData);
 
         // Trigger Notification
-        window.dispatchEvent(new Event("appointmentBooked"));        
-
-        /*console.log("🔔 Notification set:", {
-            title: "Appointment Details",
-            ...appointmentData
-        });*/
-
-        alert(`Appointment booked for ${appointmentData.name} with ${doctor.name}`);
-    };
+        window.dispatchEvent(new Event("appointmentBooked"));
+        alert(`Instant Appointment booked for ${appointmentData.name} with ${doctor.name}`);        
+    };*/
 
     /*const handleCancel = (doctor) => {
         setBookings(prev => prev.filter(b => b.doctor.name !== doctor.name));
@@ -172,7 +210,7 @@ const InstantConsultation = () => {
             <div className="search-results-container">
                 {/* {isSearched ? ( */}
                     <div className="search-results-cover">
-                        <h2 className="search-results-title">{(isSearched ? filteredDoctors : doctors).length} doctors are available</h2>
+                        <h2 className="search-results-title"><span style={{ color: "#2190FF" }}>{(isSearched ? filteredDoctors : doctors).length}</span> {selectedSpeciality} doctors are available</h2>
                                                 
                         {(isSearched ? filteredDoctors : doctors).length > 0 ? (
                             <>
@@ -183,11 +221,13 @@ const InstantConsultation = () => {
                                         return (
                                             <DoctorCard
                                                 key={index}
+                                                doctorId={doctor._id}
                                                 name={doctor.name}
                                                 speciality={doctor.speciality}
                                                 experience={doctor.experience}
                                                 ratings={doctor.ratings}
                                                 image={imagePath}
+                                                bookingType="instant"
                                                 onBook={(appointmentData) => handleBook(doctor, appointmentData)}
                                                 //setNotification={setNotification}
                                             />

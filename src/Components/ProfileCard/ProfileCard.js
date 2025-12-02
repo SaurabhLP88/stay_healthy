@@ -120,7 +120,7 @@ const ProfileForm = () => {
         
         if (updatedDetails.password) {
           setPasswordChanged(true);
-          alert("Password updated successfully! Please login again.");
+          //alert("Password updated successfully! Please login again.");
           sessionStorage.clear();
           navigate("/login");
           return;

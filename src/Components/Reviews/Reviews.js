@@ -1,38 +1,24 @@
 import React, { useState, useEffect } from "react";
-import "./Reviews.css";
-import ReviewForm from "../ReviewForm/ReviewForm";
+import { API_URL } from "../../config";
 
+//import ReviewForm from "../ReviewForm/ReviewForm";
+import "./Reviews.css";
 const Reviews = () => {
 
   //console.log("Reviews.js Loaded");
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [tempReview, setTempReview] = useState("");
-  const [rating, setRating] = useState(0);
+  //const [selectedDoctor, setSelectedDoctor] = useState(null);
+  //const [tempReview, setTempReview] = useState("");
+  //const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
 
+  //const token = sessionStorage.getItem("auth-token");
+
   useEffect(() => {
-    fetch("http://localhost:5000/api/appointments/closed")  // update URL according to backend
+    fetch(`${API_URL}/api/reviews/public`)
       .then(res => res.json())
-      .then(data => setReviews(data))
+      .then(data => setReviews(data.reviews || []))
       .catch(err => console.error("Error fetching reviews:", err));
   }, []);
-
-  const handleOpenReview = (doctor) => {
-    setSelectedDoctor(doctor);
-    setTempReview(doctor.review);
-    setRating(0);
-  };
-
-  const handleSubmitReview = (doctorId, data) => {
-    setReviews(prev =>
-        prev.map(r =>
-        r.id === doctorId
-            ? { ...r, review: data.review, rating: data.rating, reviewed: true }
-            : r
-        )
-    );
-    setSelectedDoctor(null);
-  };
 
   return (
     <div className="reviews-container">
@@ -45,23 +31,26 @@ const Reviews = () => {
       <table className="reviews-table">
         <thead>
           <tr>
-            <th>S.No.</th>
             <th>Doctor Name</th>
-            <th>Speciality</th>
-            <th>Provide Review</th>
-            <th>Review Given</th>
+            <th>Speciality</th>            
+            <th>Review Details</th>
             <th>Rating</th>
+            {/*<th>Give Review</th>*/}
           </tr>
         </thead>
         <tbody>
           {reviews.map((doctor, index) => (
             <tr key={doctor.id}>
-              <td>{index + 1}</td>
-              <td>{doctor.doctorName}</td>
-              <td>{doctor.speciality}</td>              
-              <td>{doctor.review || "—"}</td>
-              <td>{doctor.rating ? `(${ "⭐".repeat(doctor.rating) })` : "—"}</td>
-              <td>
+              <td align="center">{doctor.doctorName}</td>
+              <td align="center">{doctor.speciality}</td>
+              <td align="center">
+                <div className="doc-cell">
+                  <div className="doc-name">{doctor.title || "—"}</div>
+                  <div className="doc-small">{doctor.review || "—"}</div>
+                </div>
+              </td>
+              <td align="center">{doctor.rating ? `${ "⭐".repeat(doctor.rating) }` : "—"}</td>
+              {/*<td align="center">
                 <button
                     className={`review-btn ${doctor.review ? "disabled-btn" : ""}`}
                     onClick={() => handleOpenReview(doctor)}
@@ -69,7 +58,7 @@ const Reviews = () => {
                     >
                     {doctor.review ? "Reviewed" : "Give Review"}
                 </button>
-              </td>
+              </td>*/}
             </tr>
           ))}
         </tbody>
@@ -77,20 +66,17 @@ const Reviews = () => {
 
       )}
 
-      {selectedDoctor && (
-        <div className="review-modal" onClick={() => setSelectedDoctor(null)}>
-          <div className="review-modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3 className="review-title">Give Review for {selectedDoctor.doctorName}</h3>
-            <ReviewForm onSubmit={(data) => handleSubmitReview(selectedDoctor.id, data)} />
-            <button
-              className="cancel-btn"
-              onClick={() => setSelectedDoctor(null)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      {/*{selectedDoctor && (
+        <>          
+          <ReviewForm
+            onSubmit={(data) => {
+              //console.log("Review Submitted:", formData, "For:", selectedAppointment);
+              //handleSubmitReview(selectedDoctor._id || selectedDoctor.id, data)
+              handleSubmitReview(selectedDoctor.doctorId, data)
+            }}
+          />
+        </>
+      )}*/}
     </div>
   );
 };

@@ -36,6 +36,24 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
       console.error("[Home] Error fetching unread:", err);
     }
   };*/
+
+  const formatDate = (d) => {
+    if (!d) return "";
+
+    // If input is YYYY-MM-DD
+    if (d.includes("-")) {
+      const [year, month, day] = d.split("-");
+      return `${day}/${month}/${year}`;
+    }
+
+    // If input is MM/DD/YYYY
+    if (d.includes("/")) {
+      const [month, day, year] = d.split("/");
+      return `${day}/${month}/${year}`;
+    }
+
+    return d;
+  };
   
   const loadExistingAppointment = async () => {
     const token = sessionStorage.getItem("auth-token");
@@ -48,7 +66,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
 
       const data = await res.json();
       if (data.length > 0) {
-        const appt = data[data.length - 1];
+        const appt = data[0];
         const detail = {
           title: "Appointment Confirmed",
           message: `
@@ -56,7 +74,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
             <p><b>Speciality:</b> ${appt.doctorSpeciality}</p>
             <p><b>Patient:</b> ${appt.patientName}</p>
             <p><b>Phone:</b> ${appt.phoneNumber}</p>
-            <p><b>Date:</b> ${appt.appointmentDate}</p>
+            <p><b>Date:</b> ${formatDate(appt.appointmentDate)}</p>
             <p><b>Time:</b> ${appt.appointmentTime}</p>
           `.trim()
         };

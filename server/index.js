@@ -21,6 +21,7 @@ app.use("/api/healthtips", require("./routes/healthtips"));
 app.use("/api/healthblog", require("./routes/healthblog"));
 app.use("/api/appointments", require("./routes/appointments"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
+app.use("/api/reviews", require("./routes/reviewRoutes"));
 
 app.use(express.static(path.join(__dirname, "..", "build")));
 

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 //import { API_URL } from "../../../config";
 import "./AppointmentForm.css";
 
-const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
+const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) => {
   //console.log("AppointmentForm.js Loaded");
 
   const timeSlots = [
@@ -79,6 +79,7 @@ const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
     //console.log("Validation passed, preparing form data");
 
     const formData = {
+      doctorId,
       doctorName,
       doctorSpeciality,
       patientName: name,

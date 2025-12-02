@@ -10,7 +10,7 @@ import './DoctorCard.css';
 
 //import picture from '../../../assets/images/doctor1.png';
 
-const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) => {
+const DoctorCard = ({ doctorId, image, name, speciality, experience, ratings, onBook, bookingType }) => {
 
   //console.log("Doctor Set Loaded");
   //console.log("DoctorCard props:", { image, name, speciality, experience, ratings, onBook });
@@ -118,6 +118,7 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
   };
 
   const handleFormSubmit = async (appointmentData) => {
+    console.log("Submitting appointment for doctorId:", doctorId);
     const token = sessionStorage.getItem("auth-token");
     if (!token) return alert("Please login first");
 
@@ -133,8 +134,10 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
       };*/
 
       const payload = {
+        doctorId,
         doctorName: name,
         doctorSpeciality: speciality,
+        bookingType: bookingType || "scheduled",
         ...appointmentData
       };
 
@@ -150,7 +153,7 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
       const result = await res.json();
       if (res.ok) {
         setAppointments([result.appointment]); // update state
-        alert(`Appointment booked successfully with ${name}`);
+        //alert(`Appointment booked successfully with ${name}`);
         if (onBook) onBook(result.appointment); // trigger parent callback
       } else {
         console.error(result.error);
@@ -162,6 +165,11 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
     }
     
   };
+
+  const activeAppointment = appointments[0] || null;
+  const apptStatus = activeAppointment?.status?.toLowerCase();
+  const isBooked = apptStatus === "booked";
+  const isExpired = apptStatus === "expired";
 
   return (
     <div className="doctor-card-container">
@@ -181,12 +189,10 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
         <Popup
           trigger={            
 
-            <button className={`btn btn-primary book-appointment-btn ${ appointments.length > 0 ? 'cancel-appointment' : ''}`}  onClick={handleBookingClick}>
-              {appointments.length > 0 ? (
-                <div>Cancel Appointment</div>
-              ) : (
-                <div>Book Appointment</div>
-              )}
+            <button className={`btn btn-primary book-appointment-btn ${isBooked ? "cancel-appointment" : ""}`}  onClick={handleBookingClick}>
+              {isBooked && <div>Cancel Appointment</div>}
+              {isExpired && <div>Book Appointment Again</div>}
+              {!isBooked && !isExpired && <div>Book Appointment</div>}
               <div>No Booking Fee</div>
             </button>
 
@@ -209,7 +215,7 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
                 </div>
               </div>             
 
-              {appointments.length > 0 ? (
+              {isBooked ? (
                 <>
                   <div className='appointment-confirmation'>
                     <h3>Appointment Booked!</h3>
@@ -226,6 +232,7 @@ const DoctorCard = ({ image, name, speciality, experience, ratings, onBook }) =>
                 </>
               ) : (
                 <AppointmentForm
+                  doctorId={doctorId}
                   doctorName={name}
                   doctorSpeciality={speciality}
                   onSubmit={(data) => { 
