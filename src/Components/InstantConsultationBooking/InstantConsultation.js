@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_URL } from "../../config";
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { sendNotification } from "../../utils/notify";
 import FindDoctorSearch from './FindDoctorSearch/FindDoctorSearch';
 import DoctorCard from './DoctorCard/DoctorCard';
 //import Notification from "../Notification/Notification";
@@ -25,7 +26,7 @@ const InstantConsultation = () => {
         getDoctorsDetails();
     }, [searchParams]);
 
-    const formatDate = (d) => {
+    /*const formatDate = (d) => {
         if (!d) return "";
 
         // If backend sends YYYY-MM-DD
@@ -51,7 +52,7 @@ const InstantConsultation = () => {
         }
 
         return d;
-    };
+    };*/
 
     const getDoctorsDetails = () => {
         //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
@@ -99,7 +100,7 @@ const InstantConsultation = () => {
 
         const token = sessionStorage.getItem("auth-token");
 
-        try {
+        /*try {
             const notifRes = await fetch(`${API_URL}/api/notifications`, {
             method: "POST",
             headers: {
@@ -131,7 +132,10 @@ const InstantConsultation = () => {
 
         } catch (err) {
             console.error("❌ Instant Booking Error:", err);
-        }
+        }*/
+
+        await sendNotification(token, doctor, appointmentData, "Appointment Booked");
+
     };
 
     /*const handleBook = (newAppointment) => {

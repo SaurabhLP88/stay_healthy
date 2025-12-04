@@ -5,6 +5,11 @@ const NotificationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", 
   },
+  appointmentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Appointment", 
+    required: false
+  },
   title: String,
   message: String,
   /*isRead: {

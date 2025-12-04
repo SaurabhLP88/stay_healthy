@@ -24,6 +24,45 @@ const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) =
   const [errors, setErrors] = useState({});
   const location = useLocation();
 
+  const isWithinInstantHours = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    const minutes = now.getMinutes();
+
+    const currentTime = hour * 60 + minutes; // convert to minutes
+
+    const start = 9 * 60;       // 9:00 AM → 540 minutes
+    const end = 17 * 60 + 30;   // 5:30 PM → 1050 minutes
+
+    return currentTime >= start && currentTime <= end;
+  };
+
+  const getFilteredTimeSlots = () => {
+    if (!appointmentDate) return timeSlots;
+
+    const today = new Date().toISOString().split("T")[0];
+    if (appointmentDate !== today) return timeSlots;
+
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    return timeSlots.filter((slot) => {
+      const [start] = slot.split(" - ");
+      let [time, modifier] = start.split(" ");
+
+      let [hours, minutes] = time.split(":");
+      hours = parseInt(hours);
+      minutes = parseInt(minutes);
+
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+
+      const slotMinutes = hours * 60 + minutes;
+
+      return slotMinutes >= currentMinutes; // keep only future slots
+    });
+  };
+
   // 🟩 Validation for Instant Consultation
   const validateInstantForm = () => {
     const newErrors = {};
@@ -55,6 +94,13 @@ const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) =
 
     console.log("Form submitted");
 
+    if (location.pathname === "/instant-consultation") {
+      if (!isWithinInstantHours()) {
+        alert("You can’t book an instant consultation right now. Doctors are available between 9:00 AM and 5:30 PM only.");
+        return;
+      }
+    }
+
    const validationFn =
       location.pathname === "/instant-consultation"
         ? validateInstantForm
@@ -74,7 +120,7 @@ const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) =
       console.log("Errors found, not submitting");
       setErrors(newErrors);
       return;
-    }
+    }    
 
     //console.log("Validation passed, preparing form data");
 
@@ -142,7 +188,14 @@ const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) =
         <>
           <div className="form-group">
             <label htmlFor="appointmentDate">Appointment Date:</label>
-            <input className="form-control" type="date" id="appointmentDate" value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} />
+            <input
+              className="form-control"
+              type="date"
+              id="appointmentDate"
+              value={appointmentDate}
+              min={new Date().toISOString().split("T")[0]}
+              onChange={(e) => setAppointmentDate(e.target.value)}
+            />
             {errors.appointmentDate && (
               <span className="error-text">{errors.appointmentDate}</span>
             )}
@@ -157,11 +210,15 @@ const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) =
               onChange={(e) => setAppointmentTime(e.target.value)}            
             >
               <option value="">-- Select a Time Slot --</option>
-              {timeSlots.map((slot, index) => (
-                <option key={index} value={slot}>
-                  {slot}
-                </option>
-              ))}
+              {getFilteredTimeSlots().length === 0 ? (
+                <option value="">No time slots available today</option>
+              ) : (
+                getFilteredTimeSlots().map((slot, index) => (
+                  <option key={index} value={slot}>
+                    {slot}
+                  </option>
+                ))
+              )}
             </select>
             {errors.appointmentTime && (
               <span className="error-text">{errors.appointmentTime}</span>

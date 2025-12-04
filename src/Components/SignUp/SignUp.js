@@ -111,19 +111,32 @@ function SignUp({ setLoggedIn }) {
           <form onSubmit={handleSubmit}>
 
             <div className="form-group">
-              <label htmlFor="role">Role</label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="form-control"
-              >
-                <option value="">Select your role</option>
-                <option value="Doctor">Doctor</option>
-                <option value="Patient">Patient</option>
-              </select>
+              <label>Register as</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="Doctor"
+                    checked={formData.role === "Doctor"}
+                    onChange={handleChange}
+                  />
+                  Doctor
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="Patient"
+                    checked={formData.role === "Patient"}
+                    onChange={handleChange}
+                  />
+                  Patient
+                </label>
+              </div>
               {errors.role && <span className="error">{errors.role}</span>}
             </div>
+
 
             <div className="form-group">
               <label htmlFor="name">Name</label>

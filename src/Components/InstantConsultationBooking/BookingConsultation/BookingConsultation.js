@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_URL } from "../../../config";
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
+import { sendNotification } from "../../../utils/notify";
 import FindDoctorSearch from "../FindDoctorSearch/FindDoctorSearch"; // adjust path if needed
 import DoctorCard from "../DoctorCard/DoctorCard";
 import "./BookingConsultation.css";
@@ -40,13 +40,13 @@ const BookingConsultation = () => {
         setBookings(data);
         console.log("Bookings from DB:", data);
       });
-  }, []);*/
+  }, []);
 
   const formatDate = (d) => {
     if (!d) return "";
     const [year, month, day] = d.split("-");
     return `${day}/${month}/${year}`;
-  };
+  };*/
 
   const getDoctorsDetails = () => {
     //console.log("BookingConsultation.js getDoctorsDetails");
@@ -98,7 +98,7 @@ const BookingConsultation = () => {
     const token = sessionStorage.getItem("auth-token"); // your auth-token
 
     //console.log("auth-token:", token);
-    if (!token || token.split('.').length !== 3) {
+    /*if (!token || token.split('.').length !== 3) {
       console.warn("auth-token is missing or not a JWT");
       // handle: force login or show message
     }
@@ -134,9 +134,6 @@ const BookingConsultation = () => {
         //console.log("🔔 Notification created (server response normalized):", created);
 
         // store as fallback (so Home can read it if it missed the event)
-        /*try {
-          localStorage.setItem("latest_notification", JSON.stringify(created));
-        } catch (err) { console.warn("localStorage set failed:", err); }*/
 
         // dispatch a clear, well-named event and include the created notification as detail
         window.dispatchEvent(new CustomEvent("new-notification", { detail: created }));
@@ -144,12 +141,14 @@ const BookingConsultation = () => {
         console.log("📣 Dispatched new-notification event with detail");
       }
 
-
       alert(`Appointment booked for ${appointmentData.patientName} with ${doctor.name}`);
 
     } catch (err) {
       console.error("❌ Booking Error:", err);
-    }
+    }*/
+
+    await sendNotification(token, doctor, appointmentData, "Appointment Booked");
+
   };
 
   return (

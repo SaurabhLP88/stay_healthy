@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const Notification = require("../models/Notification");
+const Appointment = require("../models/Appointment");
 const router = express.Router();
 
 // Helper to extract userId from JWT
@@ -12,23 +13,55 @@ const getUserIdFromToken = (req) => {
   return decoded.user.id; // adjust if your payload structure differs
 };
 
+function toDateTime(dateStr, timeRange) {
+  const [start] = timeRange.split(" - ");
+  const dateParts = dateStr.includes("-") ? dateStr.split("-") : dateStr.split("/");
+  
+  // Convert to YYYY,MM,DD
+  let year, month, day;
+  if(dateStr.includes("-")){
+    [year, month, day] = dateParts;
+  } else {
+    [month, day, year] = dateParts;
+  }
+
+  const [time, modifier] = start.split(" ");
+  let [hours, minutes] = time.split(":").map(Number);
+
+  if (modifier === "PM" && hours !== 12) hours += 12;
+  if (modifier === "AM" && hours === 12) hours = 0;
+
+  return new Date(`${year}-${month}-${day}T${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:00`);
+}
+
 // CREATE NOTIFICATION
 router.post("/", async (req, res) => {
   try {
     const userId = getUserIdFromToken(req);
-    const { title, message } = req.body;
+    const { title, message, appointmentId } = req.body;
+
+    console.log("[create] Decoded User ID:", userId);
+    console.log("[create] Request Body Received:", req.body);
 
     if (!title || !message) {
+      console.log("[create] Missing title or message");
       return res.status(400).json({ error: "title and message required" });
+    }
+
+    if (!appointmentId) {
+      console.log("[create] Missing appointmentId");
     }
 
     const notify = await Notification.create({
       userId,
       title,
       message,
-      isRead: false,
+      //isRead: false,
+      appointmentId,
       createdAt: new Date()
     });
+
+    console.log("[create] Notification created successfully:", notify);
 
     res.json({ success: true, notify });
   } catch (err) {
@@ -38,14 +71,71 @@ router.post("/", async (req, res) => {
 });
 
 // CLEAR ALL NOTIFICATIONS
-router.post("/clear", async (_, res) => {
+/*router.post("/clear", async (_, res) => {
   try {
     await Notification.deleteMany({});
     return res.json({ success: true });
   } catch (err) {
     return res.status(500).json({ error: "Failed to clear notifications" });
   }
+});*/
+
+// GET LATEST NOTIFICATION (optional)
+router.get("/latest", async (req, res) => {
+  try {
+    const userId = getUserIdFromToken(req);
+    console.log("[/latest] userId:", userId);
+
+    // 1️⃣ Find all booked, future appointments
+    //const now = new Date();
+
+    const appointments = await Appointment.find({
+      userId,
+      status: "booked"
+    });
+
+    const upcoming = appointments
+      .map(appt => ({
+        ...appt._doc,
+        dateTime: toDateTime(appt.appointmentDate, appt.appointmentTime)
+      }))
+      .filter(appt => appt.dateTime >= new Date())
+      .sort((a, b) => a.dateTime - b.dateTime); // earliest first
+
+    console.log("[/latest] Upcoming booked appointments:", upcoming);
+    
+    if (!upcoming || upcoming.length === 0) {
+      console.log("[/latest] No upcoming booked appointment found");
+      return res.json(null);
+    }
+
+    const nextAppointment = upcoming[0];
+    console.log("[/latest] Nearest upcoming appointment:", nextAppointment);
+    
+    const notify = await Notification.findOne({
+      userId,
+      appointmentId: nextAppointment._id
+    }).sort({ createdAt: -1 });
+
+    console.log("[/latest] Found related notification:", notify);
+
+    if (!notify) {
+      console.log("[/latest] No notification for this appointment");
+      return res.json(null);
+    }
+
+    res.json({
+      ...notify._doc,
+      appointmentStatus: nextAppointment.status,
+      appointmentId: nextAppointment._id
+    });
+
+  } catch (err) {
+    console.error("Error loading latest notification:", err);
+    res.status(500).json({ error: "Could not load notifications" });
+  }
 });
+
 
 /*
 // GET ALL NOTIFICATIONS FOR LOGGED-IN USER
@@ -59,15 +149,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET LATEST NOTIFICATION (optional)
-router.get("/latest", async (req, res) => {
-  try {
-    const latest = await Notification.findOne().sort({ createdAt: -1 });
-    return res.json({ notification: latest || null });
-  } catch (err) {
-    return res.status(500).json({ error: "Failed to fetch notification" });
-  }
-});
+
 
 // GET UNREAD NOTIFICATIONS FOR LOGGED-IN USER
 router.get("/unread", async (req, res) => {

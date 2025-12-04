@@ -84,7 +84,8 @@ router.post('/register',[
 });
 
 router.post('/login', [
-    body('email', "Please Enter a Vaild Email").isEmail(),
+    body('email', "Please Enter a Valid Email").isEmail(),
+    body('role', "Role is required").notEmpty(), // <-- validate role
 ], async (req, res) => {
 
     const errors = validationResult(req);
@@ -93,40 +94,41 @@ router.post('/login', [
     }
 
     try {
-      
-        const theUser = await UserSchema.findOne({ email: req.body.email }); // <-- Change req.body.username to req.body.name
-            // console.log('my',theUser.name);
-        // req.session.name=theUser.name
-        //req.session.email = req.body.email; // <-- Change req.body.username to req.body.name
-        //console.log(req.session.email);
-        // console.log(req.session.name);
-        if (theUser) {
-            let checkHash = await bcrypt.compare(req.body.password, theUser.password);
-            if (checkHash) {
-                let payload = {
-                    user: {
-                        id: theUser.id
-                    }
-                }
-                const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
-                res.status(200).json({
-                    authtoken,
-                    name: theUser.name,
-                    email: theUser.email
-                });
+        const { email, password, role } = req.body;
 
-            } else {
-                return res.status(403).json({ error: "Invalid Credentials" });
-            }
-        } else {
+        const theUser = await UserSchema.findOne({ email });
+        if (!theUser) {
             return res.status(403).json({ error: "Invalid Credentials" });
         }
+
+        // Check password
+        const checkHash = await bcrypt.compare(password, theUser.password);
+        if (!checkHash) {
+            return res.status(403).json({ error: "Invalid Credentials" });
+        }
+
+        // ✅ Check role
+        if (theUser.role !== role) {
+            return res.status(403).json({ error: `Invalid role. Your account is registered as ${theUser.role}` });
+        }
+
+        // Create JWT
+        const payload = { user: { id: theUser.id, role: theUser.role } };
+        const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+
+        res.status(200).json({
+            authtoken,
+            name: theUser.name,
+            email: theUser.email,
+            role: theUser.role
+        });
 
     } catch (error) {
         console.error(error);
         return res.status(500).send("Internal Server Error");
     }
 });
+
 
 
 router.put('/update', [

@@ -97,11 +97,19 @@ const Appointments = () => {
         const [startA] = a.appointmentTime.split(" - ");
         const [startB] = b.appointmentTime.split(" - ");
 
-        const dateA = new Date(`${a.appointmentDate} ${startA}`);
-        const dateB = new Date(`${b.appointmentDate} ${startB}`);
+        // Convert DD/MM/YYYY → YYYY-MM-DD
+        const [dayA, monthA, yearA] = a.appointmentDate.split("/");
+        const [dayB, monthB, yearB] = b.appointmentDate.split("/");
 
-        return dateB - dateA; // latest first
+        const isoDateA = `${yearA}-${monthA}-${dayA}`;
+        const isoDateB = `${yearB}-${monthB}-${dayB}`;
+
+        const dateA = new Date(`${isoDateA} ${startA}`);
+        const dateB = new Date(`${isoDateB} ${startB}`);
+
+        return dateA - dateB; // earliest first
       });
+
 
       setAppointments(sorted);
     } catch (err) {
@@ -218,7 +226,7 @@ const Appointments = () => {
             <div className="appt-error">{error}</div>
           ) : appointments.length === 0 ? (
             <div className="appt-empty">
-              You don’t have any appointments yet. <Link to="/search/doctors">Book one now</Link>.
+              You don’t have any appointments yet. <Link to="/book-consultation">Book one now</Link>.
             </div>
           ) : (
               <>

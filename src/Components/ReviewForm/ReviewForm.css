@@ -9,11 +9,11 @@
 .open-btn:hover {background:#1565c0;}
 
 .review-form h3 {text-align:center;}
-.form-group {display:flex; flex-direction:column; margin-bottom:15px;}
-.form-group label {margin-bottom:6px; font-weight:600; color:#333;}
-.form-group input, .form-group textarea {width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:15px; resize:none; outline:none; transition:border 0.2s;}
-.form-group input:focus, .form-group textarea:focus {border-color:#1e88e5;}
-.form-group textarea { height:200px; }
+.review-form .form-group {display:flex; flex-direction:column; margin-bottom:15px;}
+.review-form .form-group label {margin-bottom:6px; font-weight:600; color:#333;}
+.review-form .form-group input, .review-form .form-group textarea {width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:15px; resize:none; outline:none; transition:border 0.2s;}
+.review-form .form-group input:focus, .review-form .form-group textarea:focus {border-color:#1e88e5;}
+.review-form .form-group textarea { height:200px; }
 .stars {display:flex; gap:5px; font-size:24px;}
 .star {color:#ccc; transition:color 0.2s; cursor:pointer;}
 .star:hover, .star.active {color:gold;}

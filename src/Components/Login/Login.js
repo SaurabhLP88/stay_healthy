@@ -8,7 +8,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login({ setLoggedIn }) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "", role: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
@@ -32,6 +32,7 @@ function Login({ setLoggedIn }) {
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       tempErrors.email = "Enter a valid email";
     if (!formData.password) tempErrors.password = "Password is required";
+    if (!formData.role) tempErrors.role = "Please select your role";
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -74,11 +75,7 @@ function Login({ setLoggedIn }) {
       sessionStorage.setItem("isLoggedIn", "true");
       sessionStorage.setItem("email", result.email || formData.email);
       sessionStorage.setItem("name", result.name || formData.email.split("@")[0]);
-      //sessionStorage.setItem("email", result.user.email);
-      //sessionStorage.setItem("name", result.user.name);
-      //localStorage.setItem("isLoggedIn", "true");
-      //localStorage.setItem("name", formData.email.split("@")[0]);
-      //localStorage.setItem("email", formData.email);
+      //sessionStorage.setItem("role", result.role || formData.role);
       if (typeof setLoggedIn === "function") {
         setLoggedIn(true);
       }
@@ -105,6 +102,35 @@ function Login({ setLoggedIn }) {
             </div>
             <div className="login-form">
               <form onSubmit={handleSubmit}>
+
+                <div className="form-group">
+                  <label>Login as</label>
+                  <div className="radio-group">
+                    <label>
+                      <input
+                        type="radio"
+                        name="role"
+                        value="Doctor"
+                        checked={formData.role === "Doctor"}
+                        onChange={handleChange}
+                      />
+                      Doctor
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="role"
+                        value="Patient"
+                        checked={formData.role === "Patient"}
+                        onChange={handleChange}
+                      />
+                      Patient
+                    </label>
+                  </div>
+                  {errors.role && <span className="error">{errors.role}</span>}
+                </div>
+
+
                 <div className="form-group">
                   <label>Email</label>
                   <input

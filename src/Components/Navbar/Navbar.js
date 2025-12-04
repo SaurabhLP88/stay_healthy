@@ -16,11 +16,12 @@ function Navbar({ loggedIn, setLoggedIn }) {
   const handleLogout = () => {
     setLoggedIn(false);
     sessionStorage.clear();
+    window.dispatchEvent(new Event("notification-deleted"));
     navigate("/login");
   };
 
 
-  const handleDropdown = () => setShowDropdown(!showDropdown);
+  //const handleDropdown = () => setShowDropdown(!showDropdown);
 
   useEffect(() => {
     const name = sessionStorage.getItem("name");
@@ -34,7 +35,7 @@ function Navbar({ loggedIn, setLoggedIn }) {
       setLoggedIn(false);
       setUsername("");
     }
-  }, [loggedIn, sessionStorage.getItem("name")]);
+ }, [loggedIn, setLoggedIn]);
 
 
   /*console.log("User details:", {

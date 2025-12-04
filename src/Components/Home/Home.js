@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../../config";
+import { sendNotification } from "../../utils/notify";
 import Navbar from "../Navbar/Navbar";
 import Notification from "../Notification/Notification";
 
@@ -12,32 +13,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
 
   //console.log("Home.js Loaded");  
 
-  /*const loadUnreadNotification = async () => {
-    try {
-      const userId = sessionStorage.getItem("userId"); // use same auth-token
-      if (!userId) {
-        console.warn("No auth-token found in sessionStorage!");
-        return;
-      }
-
-      const res = await fetch(`${API_URL}/api/notifications/unread`, {
-        headers: { "Authorization": `Bearer ${userId}` }
-      });
-      const data = await res.json();
-
-      console.log("[Home] unread notification:", data);
-
-      if (data.length > 0) {
-        setNotification(data[0]); 
-      } else {
-        setNotification(null);
-      }
-    } catch (err) {
-      console.error("[Home] Error fetching unread:", err);
-    }
-  };*/
-
-  const formatDate = (d) => {
+  /*const formatDate = (d) => {
     if (!d) return "";
 
     // If input is YYYY-MM-DD
@@ -53,39 +29,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
     }
 
     return d;
-  };
-  
-  const loadExistingAppointment = async () => {
-    const token = sessionStorage.getItem("auth-token");
-    if (!token) return;
-
-    try {
-      const res = await fetch(`${API_URL}/api/appointments/my`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-
-      const data = await res.json();
-      if (data.length > 0) {
-        const appt = data[0];
-        const detail = {
-          title: "Appointment Confirmed",
-          message: `
-            <p><b>Doctor:</b> ${appt.doctorName}</p>
-            <p><b>Speciality:</b> ${appt.doctorSpeciality}</p>
-            <p><b>Patient:</b> ${appt.patientName}</p>
-            <p><b>Phone:</b> ${appt.phoneNumber}</p>
-            <p><b>Date:</b> ${formatDate(appt.appointmentDate)}</p>
-            <p><b>Time:</b> ${appt.appointmentTime}</p>
-          `.trim()
-        };
-
-        setNotification(detail);
-        //console.log("detailss", detail);
-      }
-    } catch (err) {
-      console.error("Failed to load appointment", err);
-    }
-  };
+  };*/
 
   useEffect(() => {
     
@@ -102,7 +46,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
     window.addEventListener("notification-deleted", handleDelete);
 
     //console.log("useEffect Fired");
-    if (!notification) {
+    if (loggedIn && !notification) { 
       loadExistingAppointment();
     }
 
@@ -110,7 +54,28 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
       window.removeEventListener("new-notification", handler);
       window.removeEventListener("notification-deleted", handleDelete);
     };
-  }, []);
+  }, [loggedIn]);
+  
+  const loadExistingAppointment = async () => {
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/notifications/latest`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const latest = await res.json();
+
+      if (latest && latest.title && latest.message) {
+        setNotification(latest);
+      } else {
+        setNotification(null);
+      }
+    } catch (err) {
+      console.error("Failed to load notification:", err);
+    }
+  };
 
   /*const markAsRead = async () => {
     if (!notification?._id) return setNotification(null);
@@ -131,7 +96,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
     <div>
       <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} username={username} />
       {children}
-      {notification && (
+      {loggedIn && notification && (
         <Notification
           title={notification.title}
           message={notification.message}
