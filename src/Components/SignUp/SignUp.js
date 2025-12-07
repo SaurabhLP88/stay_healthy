@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { API_URL } from "../../config";
+import initSpeciality from "../../utils/specialities";
 
 import "./SignUp.css";
 
@@ -15,6 +16,8 @@ function SignUp({ setLoggedIn }) {
     email: "",
     password: "",
     role: "",
+    speciality: "",
+    experience: ""
   };
 
   const [formData, setFormData] = useState(initialFormState);
@@ -42,6 +45,10 @@ function SignUp({ setLoggedIn }) {
     else if (formData.password.length < 6)
       tempErrors.password = "Password must be at least 6 characters";
     if (!formData.role) tempErrors.role = "Please select your role";
+    if (formData.role === "Doctor") {
+      if (!formData.speciality) tempErrors.speciality = "Speciality is required";
+      if (!formData.experience) tempErrors.experience = "Experience is required";
+    }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -82,12 +89,13 @@ function SignUp({ setLoggedIn }) {
       if (result) {
         alert("Registration successful! Please login from the Login page.");
         //sessionStorage.setItem("auth-token", result.authtoken);
-        sessionStorage.setItem("email", result.email); // persist login
+        //sessionStorage.setItem("email", result.email); // persist login
         //sessionStorage.setItem("role", result.role); // store role
-        sessionStorage.setItem("phone", result.phone); 
-        sessionStorage.setItem("name", result.name);
+        //sessionStorage.setItem("phone", result.phone); 
+        //sessionStorage.setItem("name", result.name);
         //setLoggedIn(true); // update App state       
-        setFormData(initialFormState); // Clear form        
+        setFormData(initialFormState); // Clear form    
+        sessionStorage.clear();
         navigate("/login"); // Redirect user to login page
       }
     }
@@ -150,6 +158,40 @@ function SignUp({ setLoggedIn }) {
               />
               {errors.name && <span className="error">{errors.name}</span>}
             </div>
+
+            {formData.role === "Doctor" && (
+              <>
+                <div className="form-group">
+                  <label>Speciality</label>
+                  <select
+                    name="speciality"
+                    value={formData.speciality}
+                    onChange={handleChange}
+                    className="form-control"
+                  >
+                    <option value="">Select speciality</option>
+                    {initSpeciality.map((item, index) => (
+                      <option key={index} value={item}>{item}</option>
+                    ))}
+
+                  </select>
+                  {errors.speciality && <span className="error">{errors.speciality}</span>}
+                </div>
+                <div className="form-group">
+                  <label>Experience (in years)</label>
+                  <input
+                    type="number"
+                    name="experience"
+                    min="0"
+                    value={formData.experience || ""}
+                    onChange={handleChange}
+                    placeholder="Enter years of experience"
+                    className="form-control"
+                  />
+                  {errors.experience && <span className="error">{errors.experience}</span>}
+                </div>
+              </>
+            )}
 
             <div className="form-group">
               <label htmlFor="phone">Phone</label>

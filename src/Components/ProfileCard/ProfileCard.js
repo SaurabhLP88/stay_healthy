@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import initSpeciality from "../../utils/specialities";
 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./ProfileCard.css";
 
 const ProfileForm = () => {
@@ -11,6 +12,8 @@ const ProfileForm = () => {
   const [editMode, setEditMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordChanged, setPasswordChanged] = useState(false);
+
+  const role = sessionStorage.getItem("role");
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,36 +29,45 @@ const ProfileForm = () => {
     try {
       const authtoken = sessionStorage.getItem("auth-token");
       const email = sessionStorage.getItem("email"); // Get the email from session storage
-
+      console.log("🔵 Fetching Profile — Email:", email);
       if (!authtoken) {
         navigate("/login");
       } else {
-        const response = await fetch(`${API_URL}/api/auth/user`, {
+        const endpoint = role === "Doctor" 
+          ? `${API_URL}/api/doctors/profile`
+          : `${API_URL}/api/auth/user`;
+
+        console.log("🔵 API Endpoint:", endpoint);
+        const response = await fetch(endpoint, {
           headers: {
             "Authorization": `Bearer ${authtoken}`,
-            "email": email, // Add the email to the headers
-          },
+            "email": email
+          }
         });
+        console.log("🔵 Profile Fetch Status:", response.status);
         if (response.ok) {
           const user = await response.json();
+          console.log("✅ Profile Data Received:", user);
           setUserDetails(user);
           setUpdatedDetails({ ...user, password: "" });
         } else {
-          // Handle error case
+          console.log("❌ Failed to fetch profile:", response.status);
           throw new Error("Failed to fetch user profile");
         }
       }
     } catch (error) {
-      //console.error(error);
+      console.log("❌ Error inside fetchUserProfile:", error);
       // Handle error case
     }
   };
 
   const handleEdit = () => {
+    console.log("🟡 Edit Mode Enabled");
     setEditMode(true);
   };
 
   const handleInputChange = (e) => {
+    console.log(`🟡 Input Changed — ${e.target.name}:`, e.target.value);
     setUpdatedDetails({
       ...updatedDetails,
       [e.target.name]: e.target.value,
@@ -64,23 +76,26 @@ const ProfileForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("🔵 Submit Triggered — Updated Details:", updatedDetails);
     if (
       updatedDetails.name === userDetails.name &&
       updatedDetails.phone === userDetails.phone &&
       !updatedDetails.password
     ) {
       alert("No changes done");
+      console.log("⚠ No changes detected, cancelling update.");
       setEditMode(false);
       return;
     }
 
     if (!/^[0-9]{10}$/.test(updatedDetails.phone)) {
+      console.log("❌ Invalid Phone:", updatedDetails.phone);
       alert("Phone must be 10 digits!");
       return;
     }
 
     if (updatedDetails.password && updatedDetails.password.length < 6) {
+      console.log("❌ Invalid Password Length");
       alert("Password must be at least 6 characters!");
       return;
     }
@@ -88,7 +103,7 @@ const ProfileForm = () => {
     try {
       const authtoken = sessionStorage.getItem("auth-token");
       const email = sessionStorage.getItem("email"); // Get the email from session storage
-
+      console.log("🔵 Sending Update — Email:", email);
       if (!authtoken || !email) {
         navigate("/login");
         return;
@@ -96,7 +111,13 @@ const ProfileForm = () => {
 
       const payload = { ...updatedDetails };
       if (!payload.password) delete payload.password;
-      const response = await fetch(`${API_URL}/api/auth/user`, {
+      console.log("🟡 Final Payload Sent:", payload);
+
+      const endpoint = role === "Doctor"
+        ? `${API_URL}/api/doctors/update`
+        : `${API_URL}/api/auth/user`;
+      console.log("🔵 Update API Endpoint:", endpoint);
+      const response = await fetch(endpoint, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${authtoken}`,
@@ -105,11 +126,18 @@ const ProfileForm = () => {
         },
         body: JSON.stringify(payload),
       });
+      console.log("🔵 Update Response Status:", response.status);
 
       if (response.ok) {
         // Update the user details in session storage
         sessionStorage.setItem("name", updatedDetails.name);
         sessionStorage.setItem("phone", updatedDetails.phone);
+        window.dispatchEvent(new Event("session-update"));
+
+        if (role === "Doctor") {
+          sessionStorage.setItem("speciality", updatedDetails.speciality);
+          sessionStorage.setItem("experience", updatedDetails.experience);
+        }
 
         setUserDetails({
           ...userDetails,
@@ -120,8 +148,9 @@ const ProfileForm = () => {
         
         if (updatedDetails.password) {
           setPasswordChanged(true);
-          //alert("Password updated successfully! Please login again.");
           sessionStorage.clear();
+          window.dispatchEvent(new Event("session-update"));
+          alert("Password Updated Successfully!");
           navigate("/login");
           return;
         }
@@ -129,11 +158,11 @@ const ProfileForm = () => {
         alert("Profile Updated Successfully!");
         navigate("/");
       } else {
-        // Handle error case
+        console.log("❌ Failed to update profile:", response.status);
         throw new Error("Failed to update profile");
       }
     } catch (error) {
-      //console.error(error);
+      console.log("❌ Error in handleSubmit:", error);
       // Handle error case
     }
   };
@@ -168,6 +197,38 @@ const ProfileForm = () => {
               onChange={handleInputChange}
             />
           </div>
+
+          {role === "Doctor" && (
+            <>
+              <div className="form-group">
+                <label htmlFor="speciality">Speciality</label>
+                <select
+                    name="speciality"
+                    value={updatedDetails.speciality || ""}
+                    onChange={handleInputChange}
+                    className="form-control"
+                  >
+                    <option value="">Select speciality</option>
+                    {initSpeciality.map((item, index) => (
+                      <option key={index} value={item}>{item}</option>
+                    ))}
+
+                  </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="experience">Experience (years)</label>
+                <input
+                  type="number"
+                  name="experience"
+                  className="form-control"
+                  min="0"
+                  value={updatedDetails.experience || ""}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </>
+          )}
           
           <div className="form-group">
             <label htmlFor="phone"> Phone</label>
@@ -201,6 +262,12 @@ const ProfileForm = () => {
       ) : (
         <div className="profile-details">
           <h1>Welcome, {userDetails.name}</h1>
+          {role === "Doctor" && (
+            <>
+              <p><b>Speciality:</b> {userDetails.speciality}</p>
+              <p><b>Experience:</b> {userDetails.experience} years</p>
+            </>
+          )}
           <p> <b>Email:</b> {userDetails.email}</p>
           <p><b>Phone:</b> {userDetails.phone}</p>
           <button onClick={handleEdit}>Edit</button>

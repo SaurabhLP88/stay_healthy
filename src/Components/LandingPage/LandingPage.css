@@ -7,6 +7,13 @@ h1, h2 {line-height:1.3; margin:15px 0;}
 button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%; border-radius:5px; margin-top:10px;}
 .button:hover {transform:scale(0.98);}
 
+@keyframes blobani {
+0% {top:0; left:0; transform:scale(1);}
+30% {top:0; left:0; transform:scale(1.2);}
+60% {top:0; left:0; transform:scale(1.3);}
+100% {top:0; left:0; transform:scale(1);}
+}
+
 .text-center {text-align:center;}
 
 .hero-section {height:100vh; padding-top:15rem; background-color:transparent; z-index:-1;}
@@ -24,13 +31,6 @@ button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%;
 .blue {background-color:#2937a392; position:absolute; top:0; left:0; right:55%; bottom:25%; margin:auto; height:150px; width:200px; animation:blobani 8s infinite ease;}
 .blue1 {background-color:#2937a392; position:absolute; top:0; left:0; right:-55%; bottom:-25%; margin:auto; height:150px; width:200px; animation:blobani 8s infinite ease;}
 
-@keyframes blobani {
-0% {top:0; left:0; transform:scale(1);}
-30% {top:0; left:0; transform:scale(1.2);}
-60% {top:0; left:0; transform:scale(1.3);}
-100% {top:0; left:0; transform:scale(1);}
-}
-
 .services-section {height:100vh; padding:150px 50px 25px; background-color:#f9fafc; text-align:center;}
 .section-title {font-size:2.4rem; font-weight:600; color:#222; margin-bottom:15px;}
 .section-subtitle {font-size:1.2rem; font-weight:400; color:#222; margin-bottom:40px;}
@@ -39,6 +39,23 @@ button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%;
 .service-card:hover {transform:translateY(-8px); box-shadow:0 8px 25px rgba(0, 0, 0, 0.15);}
 .service-card img {width:auto; height:auto; object-fit:contain; margin-bottom:15px;}
 .service-card h3 {font-size:1.1rem; font-weight:500; color:#333;}
+
+/* Doctor dashboard */
+.doctor-dashboard {padding:7rem 20px 20px;}
+.dash-title {font-size:28px; margin-bottom:20px; font-weight:700; color:#333;}
+.stats-grid {display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:20px;}
+.stat-card {background:white; border-radius:12px; padding:20px; box-shadow:0 3px 15px rgba(0,0,0,0.1); text-align:center; transition:0.2s ease;}
+.stat-card:hover {transform:translateY(-4px);}
+.stat-card h3 {font-size:18px; margin-bottom:10px;}
+.stat-number {font-size:36px; font-weight:bold; color:#2a8df4;}
+.upcoming .next-time {font-size:20px; font-weight:bold; color:#28a745;}
+.upcoming .next-name {font-size:16px; color:#555;}
+
+@media screen and (max-width:400px) {
+.hero-section h1 {font-size:35px;}
+.hero-section {padding-top:10rem;}
+.hero-section h4 {font-size:16px; padding:0px 2rem;}
+}
 
 
 @media screen and (max-width:980px) {
@@ -49,8 +66,3 @@ button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%;
 .hero-section .button {margin-top:15px; width:45%;}
 }
 
-@media screen and (max-width:400px) {
-.hero-section h1 {font-size:35px;}
-.hero-section {padding-top:10rem;}
-.hero-section h4 {font-size:16px; padding:0px 2rem;}
-}

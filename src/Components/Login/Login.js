@@ -73,6 +73,13 @@ function Login({ setLoggedIn }) {
       alert("Login successful!");
       // persist login status and name (use email as fallback)
       sessionStorage.setItem("isLoggedIn", "true");
+      if (result.role === "Doctor") {
+          sessionStorage.setItem("doctorId", result.id);
+      } else {
+          sessionStorage.setItem("userId", result.id);
+      }
+      
+      sessionStorage.setItem("role", result.role);
       sessionStorage.setItem("email", result.email || formData.email);
       sessionStorage.setItem("name", result.name || formData.email.split("@")[0]);
       //sessionStorage.setItem("role", result.role || formData.role);
@@ -167,7 +174,7 @@ function Login({ setLoggedIn }) {
                   <button
                     type="reset"
                     className="btn btn-danger"
-                    onClick={() => setFormData({ email: "", password: "" })}
+                    onClick={() => setFormData({ email: "", password: "", role: "" })}
                   >
                     Reset
                   </button>

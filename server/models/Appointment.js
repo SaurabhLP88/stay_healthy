@@ -26,7 +26,8 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     enum: ["booked", "completed", "cancelled", "expired"],
     default: "booked"
-  }
+  },
+  createdAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Appointment", appointmentSchema);

@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { FaSearch, FaUserMd } from 'react-icons/fa';
+import initSpeciality from "../../../utils/specialities";
 
 import './FindDoctorSearch.css';
 
 import instant from '../../../assets/images/instant.svg';
 import book from "../../../assets/images/book.svg";
 import doctor from "../../../assets/images/self.svg";
-
-const initSpeciality = [
-    'Dentist', 'Gynecologist/obstetrician', 'General Physician', 'Dermatologist', 'Ear-nose-throat (ent) Specialist', 'Homeopath', 'Ayurveda'
-]
 
 const FindDoctorSearch = () => {
 

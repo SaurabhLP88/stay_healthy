@@ -2,40 +2,75 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
-
-function Navbar({ loggedIn, setLoggedIn }) {
+function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
   const [click, setClick] = useState(false);
   const [username, setUsername] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
-
+  const [role, setRole] = useState("");
+  //const [showDropdown, setShowDropdown] = useState(false);
+  
   const navigate = useNavigate();
   //console.log("Navbar.js Loaded");
 
-  const handleClick = () => setClick(!click);
+  //const role = sessionStorage.getItem("role")?.toLowerCase();
 
-  const handleLogout = () => {
-    setLoggedIn(false);
+  console.log("[Navbar Render]", {
+    loggedIn,
+    username,
+    role,
+  });
+
+  const syncNavbar = () => {
+    const name = sessionStorage.getItem("name") || "";
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+    const userRole = sessionStorage.getItem("role")?.toLowerCase() || "";
+    console.log("%c[Navbar] sessionStorage values", {
+      name,
+      isLoggedIn,
+      userRole,
+    });
+
+    //setUsername(name);
+    if (parentUsername) {
+      setUsername(parentUsername);
+    }
+    setLoggedIn(isLoggedIn);
+    setRole(userRole);
+
+    console.log("[Navbar] State updated", {
+      username: name,
+      loggedIn: isLoggedIn,
+      role: userRole,
+    });
+  };
+
+  useEffect(() => {
+    console.log("[Navbar] useEffect Mounted");
+    syncNavbar();
+    window.addEventListener("storage", syncNavbar);
+    window.addEventListener("session-update", syncNavbar);
+    return () => {
+      console.log("[Navbar] useEffect Cleanup");
+      window.removeEventListener("storage", syncNavbar);
+      window.removeEventListener("session-update", syncNavbar);
+    };
+  }, [parentUsername]);
+
+  const handleClick = () => {
+    console.log("[Navbar] Menu Toggle", "color: violet", { click: !click });
+    setClick(!click);
+  };
+
+  const handleLogout = () => {    
     sessionStorage.clear();
+    setLoggedIn(false);
+    setUsername("");
+    setRole("");
+    console.log("[Navbar] After Logout - Dispatching session-update");
+    window.dispatchEvent(new Event("session-update"));
     window.dispatchEvent(new Event("notification-deleted"));
     navigate("/login");
   };
-
-
   //const handleDropdown = () => setShowDropdown(!showDropdown);
-
-  useEffect(() => {
-    const name = sessionStorage.getItem("name");
-    const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
-
-    if (isLoggedIn) {
-      setLoggedIn(true);
-      setUsername(name || "");
-      //console.log("Signed-in User Details:", { name, isLoggedIn });
-    } else {
-      setLoggedIn(false);
-      setUsername("");
-    }
- }, [loggedIn, setLoggedIn]);
 
 
   /*console.log("User details:", {
@@ -56,20 +91,26 @@ function Navbar({ loggedIn, setLoggedIn }) {
       </div>
 
       <ul className={click ? "nav__links active" : "nav__links"}>
-        <li className="link"><Link to="/">Home</Link></li>
+        
+        <li className="link"><Link to="/">{role !== "doctor" ? "Home" : "Dashboard"}</Link></li>
+
         {loggedIn && (
           <li className="link"><Link to="/appointments">Appointments</Link></li>
         )}
         <li className="link"><Link to="/health-blog">Health Blog</Link></li>
-        <li className="link"><Link to="/reviews">Reviews</Link></li>
+        {role !== "doctor" && (
+          <li className="link"><Link to="/reviews">Reviews</Link></li>
+        )}
 
         {loggedIn ? (
           <>
             {username && 
-              <li className="welcome-user"><span>Hello, {username}</span>
+              <li className="welcome-user"><span>Welcome, {username}</span>
                 <ul className="dropdown-menu">
                   <li><Link to="/profile">Your Profile</Link></li>
-                  <li><Link to="/reports">Your Reports</Link></li>
+                  {role !== "doctor" && (
+                    <li><Link to="/reports">Your Reports</Link></li>
+                  )}
                 </ul>
               </li>
             }

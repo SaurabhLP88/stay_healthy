@@ -32,27 +32,38 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
   };*/
 
   useEffect(() => {
+
+    const syncUsername = () => {
+      const name = sessionStorage.getItem("name") || "";
+      setUsername(name);
+      console.log("%c[Home.js] Username synced", "color: cyan", name);
+    };
     
     const handler = (e) => { 
       setNotification(e.detail); 
       //console.log("handler Fired");
-    }
-    window.addEventListener("new-notification", handler);
+    }    
 
     const handleDelete = () => {
       setNotification(null);
       //console.log("handleDelete Fired");
-    }
-    window.addEventListener("notification-deleted", handleDelete);
+    }   
 
     //console.log("useEffect Fired");
     if (loggedIn && !notification) { 
       loadExistingAppointment();
     }
 
+    syncUsername();
+
+    window.addEventListener("new-notification", handler);
+    window.addEventListener("notification-deleted", handleDelete);
+    window.addEventListener("session-update", syncUsername);
+
     return () => {
       window.removeEventListener("new-notification", handler);
       window.removeEventListener("notification-deleted", handleDelete);
+      window.removeEventListener("session-update", syncUsername);
     };
   }, [loggedIn]);
   

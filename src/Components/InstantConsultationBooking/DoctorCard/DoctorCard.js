@@ -181,7 +181,7 @@ const DoctorCard = ({ doctorId, image, name, speciality, experience, ratings, on
           <div className="doctor-card-detail-name">{name}</div>
           <div className="doctor-card-detail-speciality">{speciality}</div>
           <div className="doctor-card-detail-experience">{experience} years experience</div>
-          <div className="doctor-card-detail-consultationfees">Ratings: {starRating}</div>
+          <div className="doctor-card-detail-consultationfees">Ratings: {starRating || "0"}</div>
         </div>
       </div>
 
@@ -211,7 +211,7 @@ const DoctorCard = ({ doctorId, image, name, speciality, experience, ratings, on
                   <div className="doctor-card-detail-name">{name}</div>
                   <div className="doctor-card-detail-speciality">{speciality}</div>
                   <div className="doctor-card-detail-experience">{experience} years experience</div>
-                  <div className="doctor-card-detail-consultationfees">Ratings: {starRating}</div>
+                  <div className="doctor-card-detail-consultationfees">Ratings: {starRating || "0"}</div>
                 </div>
               </div>             
 

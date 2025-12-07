@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const UserSchema = require('../models/User');
+const DoctorSchema = require('../models/Doctor');
 const passport = require('passport');
 
 
@@ -37,7 +38,7 @@ passport.deserializeUser(function (id, cb) {
 });
 
 // Route 1: Registering A New User: POST: http://localhost:8181/api/auth/register. No Login Required
-router.post('/register',[
+/*router.post('/register',[
     body('email', "Please Enter a Vaild Email").isEmail(),
     body('name', "Username should be at least 4 characters.").isLength({ min: 4 }),
     body('password', "Password Should Be At Least 6 Characters.").isLength({ min: 6 }),
@@ -81,7 +82,95 @@ router.post('/register',[
         return res.status(500).send("Internal Server Error");
     }
 
+});*/
+
+router.post('/register', [
+    body('email', "Please Enter a Valid Email").isEmail(),
+    body('name', "Username should be at least 4 characters").isLength({ min: 4 }),
+    body('password', "Password should be at least 6 characters").isLength({ min: 6 }),
+    body('phone', "Phone number should be 10 digits").isLength({ min: 10 }),
+    body('role', "Role is required").notEmpty(),
+], 
+async (req, res) => {
+    console.log("📩 Incoming Registration Request:", req.body);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log("❌ Validation Errors:", errors.array());
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const { name, email, password, phone, role, speciality, experience } = req.body;
+        console.log(`🔍 Checking existing user for email: ${email}`);
+
+        // Check email in BOTH collections
+        const existingUser = await UserSchema.findOne({ email });
+        const existingDoctor = await DoctorSchema.findOne({ email });
+        console.log("🧪 Search Results:", {
+            existingUser: !!existingUser,
+            existingDoctor: !!existingDoctor
+        });
+
+        if (existingUser || existingDoctor) {
+            console.log("❌ Duplicate Email Found!");
+            return res.status(403).json({ error: "A user with this email already exists" });
+        }
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPass = await bcrypt.hash(password, salt);
+
+        let newUser;
+        if (role === "Doctor") {
+            console.log("🩺 Registering Doctor:", { name, speciality, experience });
+            newUser = await DoctorSchema.create({
+                role: "Doctor",
+                name,
+                email,
+                phone,
+                password: hashedPass,
+                speciality,
+                experience,
+                rating: 0,
+                createdAt: Date(),
+            });
+            console.log("✅ Doctor Created Successfully:", newUser._id);
+        }
+        else {
+            console.log("👤 Registering Patient:", { name });
+            newUser = await UserSchema.create({
+                role: "Patient",
+                name,
+                email,
+                phone,
+                password: hashedPass,
+                createdAt: Date(),
+            });
+            console.log("✅ Patient Created Successfully:", newUser._id);
+        }
+
+        // Create JWT token
+        const payload = {
+            user: { id: newUser.id, role: newUser.role }
+        };
+        console.log("🔑 Creating JWT Token with payload:", payload);
+        const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+
+        return res.json({
+            authtoken,
+            email: newUser.email,
+            role: newUser.role,
+            name: newUser.name,
+            phone: newUser.phone
+        });
+
+    } catch (error) {
+        console.error("Register Error:", error);
+        return res.status(500).send("Internal Server Error");
+    }
+
 });
+
 
 router.post('/login', [
     body('email', "Please Enter a Valid Email").isEmail(),
@@ -96,18 +185,25 @@ router.post('/login', [
     try {
         const { email, password, role } = req.body;
 
-        const theUser = await UserSchema.findOne({ email });
+        //const theUser = await UserSchema.findOne({ email, role });
+        let theUser;
+        if (role === "Doctor") {
+            theUser = await DoctorSchema.findOne({ email });
+        } else {
+            theUser = await UserSchema.findOne({ email });
+        }
+
         if (!theUser) {
-            return res.status(403).json({ error: "Invalid Credentials" });
+            return res.status(403).json({ error: "Invalid Username" });
         }
 
         // Check password
         const checkHash = await bcrypt.compare(password, theUser.password);
         if (!checkHash) {
-            return res.status(403).json({ error: "Invalid Credentials" });
+            return res.status(403).json({ error: "Invalid Password" });
         }
 
-        // ✅ Check role
+        /* Check role*/
         if (theUser.role !== role) {
             return res.status(403).json({ error: `Invalid role. Your account is registered as ${theUser.role}` });
         }
@@ -118,6 +214,7 @@ router.post('/login', [
 
         res.status(200).json({
             authtoken,
+            id: theUser._id,
             name: theUser.name,
             email: theUser.email,
             role: theUser.role

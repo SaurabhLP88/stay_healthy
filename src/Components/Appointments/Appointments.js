@@ -90,28 +90,8 @@ const Appointments = () => {
       const data = await res.json();
 
       console.log("Appointments response:", data);
-
-      // Expect data to be array of appointments
-      // Normalize sort: upcoming first (status or date)
-      const sorted = (data || []).slice().sort((a, b) => {
-        const [startA] = a.appointmentTime.split(" - ");
-        const [startB] = b.appointmentTime.split(" - ");
-
-        // Convert DD/MM/YYYY → YYYY-MM-DD
-        const [dayA, monthA, yearA] = a.appointmentDate.split("/");
-        const [dayB, monthB, yearB] = b.appointmentDate.split("/");
-
-        const isoDateA = `${yearA}-${monthA}-${dayA}`;
-        const isoDateB = `${yearB}-${monthB}-${dayB}`;
-
-        const dateA = new Date(`${isoDateA} ${startA}`);
-        const dateB = new Date(`${isoDateB} ${startB}`);
-
-        return dateA - dateB; // earliest first
-      });
-
-
-      setAppointments(sorted);
+      setAppointments(data);
+      
     } catch (err) {
       console.error(err);
       setError("Unable to load appointments. Try again later.");

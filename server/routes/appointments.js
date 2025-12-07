@@ -76,29 +76,70 @@ router.get("/my", async (req, res) => {
     if (!userId) return res.status(401).json({ error: "Invalid token payload" });
 
     let appointments = await Appointment.find({ userId })
-      .populate("doctorId", "name speciality image")
-      .sort({ appointmentDate: 1 });
+      .populate("doctorId", "name speciality image");
 
-    appointments = await Promise.all(
-      appointments.map(async (appt) => {
-        const [startTime] = appt.appointmentTime.split(" - ");
+    console.log("\n================ RAW APPOINTMENTS FROM DB ================");
+    appointments.forEach((a, i) => {
+      console.log(
+        `${i + 1}. ${a.appointmentDate} | ${a.appointmentTime} | ${a.status}`
+      );
+    });
 
-        const apptDateTime = new Date(
-          `${appt.appointmentDate} ${startTime}`
-        );
+    appointments = appointments.map((appt, index) => {
+      const [startTime] = appt.appointmentTime.split(" - ");
 
-        if (
-          appt.bookingType !== "instant" &&
-          appt.status === "booked" &&
-          apptDateTime < new Date()
-        ) {
-          appt.status = "expired";
-          await appt.save();
-        }
+      let day, month, year;
 
-        return appt;
-      })
-    );
+      // detect yyyy-mm-dd
+      if (appt.appointmentDate.includes("-")) {
+        [year, month, day] = appt.appointmentDate.split("-");
+      }
+      // detect dd/mm/yyyy
+      else if (appt.appointmentDate.includes("/")) {
+        [day, month, year] = appt.appointmentDate.split("/");
+      }
+
+      const [time, ampm] = startTime.split(" ");
+      let [hr, min] = time.split(":").map(Number);
+
+      if (ampm === "PM" && hr !== 12) hr += 12;
+      if (ampm === "AM" && hr === 12) hr = 0;
+
+      const sortKey = new Date(year, month - 1, day, hr, min);
+
+      console.log(
+        `→ FIXED SORTKEY (${index + 1}): ${appt.appointmentDate} ${startTime} ==>`,
+        sortKey
+      );
+
+      return {
+        ...appt.toObject(),
+        sortKey
+      };
+    });
+
+    console.log("\n================ BEFORE SORT ================");
+    appointments.forEach((a, i) => {
+      console.log(
+        `${i + 1}. ${a.appointmentDate} ${a.appointmentTime} | sortKey: ${a.sortKey}`
+      );
+    });
+
+    appointments.sort((a, b) => {
+      // First sort by date descending (latest date first)
+      if (b.sortKey.toDateString() !== a.sortKey.toDateString()) {
+        return b.sortKey - a.sortKey; // descending date
+      }
+      // If same date, sort by time ascending
+      return a.sortKey - b.sortKey; // ascending time
+    });
+
+    console.log("\n================ AFTER SORT ================");
+    appointments.forEach((a, i) => {
+      console.log(
+        `${i + 1}. ${a.appointmentDate} ${a.appointmentTime} | sortKey: ${a.sortKey}`
+      );
+    });
 
     const Review = require("../models/Reviews");
     const updated = await Promise.all(
@@ -106,7 +147,7 @@ router.get("/my", async (req, res) => {
         const review = await Review.findOne({ appointmentId: appt._id });
 
         return {
-          ...appt.toObject(),
+          ...appt,
           doctorId: appt.doctorId?._id || null,
           hasReview: !!review 
         };
