@@ -1,7 +1,7 @@
 
 # 🏥 StayHealthy – Medical Appointment Booking System
 
-StayHealthy is a full-stack **Medical Appointment Booking System** designed to streamline online appointment booking and digital health management. It provides dedicated dashboards for patients and doctors, enabling smooth appointment scheduling, profile management, notifications, and medical record tracking.
+StayHealthy is a **Medical Appointment Booking System** designed to streamline online appointment booking and digital health management. It provides dedicated dashboards for patients and doctors, enabling smooth appointment scheduling, profile management, notifications, and medical record tracking.
 
 ## 🚀 Project Overview
 
@@ -137,7 +137,8 @@ StayHealthy/
 ## 🌐 Live Demo & Repository
 
 Live Demo: [StayHealthy Live](https://saurabhlp88.github.io/stay_healthy/)  
-Repository: [StayHealthy on GitHub](https://github.com/SaurabhLP88/stay_healthy.git)
+Repository: [StayHealthy on GitHub](https://github.com/SaurabhLP88/stay_healthy.git)  
+IBM Front-End Developer Capstone Project
 
 ## 👨‍💻 About the Developer
 
