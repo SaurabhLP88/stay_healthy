@@ -127,8 +127,8 @@ This project demonstrates your ability to:
 
 📁 Project Structure
 
-# StayHealthy/
-`
+```python
+StayHealthy/
 │
 ├── /                     # Frontend (React)
 ├── server/               # Backend (Node.js / Express)
@@ -140,7 +140,8 @@ This project demonstrates your ability to:
 ├── dist/                 # Bundles
 ├── src/                  # React source code
 └── README.md             # Project documentation
-`
+```
+
 
 🌐 Live Demo & Repository
 
