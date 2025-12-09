@@ -1,4 +1,4 @@
-.self-checkup {max-width:1200px; margin:auto; padding:8em 20px 2em;}
+.self-checkup {max-width:1200px; margin:auto; padding:0em 20px 0em;}
 .checkup-header {background:#e8f1ff; padding:25px; border-radius:14px; display:flex; align-items:center; gap:25px; margin-bottom:25px;}
 .checkup-left {flex:1;}
 .checkup-header-image {width:100%; height:auto; object-fit:cover;}

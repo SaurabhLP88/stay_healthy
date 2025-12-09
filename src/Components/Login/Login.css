@@ -1,4 +1,4 @@
-.container {max-width:450px; margin:0 auto; padding:40px; margin-top:10%;}
+.container {max-width:450px; margin:0 auto; padding:0 20px 0; }
 .login-text { text-align: center; }
 .login-form, .forgot-form { padding-top: 20px; }
 .form-group {margin-bottom:20px;}

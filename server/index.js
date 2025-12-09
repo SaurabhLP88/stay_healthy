@@ -1,3 +1,9 @@
+/**
+ * StayHealthy — Medical Appointment Booking System
+ * Developed by: Saurabh Lakhanpal
+ * GitHub: https://github.com/SaurabhLP88
+ */
+
 const express = require('express');
 const cors = require('cors');
 const connectToMongo = require('./db');

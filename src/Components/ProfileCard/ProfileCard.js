@@ -173,6 +173,9 @@ const ProfileForm = () => {
 
   return (
     <div className="profile-container">
+
+      <h1 className="profile-title">Your Profile</h1>
+
       {editMode ? (
         <form onSubmit={handleSubmit}>
 
@@ -261,7 +264,7 @@ const ProfileForm = () => {
         </form>
       ) : (
         <div className="profile-details">
-          <h1>Welcome, {userDetails.name}</h1>
+          <h3>Welcome, {userDetails.name}</h3>
           {role === "Doctor" && (
             <>
               <p><b>Speciality:</b> {userDetails.speciality}</p>

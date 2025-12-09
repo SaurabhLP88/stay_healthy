@@ -16,7 +16,7 @@ button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%;
 
 .text-center {text-align:center;}
 
-.hero-section {height:100vh; padding-top:15rem; background-color:transparent; z-index:-1;}
+.hero-section { padding-top:8rem; background-color:transparent; z-index:-1;}
 .hero-section .flex-hero {flex-direction:column; gap:30px; text-align:center;}
 .hero-section .flex-hero h1 {font-size:65px; font-weight:900;}
 .text-gradient {background:linear-gradient(45deg,#2190FF 2.34%,#b673f8 100.78%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
@@ -31,7 +31,7 @@ button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%;
 .blue {background-color:#2937a392; position:absolute; top:0; left:0; right:55%; bottom:25%; margin:auto; height:150px; width:200px; animation:blobani 8s infinite ease;}
 .blue1 {background-color:#2937a392; position:absolute; top:0; left:0; right:-55%; bottom:-25%; margin:auto; height:150px; width:200px; animation:blobani 8s infinite ease;}
 
-.services-section {height:100vh; padding:150px 50px 25px; background-color:#f9fafc; text-align:center;}
+.services-section { padding:0px 50px 25px;  text-align:center;}
 .section-title {font-size:2.4rem; font-weight:600; color:#222; margin-bottom:15px;}
 .section-subtitle {font-size:1.2rem; font-weight:400; color:#222; margin-bottom:40px;}
 .services-container {display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:30px; justify-items:center;}
@@ -41,7 +41,7 @@ button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%;
 .service-card h3 {font-size:1.1rem; font-weight:500; color:#333;}
 
 /* Doctor dashboard */
-.doctor-dashboard {padding:7rem 20px 20px;}
+.doctor-dashboard {padding:1rem 20px 0px;}
 .dash-title {font-size:28px; margin-bottom:20px; font-weight:700; color:#333;}
 .stats-grid {display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:20px;}
 .stat-card {background:white; border-radius:12px; padding:20px; box-shadow:0 3px 15px rgba(0,0,0,0.1); text-align:center; transition:0.2s ease;}

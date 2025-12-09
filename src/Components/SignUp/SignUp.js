@@ -107,7 +107,7 @@ function SignUp({ setLoggedIn }) {
   };
 
   return (
-    <div className="signup-container">
+    <div className="container">
       <div className="signup-grid">
         <div className="signup-text">
           <h1>Sign Up</h1>

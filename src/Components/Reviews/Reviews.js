@@ -8,15 +8,41 @@ const Reviews = () => {
   const [patientReviews, setPatientReviews] = useState([]);
   const [doctorReviews, setDoctorReviews] = useState([]);
 
-  const userId = sessionStorage.getItem("userId");
-  const doctorId = sessionStorage.getItem("doctorId");
-  const role = (sessionStorage.getItem("role") || "").toLowerCase();
+  const [userId, setUserId] = useState(sessionStorage.getItem("userId") || "");
+  const [doctorId, setDoctorId] = useState(sessionStorage.getItem("doctorId") || "");
+  const [role, setRole] = useState((sessionStorage.getItem("role") || "").toLowerCase());
 
   console.log("[Reviews] Session Data ->", { userId, doctorId, role });
 
   useEffect(() => {
-    if (!role) return;
+    const interval = setInterval(() => {
+      const uid = sessionStorage.getItem("userId");
+      const did = sessionStorage.getItem("doctorId");
+      const r = (sessionStorage.getItem("role") || "").toLowerCase();
+
+      if (uid !== userId) setUserId(uid);
+      if (did !== doctorId) setDoctorId(did);
+      if (r !== role) setRole(r);
+
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [userId, doctorId, role]);
+
+  useEffect(() => {
+    
     let url = "";
+
+    if (!role) {
+      // Load ALL public reviews after logout
+      fetch(`${API_URL}/api/reviews/public`)
+        .then(res => res.json())
+        .then(data => {
+          setPatientReviews(data.reviews || []);
+          setDoctorReviews([]);
+        });
+      return;
+    }    
 
     if (role === "doctor") {
       if (!doctorId) return; // avoid empty call
@@ -45,7 +71,7 @@ const Reviews = () => {
         }
       })
       .catch((err) => console.error("[Reviews] Error fetching reviews:", err));
-  }, [role, userId, doctorId]);
+  }, [role]);
 
   const list = role === "doctor" ? doctorReviews : patientReviews;
   console.log("[Reviews] Final list rendered on screen:", list);

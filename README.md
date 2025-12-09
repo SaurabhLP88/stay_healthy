@@ -1,19 +1,34 @@
 
 # 🏥 StayHealthy – Medical Appointment Booking System
 
-StayHealthy is a full-stack **Medical Appointment Booking System** designed to simplify the process of scheduling and managing doctor appointments online. It provides an intuitive interface for patients, doctors, and administrators to manage appointments, view schedules, and maintain medical records efficiently.
+StayHealthy is a full-stack **Medical Appointment Booking System** designed to streamline online appointment booking and digital health management. It provides dedicated dashboards for patients and doctors, enabling smooth appointment scheduling, profile management, notifications, and medical record tracking.
 
 ---
 
 ## 🚀 Project Overview
 
-The **StayHealthy** platform allows users to:
-- Book and manage appointments with doctors.
-- View doctor profiles, available slots, and consultation details.
-- Receive notifications and reminders for upcoming appointments.
-- Maintain digital records of past visits and prescriptions.
-- Enable doctors to manage availability and confirm or reject appointments.
-- Reviews doctors
+StayHealthy allows users to:
+
+👤 For Patients
+
+- Register or log in as a Patient.
+- Book appointments with available doctors.
+- View doctor details, specializations, timings, and consultation info.
+- Manage upcoming appointments and view appointment history.
+- Upload, view, and manage medical reports.
+- Give reviews and feedback to doctors.
+- Edit their profile (name, username, contact info, etc.).
+- Get real-time notifications (appointment status, logout notice, etc.).
+
+🩺 For Doctors (in progress)
+
+- Register or log in as a Doctor.
+- Manage appointment requests (approve/reject).
+- Set and update availability / working hours.
+- View patient details for upcoming visits.
+- View appointment history.
+- Manage profile (name, specialization, consultation fee, etc.).
+- View feedback & reviews given by patients.
 
 ---
 
@@ -26,26 +41,49 @@ The **StayHealthy** platform allows users to:
 
 **Backend:**
 - Node.js with Express.js for REST APIs
-- MongoDB / MySQL for data storage
+- MongoDB for data storage
 - JWT for user authentication
-- bcrypt for password encryption
+- bcrypt for secure password hashing
 
 **Tools & Deployment:**
 - Git & GitHub for version control
 - Postman for API testing
-- Docker for containerization (optional)
-- Deployed on GitHub Pages / Render / IBM Cloud
+- Deployed on GitHub Pages
 
 ---
 
-## 🧩 Features
+## 🧩 Key Features
 
-✅ **User Authentication:** Secure login and registration for patients and doctors.  
-✅ **Appointment Booking:** Real-time slot availability and confirmation.  
-✅ **Doctor Dashboard:** Manage schedules, view patient requests, and update details.  
-✅ **Patient Dashboard:** Track upcoming appointments and view history.  
-✅ **Notifications:** Email or SMS reminders for upcoming visits.  
-✅ **Responsive Design:** Optimized for desktop and mobile screens.  
+🔐 Authentication
+- JWT-based login & registration.
+- Supports both Patient and Doctor account types.
+- Secure password handling with bcrypt.
+
+📅 Appointment Management
+- Real-time slot selection.
+- Appointment approval system for doctors.
+- Patients can cancel or reschedule appointments.
+- Doctors can confirm or reject requests.
+
+📄 Digital Health Records
+- Patients can upload medical reports.
+- Doctors can review past records (planned).
+- Visit history stored securely.
+
+🔔 In-App Notifications
+- Login/logout notifications.
+- Appointment status updates.
+- Profile update confirmation.
+- Smooth UI notifications (built using your custom notify utility).
+
+🧑‍💼 Profile Management
+- Update username, personal details, and profile info.
+- Syncs across navigation and state.
+- Fixes applied to ensure username refresh after edits.
+
+📱 Responsive UI
+- Fully responsive design using React + Bootstrap/Tailwind.
+- Optimized for mobile and desktop users.
 
 ---
 
@@ -61,10 +99,11 @@ To run this project locally, follow these steps:
 `cd StayHealthy`
 
 # Install backend dependencies
+`cd server`
 `npm install`
 
 # Install frontend dependencies (if separate)
-`cd client`
+`cd..`
 `npm install`
 
 # Start the backend server
@@ -73,51 +112,44 @@ To run this project locally, follow these steps:
 
 Then open your browser and visit:
 
-http://localhost:3000
+http://localhost:5000
 
 🧠 Learning Objectives
 
 This project demonstrates your ability to:
-- Design and implement a full-stack web application.
-- Develop and integrate RESTful APIs.
-- Work with databases and authentication systems.
-- Deploy and maintain a production-ready application.
+
+- Build a full-stack application using React + Node.js + MongoDB
+- Implement JWT authentication, user roles (Patient/Doctor), and secure APIs
+- Work with RESTful API architecture
+- Manage state, notifications, and complex UI flows in React
+- Deploy a production-ready healthcare application
+- Maintain profile updates, appointment tracking, and role-based dashboards
 
 📁 Project Structure
 StayHealthy/
 │
-├── client/               # Frontend (React)
+├── /                     # Frontend (React)
 ├── server/               # Backend (Node.js / Express)
 ├── models/               # Database models
-├── routes/               # API routes
-├── controllers/          # Business logic
+├── routes/               # API routes (auth, appointments, doctors, etc.) and business logic
 ├── public/               # Static assets
+├── node_modules/         # Backend dependencies
+├── build/                # Production build (only after `npm run build`)
+├── dist/                 # Bundles
+├── src/                  # React source code
 └── README.md             # Project documentation
 
 🌐 Live Demo & Repository
 
 Live Demo: [StayHealthy Live](https://saurabhlp88.github.io/stay_healthy/)
-
 Repository: [StayHealthy on GitHub](https://github.com/SaurabhLP88/stay_healthy.git)
 
-👨‍💻 Author
+👨‍💻 About the Developer
 
-Saurabh Lakhanpal
-Full Stack Developer | Front End Developer
-📧 [firsty111@gmail.com]
-🔗 [GitHub Profile](https://github.com/SaurabhLP88/)
+**StayHealthy** is designed and developed by **Saurabh Lakhanpal** – Full Stack & Front-End Developer.
+📧 Email: [firsty111@gmail.com]
+🔗 GitHub: [GitHub Profile](https://github.com/SaurabhLP88/)
 
 📜 License
-
 This project is licensed under the MIT License
-.
 
-EOF
----
-
-### 💡 How to use:
-1. Open your Bash terminal inside the project folder.  
-2. Copy-paste the above code and press **Enter**.  
-3. It will create and save a `README.md` file with all the content inside.  
-
-Would you like me to tailor this README slightly depending on whether your StayHealthy project is **pure front-end** (HTML/CSS/JS) or a **full-stack (React + Node)** version?

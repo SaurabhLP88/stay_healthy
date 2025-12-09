@@ -1,3 +1,9 @@
+/**
+ * StayHealthy — Medical Appointment Booking System
+ * Developed by: Saurabh Lakhanpal
+ * GitHub: https://github.com/SaurabhLP88
+ */
+
 import React, { useState } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 

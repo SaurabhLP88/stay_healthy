@@ -1,5 +1,5 @@
-.reviews-container {max-width:1200px; margin:auto; padding:6em 20px 3em;}
-.reviews-title {text-align:center; margin:2em 0 1em; color:#222; font-size:32px;}
+.reviews-container {max-width:1200px; margin:auto; padding:0em 20px 0em;}
+.reviews-title {text-align:center; margin:1em 0 1em; color:#222; font-size:32px;}
 .reviews-table {width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 .reviews-table th, .reviews-table td {border:1px solid #eee; padding:5px 10px; }
 .reviews-table th {background-color:#f8f9fa; color:#333; font-weight:600; padding:10px;}

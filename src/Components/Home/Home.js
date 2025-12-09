@@ -1,9 +1,10 @@
 
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../../config";
-import { sendNotification } from "../../utils/notify";
+//import { sendNotification } from "../../utils/notify";
 import Navbar from "../Navbar/Navbar";
 import Notification from "../Notification/Notification";
+import Footer from "../Footer/Footer";
 
 import "./Home.css";
 
@@ -11,25 +12,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [notification, setNotification] = useState(null);
 
-  //console.log("Home.js Loaded");  
-
-  /*const formatDate = (d) => {
-    if (!d) return "";
-
-    // If input is YYYY-MM-DD
-    if (d.includes("-")) {
-      const [year, month, day] = d.split("-");
-      return `${day}/${month}/${year}`;
-    }
-
-    // If input is MM/DD/YYYY
-    if (d.includes("/")) {
-      const [month, day, year] = d.split("/");
-      return `${day}/${month}/${year}`;
-    }
-
-    return d;
-  };*/
+  //console.log("Home.js Loaded"); 
 
   useEffect(() => {
 
@@ -88,25 +71,11 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
     }
   };
 
-  /*const markAsRead = async () => {
-    if (!notification?._id) return setNotification(null);
-
-    try {
-      await fetch(`${API_URL}/api/notifications/read/${notification._id}`, {
-        method: "PATCH"
-      });
-
-      setNotification(null);
-    } catch (err) {
-      console.error("Error marking notification as read:", err);
-    }
-  };*/
-
-
   return (    
     <div>
       <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} username={username} />
-      {children}
+      <div className="main">{children}</div>
+      <Footer />
       {loggedIn && notification && (
         <Notification
           title={notification.title}
