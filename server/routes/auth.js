@@ -226,8 +226,6 @@ router.post('/login', [
     }
 });
 
-
-
 router.put('/update', [
 ], async (req, res) => {
     const errors = validationResult(req);

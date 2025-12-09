@@ -86,7 +86,7 @@ router.get("/my", async (req, res) => {
     });
 
     appointments = appointments.map((appt, index) => {
-      const [startTime] = appt.appointmentTime.split(" - ");
+      const [startTime, endTime] = appt.appointmentTime.split(" - ");
 
       let day, month, year;
 
@@ -99,16 +99,33 @@ router.get("/my", async (req, res) => {
         [day, month, year] = appt.appointmentDate.split("/");
       }
 
-      const [time, ampm] = startTime.split(" ");
-      let [hr, min] = time.split(":").map(Number);
+      // Convert time string such as "10:30 AM" → 24hr Date object
+      function toDateObj(date, timeStr) {
+        let [time, ampm] = timeStr.trim().split(" ");
+        let [hr, min] = time.split(":").map(Number);
 
-      if (ampm === "PM" && hr !== 12) hr += 12;
-      if (ampm === "AM" && hr === 12) hr = 0;
+        if (ampm === "PM" && hr !== 12) hr += 12;
+        if (ampm === "AM" && hr === 12) hr = 0;
 
-      const sortKey = new Date(year, month - 1, day, hr, min);
+        return new Date(date.year, date.month, date.day, hr, min);
+      }
+
+      const dateParts = {
+        year: Number(year),
+        month: Number(month) - 1,
+        day: Number(day),
+      };
+
+      // Create actual DateTime objects
+      const startDateTime = toDateObj(dateParts, startTime);
+      const endDateTime = toDateObj(dateParts, endTime);
+      const now = new Date();
+
+      // Sort key remains the same
+      const sortKey = startDateTime;
 
       console.log(
-        `→ FIXED SORTKEY (${index + 1}): ${appt.appointmentDate} ${startTime} ==>`,
+        `→ FIXED SORTKEY (${index + 1}): ${appt.appointmentDate} ${startTime} - ${endTime} ==>`,
         sortKey
       );
 
@@ -125,14 +142,7 @@ router.get("/my", async (req, res) => {
       );
     });
 
-    appointments.sort((a, b) => {
-      // First sort by date descending (latest date first)
-      if (b.sortKey.toDateString() !== a.sortKey.toDateString()) {
-        return b.sortKey - a.sortKey; // descending date
-      }
-      // If same date, sort by time ascending
-      return a.sortKey - b.sortKey; // ascending time
-    });
+    appointments.sort((a, b) => b.sortKey - a.sortKey);
 
     console.log("\n================ AFTER SORT ================");
     appointments.forEach((a, i) => {
@@ -162,6 +172,79 @@ router.get("/my", async (req, res) => {
   }
 });
 
+// Get appointments for a doctor
+router.get("/doctor/:doctorId", async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+    console.log("➡️ doctorId received from params:", doctorId);
+
+    if (!doctorId) {
+      console.log("❌ ERROR: doctorId missing in request params");
+      return res.status(400).json({ error: "doctorId is required" });
+    }
+
+    // Fetch appointments for this doctor
+    let appointments = await Appointment.find({ doctorId })
+      .populate("userId", "name phone")
+      .sort({ appointmentDate: 1, appointmentTime: 1 });
+    console.log("➡️ Raw appointments from DB:", appointments.length);
+    appointments.forEach((a, i) => {
+      console.log(
+        `   ${i + 1}. Date: ${a.appointmentDate}, Time: ${a.appointmentTime}, Status: ${a.status}`
+      );
+    });
+    const now = new Date();
+
+    // Auto-update expired/pending status (same logic as /my)
+    appointments = appointments.map((appt, index) => {
+      const [startTime] = appt.appointmentTime.split(" - ");
+      console.log(
+        `\n⏱️ Processing Appointment #${index + 1}:`,
+        `Date: ${appt.appointmentDate}, StartTime: ${startTime}`
+      );
+      const start = convertToDate(appt.appointmentDate, startTime);
+
+      if (start < now && appt.status === "booked") {
+        console.log("🔄 Status updated: booked → expired");
+        appt.status = "expired";
+      } else {
+        console.log("✔ Status unchanged:", appt.status);
+      }
+
+      return appt;
+    });
+
+    appointments.sort((a, b) => {
+      // Convert appointment a
+      const [startA] = a.appointmentTime.split(" - ");
+      const dateA = convertToDate(a.appointmentDate, startA);
+
+      // Convert appointment b
+      const [startB] = b.appointmentTime.split(" - ");
+      const dateB = convertToDate(b.appointmentDate, startB);
+
+      console.log(
+        `\n🔽 Comparing:\n A => ${a.appointmentDate} ${startA}\n B => ${b.appointmentDate} ${startB}`
+      );
+      console.log("   Converted A:", dateA);
+      console.log("   Converted B:", dateB);
+
+      // 1️⃣ Sort by date descending (newest date on top)
+      if (dateA.toDateString() !== dateB.toDateString()) {
+        //return dateB - dateA; // newer date first
+      }
+
+      // 2️⃣ If same date → sort time ascending
+      return dateB - dateA;
+    });
+    res.json(appointments);
+
+  } catch (err) {
+    console.error("Error fetching doctor appointments:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.delete("/cancel/:id", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -174,12 +257,15 @@ router.delete("/cancel/:id", async (req, res) => {
     const appointment = await Appointment.findOne({ _id: req.params.id, userId });
     if (!appointment) return res.status(404).json({ error: "Appointment not found" });
 
-    await appointment.remove();
+    appointment.status = "cancelled";
+    await appointment.save();
+
+    //await appointment.remove();
     await Notification.deleteOne({
       userId,
       message: { $regex: appointment.doctorName, $options: "i" }
     });
-    res.json({ success: true });
+    res.json({ success: true, message: "Appointment cancelled" });
   } catch (err) {
     console.error("Error cancelling appointment:", err);
     res.status(500).json({ error: "Server error" });
@@ -202,5 +288,43 @@ router.put("/cancel/:id", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+router.put("/complete/:id", async (req, res) => {
+  try {
+    const appt = await Appointment.findById(req.params.id);
+
+    if (!appt) return res.status(404).json({ error: "Appointment not found" });
+    if (["cancelled", "expired"].includes(appt.status)) {
+      return res.status(400).json({ error: "Cannot complete cancelled/expired appointment" });
+    }
+
+    appt.status = "completed";
+    await appt.save();
+
+    res.json({ success: true, message: "Appointment completed" });
+  } catch (err) {
+    console.error("Complete error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Helper to convert date + time to Date()
+function convertToDate(dateStr, timeStr) {
+  let day, month, year;
+
+  if (dateStr.includes("-")) {
+    [year, month, day] = dateStr.split("-");
+  } else {
+    [day, month, year] = dateStr.split("/");
+  }
+
+  const [time, ampm] = timeStr.split(" ");
+  let [h, m] = time.split(":").map(Number);
+
+  if (ampm === "PM" && h !== 12) h += 12;
+  if (ampm === "AM" && h === 12) h = 0;
+
+  return new Date(year, month - 1, day, h, m);
+}
 
 module.exports = router;

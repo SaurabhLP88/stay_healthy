@@ -102,10 +102,10 @@ router.get("/latest", async (req, res) => {
       .filter(appt => appt.dateTime >= new Date())
       .sort((a, b) => a.dateTime - b.dateTime); // earliest first
 
-    console.log("[/latest] Upcoming booked appointments:", upcoming);
+    //console.log("[/latest] Upcoming booked appointments:", upcoming);
     
     if (!upcoming || upcoming.length === 0) {
-      console.log("[/latest] No upcoming booked appointment found");
+      //console.log("[/latest] No upcoming booked appointment found");
       return res.json(null);
     }
 

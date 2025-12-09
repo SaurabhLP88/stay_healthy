@@ -23,7 +23,7 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
     const name = sessionStorage.getItem("name") || "";
     const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
     const userRole = sessionStorage.getItem("role")?.toLowerCase() || "";
-    console.log("%c[Navbar] sessionStorage values", {
+    console.log("[Navbar] sessionStorage values", {
       name,
       isLoggedIn,
       userRole,
@@ -44,12 +44,12 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
   };
 
   useEffect(() => {
-    console.log("[Navbar] useEffect Mounted");
+    //console.log("[Navbar] useEffect Mounted");
     syncNavbar();
     window.addEventListener("storage", syncNavbar);
     window.addEventListener("session-update", syncNavbar);
     return () => {
-      console.log("[Navbar] useEffect Cleanup");
+      //console.log("[Navbar] useEffect Cleanup");
       window.removeEventListener("storage", syncNavbar);
       window.removeEventListener("session-update", syncNavbar);
     };
@@ -65,7 +65,7 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
     setLoggedIn(false);
     setUsername("");
     setRole("");
-    console.log("[Navbar] After Logout - Dispatching session-update");
+    //console.log("[Navbar] After Logout - Dispatching session-update");
     window.dispatchEvent(new Event("session-update"));
     window.dispatchEvent(new Event("notification-deleted"));
     navigate("/login");
@@ -97,15 +97,14 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
         {loggedIn && (
           <li className="link"><Link to="/appointments">Appointments</Link></li>
         )}
-        <li className="link"><Link to="/health-blog">Health Blog</Link></li>
-        {role !== "doctor" && (
-          <li className="link"><Link to="/reviews">Reviews</Link></li>
-        )}
+
+        <li className="link"><Link to="/health-blog">Health Blog</Link></li>        
+        <li className="link"><Link to="/reviews">Reviews</Link></li>
 
         {loggedIn ? (
           <>
             {username && 
-              <li className="welcome-user"><span>Welcome, {username}</span>
+              <li className="welcome-user"><span>Welcome, {role === "doctor" ? "Dr." : ""} {username}</span>
                 <ul className="dropdown-menu">
                   <li><Link to="/profile">Your Profile</Link></li>
                   {role !== "doctor" && (
@@ -128,6 +127,7 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
             </li>
           </>
         )}
+
       </ul>
     </nav>
   );

@@ -40,83 +40,81 @@ router.get("/", async (req, res) => {
 router.get("/stats", async (req, res) => {
   try {
     const doctorId = req.query.doctorId;
+    console.log("📌 /stats called with doctorId:", doctorId);
 
-    console.log("doctorId received:", doctorId);
     if (!doctorId) {
-      console.log("❌ doctorId missing in request");
+      console.log("❌ No doctorId provided");
       return res.status(400).json({ error: "doctorId is required" });
     }
 
-    const doctor = await DoctorModel.findById(doctorId);
-    console.log("🔥 Doctor found:", doctor);
+    // Fetch all appointments
+    const appointments = await AppointmentModel.find({ doctorId })
+      .populate("userId", "name phone");
 
-    if (!doctor) {
-      return res.status(404).json({ error: "Doctor not found" });
+    console.log("📌 Total appointments found:", appointments.length);
+    console.log("📌 Raw appointments list:", appointments);
+
+    const todayStr = new Date().toISOString().split("T")[0];
+    console.log("📌 Today's date (YYYY-MM-DD) =", todayStr);
+
+    // Calculate today, pending, completed
+    const todayAppointments = appointments.filter(a => a.appointmentDate === todayStr);
+    const pendingAppointments = appointments.filter(a => a.status === "pending");
+    const completedAppointments = appointments.filter(a => a.status === "completed");
+
+    console.log("👉 Today count:", todayAppointments.length);
+    console.log("👉 Pending count:", pendingAppointments.length);
+    console.log("👉 Completed count:", completedAppointments.length);
+
+    // Next appointment logic
+    const upcoming = appointments
+      .filter(a => a.status !== "completed")
+      .filter(a => {
+        const [startTime] = a.appointmentTime.split(" - ");
+        const apptDateTime = new Date(`${a.appointmentDate} ${startTime}`);
+        return apptDateTime > new Date();
+      })
+      .sort((a, b) => {
+        const [timeA] = a.appointmentTime.split(" - ");
+        const [timeB] = b.appointmentTime.split(" - ");
+        return new Date(`${a.appointmentDate} ${timeA}`) - new Date(`${b.appointmentDate} ${timeB}`);
+      });
+
+    console.log("📌 Upcoming appointments sorted:", upcoming);
+
+    let nextAppointment = null;
+    if (upcoming.length > 0) {
+      const appt = upcoming[0];
+      console.log("⏭ Next Appointment Found:", appt);
+
+      nextAppointment = {
+        date: appt.appointmentDate,
+        time: appt.appointmentTime,
+        patient: appt.userId?.name || "Unknown",
+        phone: appt.userId?.phone || "",
+        bookingType: appt.bookingType
+      };
+    } else {
+      console.log("⏭ No next appointment found");
     }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    // Count today's appointments
-    const todayCount = await AppointmentModel.countDocuments({
-      doctorId,
-      date: { $gte: today, $lt: tomorrow }
-    });
-    console.log("📊 Today Appointments Count:", todayCount);
-
-    // Pending (not completed)
-    const pendingCount = await AppointmentModel.countDocuments({
-      doctorId,
-      status: "Pending"
-    });
-    console.log("🟡 Pending Appointments:", pendingCount);
-
-    // Completed
-    const completedCount = await AppointmentModel.countDocuments({
-      doctorId,
-      status: "Completed"
-    });
-    console.log("🟢 Completed Appointments:", completedCount);
-
-    console.log("⏭ Next Appointment Raw:", doctorId);
-
-    // Next upcoming appointment
-    const nextAppt = await AppointmentModel.findOne({
-      doctorId,
-      date: { $gte: new Date() }
-    })
-      .sort({ date: 1 })
-      .populate("userId", "name");
-
-    console.log("⏭ Next Appointment Raw:", nextAppt);
-
-    const nextData = nextAppt
-      ? {
-          time: nextAppt.time,
-          patient: nextAppt.userId?.name || "Unknown"
-        }
-      : null;
-
-    console.log("⏭ Next Appointment Processed:", nextData);
-
-    const finalResponse = {
-      today: todayCount,
-      pending: pendingCount,
-      completed: completedCount,
-      next: nextData
+    const response = {
+      today: todayAppointments.length,
+      pending: pendingAppointments.length,
+      completed: completedAppointments.length,
+      next: nextAppointment,
     };
 
-    console.log("📤 Sending Dashboard Data:", finalResponse);
+    console.log("📤 Final stats response:", response);
 
-    res.json(finalResponse);
+    res.json(response);
+
   } catch (err) {
-    console.error("🔥 Dashboard Stats Error:", err);
-    res.status(500).json({ error: "Failed to load dashboard stats" });
+    console.error("❌ Error in /stats route:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
+
 
 // Update Doctor Profile
 router.put("/update", async (req, res) => {

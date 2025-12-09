@@ -52,6 +52,7 @@ const Appointments = () => {
 
   const authtoken = sessionStorage.getItem("auth-token");
   const email = sessionStorage.getItem("email");
+  const role = sessionStorage.getItem("role");
 
   useEffect(() => {
     if (!authtoken || !email) {
@@ -74,17 +75,29 @@ const Appointments = () => {
   };
 
   const fetchAppointments = async () => {
+
+    const doctorId = sessionStorage.getItem("doctorId");
+    console.log("➡️ doctorId from sessionStorage:", doctorId);
+
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/appointments/my`, {
+      const endpoint =
+        role.toLowerCase() === "doctor"
+          ? `${API_URL}/api/appointments/doctor/${doctorId}`
+          : `${API_URL}/api/appointments/my`;
+      console.log("➡️ Fetching from endpoint:", endpoint);
+
+      const res = await fetch(endpoint, {
         headers: {
           "Authorization": `Bearer ${authtoken}`,
           "Content-Type": "application/json",
         },
       });
+      console.log("➡️ Raw fetch response object:", res);
 
       if (!res.ok) {
+        console.error("❌ Response NOT OK. Status:", res.status);
         throw new Error(`Failed to fetch (${res.status})`);
       }
       const data = await res.json();
@@ -93,9 +106,10 @@ const Appointments = () => {
       setAppointments(data);
       
     } catch (err) {
-      console.error(err);
+      console.error("🔥 Error in fetchAppointments:", err);
       setError("Unable to load appointments. Try again later.");
     } finally {
+      console.log("➡️ fetchAppointments FINISHED");
       setLoading(false);
     }
   };
@@ -136,6 +150,8 @@ const Appointments = () => {
 
       if (data.success) {
         fetchAppointments();
+      } else {
+        alert("Cancel failed.");
       }
       
       setAppointments(prev =>
@@ -150,6 +166,58 @@ const Appointments = () => {
     } finally {
       setBusyId(null);
     }
+  };
+  const confirmCancel = (id) => {
+    const ok = window.confirm("Are you sure you want to cancel this appointment?");
+    if (!ok) return;
+    handleCancel(id);
+  };
+
+  const handleComplete = async (appointmentId) => {
+    if (!appointmentId) return;
+
+    const ok = window.confirm("Mark this appointment as completed?");
+    if (!ok) return;
+
+    setBusyId(appointmentId);
+
+    try {
+      const res = await fetch(`${API_URL}/api/appointments/complete/${appointmentId}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${authtoken}`,
+          "Content-Type": "application/json",
+        }
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Complete failed");
+      }
+
+      if (data.success) {
+        fetchAppointments();
+      } else {
+        alert("Complete failed.");
+      }
+
+      setAppointments(prev =>
+        prev.map(a =>
+          a._id === appointmentId ? { ...a, status: "completed" } : a
+        )
+      );
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to mark as complete. Try again.");
+    } finally {
+      setBusyId(null);
+    }
+  };
+  const confirmComplete = (id) => {
+    const ok = window.confirm("Mark this appointment as completed?");
+    if (!ok) return;
+    handleComplete(id);
   };
 
   const submitReview = async (formData) => {
@@ -195,7 +263,7 @@ const Appointments = () => {
       <div className="appointments-page">
           <div className="appointments-header">
             <h2>Your Appointments</h2>
-            <p className="muted">Current and previous appointments for your account</p>
+            <p className="muted">Past, present and future appointments are listed here</p>
           </div>
 
         <section className="appointments-card">
@@ -206,132 +274,185 @@ const Appointments = () => {
             <div className="appt-error">{error}</div>
           ) : appointments.length === 0 ? (
             <div className="appt-empty">
-              You don’t have any appointments yet. <Link to="/book-consultation">Book one now</Link>.
+              You don’t have any appointments yet. 
+              {role.toLowerCase() === "doctor" && (
+                <Link to="/book-consultation">Book one now</Link>
+              )}
             </div>
           ) : (
               <>
-              {/* 
-                <div className="top-actions">
-                  <button className="action-btn" onClick={handleOpenReviews}>Your Reviews</button>
-                  <button className="action-btn" onClick={handleOpenReports}>Your Reports</button>
-                  <button className="action-btn muted" onClick={handleGotoCancelCenter}>Cancel Appointment</button>
-                </div> 
-            */}
-            <div className="table-wrap">
-              <table className="appt-table" role="table" aria-label="Your appointments">
-                <thead>
-                  <tr>
-                    <th>Patient Name</th>
-                    <th>Booking Type</th>
-                    <th>Doctor Name</th>
-                    <th>Speciality</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {appointments.map((a) => {
-                    //const doctor = a.doctor || a.doctorDetails || {};
-                    const doctorName = a.doctorName || "Doctor";
-                    const specialty = a.doctorSpeciality || "-";
-                    const apptDate = a.appointmentDate || "";
-                    const apptTime = a.appointmentTime || "";
-                    return (
-                      <tr key={a._id || a.id}>
-
-                        <td>
-                          <div className="doc-cell">
-                            <div className="doc-name">{a.patientName}</div>
-                            <div className="doc-small">{a.phoneNumber}</div>
-                          </div>
-                        </td>
-                        <td>
-                          {a.bookingType === "instant" ? "Instant": a.bookingType === "scheduled"? "Scheduled": "-"}
-                        </td>
-                        <td>{doctorName}</td>
-                        <td>{specialty}</td>
-                        <td>{formatDate(apptDate)}</td>
-                        <td>{formatTime(apptTime)}</td>
-                        <td><StatusPill status={a.status || "Pending"} /></td>
-                        <td className="actions-cell">
-
-                          {/* BOOK AGAIN — when expired, completed, or cancelled */}
-                          {["expired", "completed", "cancelled"].includes(a.status?.toLowerCase()) && (
-                            <button
-                              className="btn btn-primary small"
-                              onClick={() => handleBookAgain(a)}
-                            >
-                              Book Again
-                            </button>
-                          )}
-
-                          {/* DOWNLOAD REPORT — only if report exists */}
-                          {a.reportUrl && (
-                            <a
-                              className="btn small outline"
-                              href={a.reportUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              Download Report
-                            </a>
-                          )}
-
-                          {/* ADD / VIEW REVIEW — only when completed */}
-                          {a.status?.toLowerCase() === "completed" && (
-                            <>
-                              <button
-                                className="btn small outline"
-                                onClick={() => {
-                                  if (a.hasReview) {
-                                    navigate("/reviews");
-                                  } else {
-                                    handleAddReview(a);
-                                  }
-                                }}
-                              >
-                                {a.hasReview ? "View Review" : "Add Review"}
-                              </button>
-                            </>
-                          )}
-
-                          {/* CANCEL — only when booked */}
-                          {a.status?.toLowerCase() === "booked" && (
-                            <button
-                              className="btn small danger"
-                              onClick={() => handleCancel(a._id)}
-                              disabled={busyId === a._id}
-                            >
-                              {busyId === a._id ? "Cancelling" : "Cancel"}
-                            </button>
-                          )}
-
-                        </td>
+                <div className="table-wrap">
+                  <table className="appt-table" role="table" aria-label="Your appointments">
+                    <thead>
+                      <tr>
+                        {role.toLowerCase() === "doctor" ? (
+                          <>
+                            <th>Patient Name</th>
+                            <th>Patient Phone</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                          </>
+                        ) : (
+                          <>
+                            <th>Patient Name</th>
+                            <th>Booking Type</th>
+                            <th>Doctor Name</th>
+                            <th>Speciality</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                          </>
+                        )}
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                    </thead>
+
+                    <tbody>
+                      {appointments.map((a, index) => {
+                        //const doctor = a.doctor || a.doctorDetails || {};
+                        const doctorName = a.doctorName || "Doctor";
+                        const specialty = a.doctorSpeciality || "-";
+                        const apptDate = a.appointmentDate || "";
+                        const apptTime = a.appointmentTime || "";
+                        return (
+                          <tr key={`${a._id || a.id}-${index}`}>
+
+                            {role.toLowerCase() === "doctor" ? (
+                              // Doctor view
+                              <>
+
+                                <td>{a.patientName}</td>
+                                <td>{a.phoneNumber}</td>
+                                <td>{formatDate(a.appointmentDate)}</td>
+                                <td>{formatTime(a.appointmentTime)}</td>
+                                <td><StatusPill status={a.status} /></td>
+
+                                <td className="actions-cell">
+                                  {a.status === "booked" ? (
+                                    <>
+                                      <button
+                                        className="btn small danger"
+                                        onClick={() => confirmCancel(a._id)}
+                                        disabled={busyId === a._id}
+                                      >
+                                        {busyId === a._id ? "Cancelling" : "Cancel"}
+                                      </button>
+                                      <button
+                                        className="btn btn-primary small"
+                                        onClick={() => confirmComplete(a._id)}
+                                      >
+                                        Complete
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <span className="no-actions">—</span> 
+                                  )}
+                                </td>
+
+                              </>
+                            ) : (
+                              // Patient view
+                              <>                              
+                                <td>
+                                  <div className="doc-cell">
+                                    <div className="doc-name">{a.patientName}</div>
+                                    <div className="doc-small">{a.phoneNumber}</div>
+                                  </div>
+                                </td>
+                                <td>
+                                  {a.bookingType === "instant" ? "Instant": a.bookingType === "scheduled"? "Scheduled": "-"}
+                                </td>
+                                <td>{doctorName}</td>
+                                <td>{specialty}</td>
+                                <td>{formatDate(apptDate)}</td>
+                                <td>{formatTime(apptTime)}</td>
+                                <td><StatusPill status={a.status || "Pending"} /></td>
+                                <td className="actions-cell">
+
+                                  {/* BOOK AGAIN — when expired, completed, or cancelled */}
+                                  {["expired", "completed", "cancelled"].includes(a.status?.toLowerCase()) && (
+                                    <button
+                                      className="btn btn-primary small"
+                                      onClick={() => handleBookAgain(a)}
+                                    >
+                                      Book Again
+                                    </button>
+                                  )}
+
+                                  {/* DOWNLOAD REPORT — only if report exists */}
+                                  {a.reportUrl && (
+                                    <a
+                                      className="btn small outline"
+                                      href={a.reportUrl}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      Download Report
+                                    </a>
+                                  )}
+
+                                  {/* ADD / VIEW REVIEW — only when completed */}
+                                  {a.status?.toLowerCase() === "completed" && (
+                                    <>
+                                      <button
+                                        className="btn small outline"
+                                        onClick={() => {
+                                          if (a.hasReview) {
+                                            navigate("/reviews");
+                                          } else {
+                                            handleAddReview(a);
+                                          }
+                                        }}
+                                      >
+                                        {a.hasReview ? "View Review" : "Add Review"}
+                                      </button>
+                                    </>
+                                  )}
+
+                                  {/* CANCEL — only when booked */}
+                                  {a.status?.toLowerCase() === "booked" && (
+                                    <button
+                                      className="btn small danger"
+                                      onClick={() => confirmCancel(a._id)}
+                                      disabled={busyId === a._id}
+                                    >
+                                      {busyId === a._id ? "Cancelling" : "Cancel"}
+                                    </button>
+                                  )}
+
+                                </td>
+                              </>
+                            )}
+
+
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
             </>
           )}
         </section>
       </div>
-
-      {showReviewForm && (
-        <ReviewForm
-          appointmentId={selectedAppointment}
-          doctorId={selectedAppointment?.doctorId || selectedAppointment?.doctor?._id}
-          userId={selectedAppointment?.userId?._id || selectedAppointment?.userId}
-          onSubmit={(formData) => {
-            console.log("Review Submitted:", formData, "For:", selectedAppointment);
-            submitReview(formData);
-          }}
-          onClose={() => setShowReviewForm(false)}
-        />
+      
+      {role.toLowerCase() === "patient" && (
+        <>
+          {showReviewForm && (
+            <ReviewForm
+              appointmentId={selectedAppointment}
+              doctorId={selectedAppointment?.doctorId || selectedAppointment?.doctor?._id}
+              userId={selectedAppointment?.userId?._id || selectedAppointment?.userId}
+              onSubmit={(formData) => {
+                console.log("Review Submitted:", formData, "For:", selectedAppointment);
+                submitReview(formData);
+              }}
+              onClose={() => setShowReviewForm(false)}
+            />
+          )}
+        </>
       )}
 
     </>

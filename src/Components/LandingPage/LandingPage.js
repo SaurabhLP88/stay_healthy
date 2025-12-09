@@ -19,8 +19,11 @@ const LandingPage = () => {
   const [pendingAppointments, setPendingAppointments] = useState(0);
   const [completedAppointments, setCompletedAppointments] = useState(0);
 
-  const [nextAppointmentTime, setNextAppointmentTime] = useState("No upcoming");
-  const [nextAppointmentName, setNextAppointmentName] = useState("");  
+  const [nextAppointmentName, setNextAppointmentName] = useState("No upcoming");  
+  const [nextAppointmentTime, setNextAppointmentTime] = useState("");
+  const [nextAppointmentDate, setNextAppointmentDate] = useState("");
+  const [nextAppointmentPhone, setNextAppointmentPhone] = useState("");
+  
   
   const navigate = useNavigate();
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
@@ -52,17 +55,36 @@ const LandingPage = () => {
 
   async function fetchDoctorStats() {
     try {
+      console.log("📌 Fetching doctor stats for doctorId:", doctorId);
       const res = await fetch(`${API_URL}/api/doctors/stats?doctorId=${doctorId}`);
       console.log("Raw response:", res);
       const data = await res.json();
+      console.log("📌 Parsed Stats Data:", data);
 
-      setTodayAppointments(data.today);
-      setPendingAppointments(data.pending);
-      setCompletedAppointments(data.completed);
+      // Log each individual value
+      console.log("👉 Today Appointments Count:", data.today);
+      console.log("👉 Pending Appointments Count:", data.pending);
+      console.log("👉 Completed Appointments Count:", data.completed);
+      console.log("👉 Next Appointment Data:", data.next);
+
+      setTodayAppointments(data.today ?? 0);
+      setPendingAppointments(data.pending ?? 0);
+      setCompletedAppointments(data.completed ?? 0);
 
       if (data.next) {
-        setNextAppointmentTime(data.next.time);
-        setNextAppointmentName(data.next.patient);
+        console.log("⏭ Setting Next Appointment:", data.next);
+
+        setNextAppointmentTime(data.next.time || "");
+        setNextAppointmentName(data.next.patient || "No upcoming");
+        setNextAppointmentDate(data.next.date || "");
+        setNextAppointmentPhone(data.next.phone || "");
+      } else {
+        console.log("⏭ No upcoming appointment found");
+
+        setNextAppointmentTime("");
+        setNextAppointmentName("No upcoming");
+        setNextAppointmentDate("");
+        setNextAppointmentPhone("");
       }
 
     } catch (err) {
@@ -160,8 +182,10 @@ const LandingPage = () => {
 
               <div className="stat-card upcoming">
                 <h3>Next Appointment</h3>
-                <p className="next-time">{nextAppointmentTime}</p>
-                <p className="next-name">{nextAppointmentName}</p>
+                <p className="next-time">{nextAppointmentName}</p>
+                <p className="next-phone">{nextAppointmentPhone}</p>
+                <p className="next-name">{nextAppointmentDate}</p>  
+                <p className="next-name">{nextAppointmentTime}</p>
               </div>
 
             </div>
