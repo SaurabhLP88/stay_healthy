@@ -3,8 +3,6 @@
 
 StayHealthy is a full-stack **Medical Appointment Booking System** designed to streamline online appointment booking and digital health management. It provides dedicated dashboards for patients and doctors, enabling smooth appointment scheduling, profile management, notifications, and medical record tracking.
 
----
-
 ## 🚀 Project Overview
 
 StayHealthy allows users to:
@@ -30,8 +28,6 @@ StayHealthy allows users to:
 - Manage profile (name, specialization, consultation fee, etc.).
 - View feedback & reviews given by patients.
 
----
-
 ## 🛠️ Technologies Used
 
 **Frontend:**
@@ -49,8 +45,6 @@ StayHealthy allows users to:
 - Git & GitHub for version control
 - Postman for API testing
 - Deployed on GitHub Pages
-
----
 
 ## 🧩 Key Features
 
@@ -85,36 +79,33 @@ StayHealthy allows users to:
 - Fully responsive design using React + Bootstrap/Tailwind.
 - Optimized for mobile and desktop users.
 
----
-
 ## ⚙️ Installation & Setup
 
-To run this project locally, follow these steps:
+To run this project locally, follow these steps:  
 
-
-# Clone the repository
+### Clone the repository
 `git clone https://github.com/SaurabhLP88/StayHealthy.git`
 
-# Navigate into the project folder
+### Navigate into the project folder
 `cd StayHealthy`
 
-# Install backend dependencies
-`cd server`
+### Install backend dependencies
+`cd server`  
 `npm install`
 
-# Install frontend dependencies (if separate)
-`cd..`
+### Install frontend dependencies (if separate)
+`cd..`  
 `npm install`
 
-# Start the backend server
-`cd ..`
+### Start the backend server
+`cd ..`  
 `npm start`
 
-Then open your browser and visit:
+Then open your browser and visit:  
 
 http://localhost:5000
 
-🧠 Learning Objectives
+## 🧠 Learning Objectives
 
 This project demonstrates your ability to:
 
@@ -125,7 +116,7 @@ This project demonstrates your ability to:
 - Deploy a production-ready healthcare application
 - Maintain profile updates, appointment tracking, and role-based dashboards
 
-📁 Project Structure
+## 📁 Project Structure
 
 ```python
 StayHealthy/
@@ -143,17 +134,17 @@ StayHealthy/
 ```
 
 
-🌐 Live Demo & Repository
+## 🌐 Live Demo & Repository
 
-Live Demo: [StayHealthy Live](https://saurabhlp88.github.io/stay_healthy/)
+Live Demo: [StayHealthy Live](https://saurabhlp88.github.io/stay_healthy/)  
 Repository: [StayHealthy on GitHub](https://github.com/SaurabhLP88/stay_healthy.git)
 
-👨‍💻 About the Developer
+## 👨‍💻 About the Developer
 
-**StayHealthy** is designed and developed by **Saurabh Lakhanpal** – Full Stack & Front-End Developer.
-📧 Email: [firsty111@gmail.com]
+**StayHealthy** is designed and developed by **Saurabh Lakhanpal** – Full Stack & Front-End Developer.  
+📧 Email: [firsty111@gmail.com]  
 🔗 GitHub: [GitHub Profile](https://github.com/SaurabhLP88/)
 
-📜 License
+## 📜 License  
 This project is licensed under the MIT License
 
