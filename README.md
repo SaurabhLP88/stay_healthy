@@ -126,7 +126,9 @@ This project demonstrates your ability to:
 - Maintain profile updates, appointment tracking, and role-based dashboards
 
 📁 Project Structure
-StayHealthy/
+
+# StayHealthy/
+`
 │
 ├── /                     # Frontend (React)
 ├── server/               # Backend (Node.js / Express)
@@ -138,6 +140,7 @@ StayHealthy/
 ├── dist/                 # Bundles
 ├── src/                  # React source code
 └── README.md             # Project documentation
+`
 
 🌐 Live Demo & Repository
 
