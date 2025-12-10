@@ -1,5 +1,5 @@
 {
-  "name": "stay_healthy",  
+  "name": "stay_healthy",
   "homepage": "https://saurabhlp88.github.io/stay_healthy/",
   "version": "0.1.0",
   "private": true,
@@ -46,12 +46,15 @@
     "@babel/core": "^7.28.4",
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-react": "^7.27.1",
+    "autoprefixer": "^10.4.22",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
     "file-loader": "^6.2.0",
     "gh-pages": "^6.3.0",
     "html-webpack-plugin": "^5.6.4",
+    "postcss": "^8.5.6",
     "style-loader": "^4.0.0",
+    "tailwindcss": "^3.4.18",
     "webpack": "^5.102.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"

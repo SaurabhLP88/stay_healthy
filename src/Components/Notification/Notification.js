@@ -8,11 +8,19 @@ const Notification = ({ title, message, onClose }) => {
   });
 
   return (
-    <div className="notification">
-      {/*<p align="right"><button className="close-btn" onClick={onClose}>x</button></p>*/}
-      <h5>{title}</h5>
-      <div className="notification-message" dangerouslySetInnerHTML={{ __html: message }}></div>
+    <div className="fixed bottom-5 right-5 bg-blue-600 text-white px-5 py-4 rounded-xl shadow-lg min-w-[260px] animate-slide-in z-[9999]">
+
+      <h5 className="text-lg font-semibold mb-2">
+        {title}
+      </h5>
+
+      <div
+        className="text-sm leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: message }}
+      ></div>
+
     </div>
+
   );
 };
 

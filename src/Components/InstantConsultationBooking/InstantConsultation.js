@@ -209,17 +209,16 @@ const InstantConsultation = () => {
     };*/
 
     return (
-        <div className="searchpage-container">
+        <div className="text-gray-700">
             <FindDoctorSearch onSearch={handleSearch} />
-            <div className="search-results-container">
-                {/* {isSearched ? ( */}
-                    <div className="search-results-cover">
-                        <h2 className="search-results-title"><span style={{ color: "#2190FF" }}>{(isSearched ? filteredDoctors : doctors).length}</span> {selectedSpeciality} doctors are available</h2>
+            <div className="mt-6">
+                <div className="max-w-5xl mx-auto">
+                        <h2 className="text-2xl font-bold text-center mb-2"><span className="text-blue-500">{(isSearched ? filteredDoctors : doctors).length}</span> {selectedSpeciality} doctors are available</h2>
                                                 
                         {(isSearched ? filteredDoctors : doctors).length > 0 ? (
                             <>
-                                <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>
-                                <div className="doctor-results-container">
+                                <h3 className="text-center text-gray-600 mb-6 text-sm">Book appointments with minimum wait-time & verified doctor details</h3>
+                                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-8xl mx-auto">
                                     {(isSearched ? filteredDoctors : doctors).map((doctor, index) => {
                                         const imagePath = require(`../../assets/images/${doctor.image}`);
                                         return (
@@ -240,7 +239,7 @@ const InstantConsultation = () => {
                                 </div>
                             </>
                         ) : (
-                            <p className='text-center'>No doctors found for  {searchParams.get('speciality')}.</p>
+                            <p className="text-center text-gray-600 text-sm mt-4">No doctors found for  {searchParams.get('speciality')}.</p>
                         )}
                        
                     </div>

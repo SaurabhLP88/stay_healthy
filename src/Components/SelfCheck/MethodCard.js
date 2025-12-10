@@ -9,19 +9,35 @@ const MethodCard = ({ title, image, description }) => {
   };
 
   return (
-    <div className="method-card">
-      <img src={image} alt={title} className="method-image" />
+    <div className="bg-blue-50 p-5 rounded-xl shadow-md">
 
-      <h3 className="method-title">{title}</h3>
+      <img
+        src={image}
+        alt={title}
+        className="w-full h-40 object-contain mb-4"
+      />
 
-      <p className={`method-description ${expanded ? "expanded" : "collapsed"}`}>
+      <h3 className="text-lg font-bold text-center mb-3">
+        {title}
+      </h3>
+
+      <p
+        className={`text-sm text-gray-700 leading-relaxed mb-3 transition-all ${
+          expanded ? "" : "line-clamp-2"
+        }`}
+      >
         {description}
       </p>
 
-      <button className="read-btn" onClick={toggleReadMore}>
+      <button
+        className="text-blue-600 font-semibold text-sm hover:underline"
+        onClick={toggleReadMore}
+      >
         {expanded ? "Read Less" : "Read More"}
       </button>
+
     </div>
+
   );
 };
 

@@ -106,129 +106,174 @@ const HealthBlog = () => {
     console.log("Search Filter Result:", filteredVideosBySearch);
 
   return (
-    <div className="healthblog-container">
-      {/* Page Title */}
-      <h1 className="hb-title">Health Blog</h1>
-      <p className="hb-subtitle">
-        Stay informed with medical news, training videos, and daily health tips.
-      </p>
+    <div className="max-w-5xl mx-auto px-4">
 
-      {/* Search Bar */}
-      <div className="hb-searchbar">
+      {/* Title */}
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-blue-600 tracking-wide mb-3">Health Blog</h1>
+        <p className="text-gray-600 text-sm md:text-base mb-0">
+          Stay informed with medical news, training videos, and daily health tips.
+        </p>
+      </div>
+
+      {/* Search */}
+      <div className="text-center mb-6">
         <input
-            type="text"
-            placeholder="Search videos and tips..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+          type="text"
+          placeholder="Search videos and tips..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-3/4 md:w-1/2 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
         />
-        </div>
+      </div>
 
       {/* Category Tabs */}
-      <div className="hb-categories">
+      <div className="flex justify-center gap-3 overflow-x-auto pb-2 mb-6 scrollbar-hide">
         {categories.map((cat) => (
           <button
             key={cat}
-            className={`hb-category-btn ${
-              activeCategory === cat ? "active" : ""
-            }`}
             onClick={() => setActiveCategory(cat)}
+            className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition 
+              ${activeCategory === cat ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* Videos Section */}
-      <div className="hb-videos-section">
-        <div className="hb-videos-grid">
+      {/* VIDEOS SECTION */}
+      <div className="mb-10">
 
-            {filteredVideosBySearch.length === 0 && (
-                <p className="no-results">No videos found.</p>
-            )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            {filteredVideosBySearch.slice(0, visibleCount).map((video, index) => {
-              console.log("Rendering video card:", video);
-              const thumb = require(`../../assets/images/${video.thumbnail}`);
-              console.log("Thumbnail path:", thumb);
+          {filteredVideosBySearch.length === 0 && (
+            <p className="text-center text-gray-500 col-span-full">No videos found.</p>
+          )}
 
-              return (
-                <div key={index} className="hb-video-card">
-                    <img src={thumb} alt={video.title} />
+          {filteredVideosBySearch.slice(0, visibleCount).map((video, index) => {
+            const thumb = require(`../../assets/images/${video.thumbnail}`);
+            return (
+              <div key={index} className="bg-white rounded-xl shadow-md p-4">
 
-                    <h3>{video.title}</h3>
+                <img
+                  src={thumb}
+                  alt={video.title}
+                  className="w-full h-48 object-contain rounded-md mb-3"
+                />
 
-                    <p>
-                    {expandedVideo === index
-                        ? video.description
-                        : video.description.slice(0, 80) + "..."}
-                    </p>
+                <h3 className="text-lg font-semibold mb-2">{video.title}</h3>
 
-                    <button className="read-more-btn" onClick={() =>
-                        setExpandedVideo(
-                        expandedVideo === index ? null : index
-                        )
-                    }>{expandedVideo === index ? "Read Less" : "Read More"}</button>
+                <p className="text-sm text-gray-600">
+                  {expandedVideo === index
+                    ? video.description
+                    : video.description.slice(0, 80) + "..."}
+                </p>
 
-                    <button className="watch-btn" onClick={() => setSelectedVideo(video.videofile)}>Watch Video</button>
+                <div className="flex gap-3 mt-3">
+                  <button
+                    className="flex-1 py-2 text-sm bg-gray-200 hover:bg-gray-300 rounded-lg transition"
+                    onClick={() =>
+                      setExpandedVideo(expandedVideo === index ? null : index)
+                    }
+                  >
+                    {expandedVideo === index ? "Read Less" : "Read More"}
+                  </button>
+
+                  <button
+                    className="flex-1 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                    onClick={() => setSelectedVideo(video.videofile)}
+                  >
+                    Watch Video
+                  </button>
                 </div>
-              )
-            })}
+
+
+              </div>
+            );
+          })}
+
         </div>
 
-        {/* Load More Button */}
+        {/* Load More */}
         {visibleCount < filteredVideosBySearch.length && (
-            <div className="load-more-container">
-              <button
-                  className="load-more-btn"
-                  onClick={() => setVisibleCount(visibleCount + 3)}
-              >
-                  Load More
-              </button>
-            </div>
+          <div className="text-center mt-6">
+            <button
+              className="px-6 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition"
+              onClick={() => setVisibleCount(visibleCount + 3)}
+            >
+              Load More
+            </button>
+          </div>
         )}
-      </div>      
+      </div>
 
-      {/* Daily Tips Section */}
-      <div className="hb-tips-section">
-        <h2 className="tips-title">Daily Health Tips</h2>
-        <div className="hb-tips-list">
+      {/* DAILY TIPS SECTION */}
+      <div className="mb-10">
+        <h2 className="text-2xl font-semibold mb-4">Daily Health Tips</h2>
 
-            {tips.length === 0 && (
-                <p className="no-results">No daily tips found.</p>
-            )}
+        <div>
 
-            {tips.map((tip, index) => (
-            <div key={index} className="hb-tip-card">
-                <div
-                className="hb-tip-header"
-                onClick={() =>
-                    setExpandedTip(expandedTip === index ? null : index)
-                }
-                >
-                <h3>{tip.title}</h3>
-                <span>{expandedTip === index ? "−" : "+"}</span>
-                </div>
+          {tips.length === 0 && (
+            <p className="text-center text-gray-500">No daily tips found.</p>
+          )}
 
-                {expandedTip === index && (
-                <p className="hb-tip-content">{tip.description}</p>
-                )}
+          {tips.map((tip, index) => (
+            <div key={index} className="bg-white p-4 rounded-lg shadow mb-3">
+
+              <div
+                className="flex justify-between cursor-pointer"
+                onClick={() => setExpandedTip(expandedTip === index ? null : index)}
+              >
+                <h3 className="font-semibold">{tip.title}</h3>
+                <span className="text-xl font-bold select-none">
+                  {expandedTip === index ? "−" : "+"}
+                </span>
+              </div>
+
+              {expandedTip === index && (
+                <p className="mt-2 text-gray-700 text-sm">{tip.description}</p>
+              )}
+
             </div>
-            ))}
-        </div>
-      </div>    
+          ))}
 
+        </div>
+      </div>
+
+      {/* VIDEO MODAL */}
       {selectedVideo && (
-        <div className="video-modal-overlay" onClick={() => setSelectedVideo(null)}>
-          <div className="video-modal" onClick={(e) => e.stopPropagation()}>            
-            <button className="video-close-btn" onClick={() => setSelectedVideo(null)}>x</button>
-            <video width="100%" controls autoPlay>
-              <source src={require(`../../assets/videos/${selectedVideo}`)} type="video/mp4" />
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-50"
+          onClick={() => setSelectedVideo(null)}
+        >
+          <div
+            className="relative bg-white rounded-xl w-[90%] max-w-3xl p-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedVideo(null)}
+              className="absolute top-3 right-3 bg-blue-600 text-white rounded-full w-8 h-8 flex justify-center items-center hover:bg-blue-700 transition cursor-pointer z-10"
+            >
+              ×
+            </button>
+
+            {/* Video Player */}
+            <video controls autoPlay className="w-full rounded-lg">
+              <source
+                src={require(`../../assets/videos/${selectedVideo}`)}
+                type="video/mp4"
+              />
             </video>
+
           </div>
         </div>
       )}
 
+
     </div>
+
   );
 };
 

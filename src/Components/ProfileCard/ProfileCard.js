@@ -172,30 +172,33 @@ const ProfileForm = () => {
   };
 
   return (
-    <div className="profile-container">
+    <div className="max-w-xl mx-auto p-6 bg-gray-100 rounded-lg">
 
-      <h1 className="profile-title">Your Profile</h1>
+      <div className="text-center mb-5">
+          <h1 className="text-3xl font-bold text-blue-600 tracking-wide">Your Profile</h1>
+        </div>
 
+      {/* EDIT MODE */}
       {editMode ? (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-5">
 
-          <div className="form-group">
-            <label htmlFor="email"> Email </label>
+          <div>
+            <label className="block mb-1 font-semibold">Email</label>
             <input
               type="email"
               name="email"
-              className="form-control"
+              className="w-full px-3 py-2 border border-gray-300 rounded bg-gray-200 cursor-not-allowed"
               value={userDetails.email}
-              disabled // Disable the email field
+              disabled
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="name"> Name</label>
+          <div>
+            <label className="block mb-1 font-semibold">Name</label>
             <input
               type="text"
               name="name"
-              className="form-control"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
               value={updatedDetails.name || ""}
               onChange={handleInputChange}
             />
@@ -203,80 +206,112 @@ const ProfileForm = () => {
 
           {role === "Doctor" && (
             <>
-              <div className="form-group">
-                <label htmlFor="speciality">Speciality</label>
+              <div>
+                <label className="block mb-1 font-semibold">Speciality</label>
                 <select
-                    name="speciality"
-                    value={updatedDetails.speciality || ""}
-                    onChange={handleInputChange}
-                    className="form-control"
-                  >
-                    <option value="">Select speciality</option>
-                    {initSpeciality.map((item, index) => (
-                      <option key={index} value={item}>{item}</option>
-                    ))}
-
-                  </select>
+                  name="speciality"
+                  value={updatedDetails.speciality || ""}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
+                >
+                  <option value="">Select speciality</option>
+                  {initSpeciality.map((item, index) => (
+                    <option key={index} value={item}>{item}</option>
+                  ))}
+                </select>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="experience">Experience (years)</label>
+              <div>
+                <label className="block mb-1 font-semibold">Experience (years)</label>
                 <input
                   type="number"
-                  name="experience"
-                  className="form-control"
                   min="0"
+                  name="experience"
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
                   value={updatedDetails.experience || ""}
                   onChange={handleInputChange}
                 />
               </div>
             </>
           )}
-          
-          <div className="form-group">
-            <label htmlFor="phone"> Phone</label>
+
+          <div>
+            <label className="block mb-1 font-semibold">Phone</label>
             <input
               type="text"
               name="phone"
-              className="form-control"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
               value={updatedDetails.phone || ""}
               onChange={handleInputChange}
             />
           </div>
 
-           <div className="form-group password-field">
-            <label htmlFor="password"> New Password (leave empty if not changing)</label>
-            <div className="password-wrapper">
+          <div>
+            <label className="block mb-1 font-semibold">New Password (optional)</label>
+
+            <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                className="form-control"
+                className="w-full px-3 py-2 border border-gray-300 rounded"
                 value={updatedDetails.password || ""}
                 onChange={handleInputChange}
               />
-              <span className="eye-icon" onClick={togglePasswordVisibility}>
+              <span
+                className="eye-icon absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-          </div>          
+          </div>
 
-          <button type="submit">Save</button>
+          <div className="flex gap-3 pt-3">
+            <button
+              type="button"
+              onClick={() => setEditMode(false)}
+              className="w-1/2 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 rounded transition"
+            >
+              Cancel Edit
+            </button>
+
+            <button
+              type="submit"
+              className="w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition"
+            >
+              Save
+            </button>
+          </div>
+
         </form>
       ) : (
-        <div className="profile-details">
-          <h3>Welcome, {userDetails.name}</h3>
+        /* VIEW MODE */
+        <div className="bg-white rounded-lg p-5 shadow-sm">
+
+          <h3 className="text-xl font-semibold mb-3">
+            Welcome, {role === "Doctor" ? "Dr." : ""} {userDetails.name}
+          </h3>
+
           {role === "Doctor" && (
             <>
-              <p><b>Speciality:</b> {userDetails.speciality}</p>
-              <p><b>Experience:</b> {userDetails.experience} years</p>
+              <p className="mb-2"><b>Speciality:</b> {userDetails.speciality}</p>
+              <p className="mb-2"><b>Experience:</b> {userDetails.experience} years</p>
             </>
           )}
-          <p> <b>Email:</b> {userDetails.email}</p>
-          <p><b>Phone:</b> {userDetails.phone}</p>
-          <button onClick={handleEdit}>Edit</button>
+
+          <p className="mb-2"><b>Email:</b> {userDetails.email}</p>
+          <p className="mb-4"><b>Phone:</b> {userDetails.phone}</p>
+
+          <button
+            onClick={handleEdit}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition"
+          >
+            Edit
+          </button>
         </div>
       )}
     </div>
+
 )};
 
 export default ProfileForm;

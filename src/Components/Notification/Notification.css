@@ -1,4 +1,4 @@
-.notification {position:fixed; bottom:20px; right:20px; background:#007bff; color:#fff; padding:16px 20px; border-radius:12px; box-shadow:0 4px 10px rgba(0, 0, 0, 0.2); animation:slideIn 0.3s ease-out; z-index:9999; min-width:260px;}
+/*.notification {position:fixed; bottom:20px; right:20px; background:#007bff; color:#fff; padding:16px 20px; border-radius:12px; box-shadow:0 4px 10px rgba(0, 0, 0, 0.2); animation:slideIn 0.3s ease-out; z-index:9999; min-width:260px;}
 .notification h5 { font-size:18px; margin-bottom:10px;}
 .notification-message {font-size:13px; line-height:1.4; }
 .notification-message p { margin: 0 0 5px; }
@@ -11,7 +11,7 @@ to {transform:translateX(0); opacity:1;}
 }
 
 
-/*.notification-container {
+.notification-container {
   position: fixed;
   top: 10px;
   right: 10px;

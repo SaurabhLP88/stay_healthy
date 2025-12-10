@@ -1,4 +1,4 @@
-.signup-container {max-width:450px; margin:0 auto; padding:40px; margin-top:5%; overflow:hidden;}
+/*.signup-container {max-width:450px; margin:0 auto; padding:40px; margin-top:5%; overflow:hidden;}
 .password-visibility {position:relative; top:-39px; left:92%; cursor:pointer; font-size:17px;}
 .signup-grid {display:grid; grid-template-columns:0.1fr 1.5fr 8fr; grid-gap:10px;}
 .signup-text {margin-top:30px; grid-column:2 / 4; text-align:center;}
@@ -21,4 +21,4 @@
 
 .form-group .radio-group { display: inline-block; margin-left: 10px; color:red }
 .form-group .radio-group label { display: inline-block; margin-right: 10px; font-weight: 400; cursor: pointer; }
-.form-group .radio-group input { display: inline-block; margin-right: 5px; }
+.form-group .radio-group input { display: inline-block; margin-right: 5px; }*/

@@ -107,144 +107,205 @@ function SignUp({ setLoggedIn }) {
   };
 
   return (
-    <div className="container">
-      <div className="signup-grid">
-        <div className="signup-text">
-          <h1>Sign Up</h1>
-        </div>
-        <div className="signup-text1">
-          Already a member? <Link to="/login" style={{ color: "#2190FF" }}>Login</Link>
-        </div>
-        <div className="signup-form">
-          <form onSubmit={handleSubmit}>
+    <div className="max-w-md mx-auto px-4 pt-0">
+      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-2xl">
 
-            <div className="form-group">
-              <label>Register as</label>
-              <div className="radio-group">
-                <label>
+        {/* Heading */}
+        <div className="text-center mb-2">
+          <h1 className="text-3xl font-semibold text-blue-600 tracking-wide">Sign Up</h1>
+        </div>
+
+        {/* Login link */}
+        <div className="text-center text-sm mb-4">
+          Already a member?{" "}
+          <Link to="/login" className="text-blue-600 font-semibold hover:underline">
+            Login
+          </Link>
+        </div>
+
+        <div className="pt-2">
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+            {/* Register as */}
+            <div>
+              <label className="block font-semibold mb-1">Register as</label>
+
+              <div className="flex items-center gap-6">
+                <label className="flex items-center gap-2 text-gray-700">
                   <input
                     type="radio"
                     name="role"
                     value="Doctor"
                     checked={formData.role === "Doctor"}
                     onChange={handleChange}
+                    className="accent-blue-600"
                   />
                   Doctor
                 </label>
-                <label>
+
+                <label className="flex items-center gap-2 text-gray-700">
                   <input
                     type="radio"
                     name="role"
                     value="Patient"
                     checked={formData.role === "Patient"}
                     onChange={handleChange}
+                    className="accent-blue-600"
                   />
                   Patient
                 </label>
               </div>
-              {errors.role && <span className="error">{errors.role}</span>}
+
+              {errors.role && (
+                <span className="text-red-500 text-sm">{errors.role}</span>
+              )}
             </div>
 
-
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
+            {/* Name */}
+            <div>
+              <label className="block font-semibold mb-1">Name</label>
               <input
                 type="text"
                 name="name"
+                placeholder="Enter your name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Enter your name"
-                className="form-control"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
               />
-              {errors.name && <span className="error">{errors.name}</span>}
+              {errors.name && (
+                <span className="text-red-500 text-sm">{errors.name}</span>
+              )}
             </div>
 
+            {/* Doctor-only fields */}
             {formData.role === "Doctor" && (
               <>
-                <div className="form-group">
-                  <label>Speciality</label>
+                {/* Speciality */}
+                <div>
+                  <label className="block font-semibold mb-1">Speciality</label>
                   <select
                     name="speciality"
                     value={formData.speciality}
                     onChange={handleChange}
-                    className="form-control"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
                   >
                     <option value="">Select speciality</option>
                     {initSpeciality.map((item, index) => (
                       <option key={index} value={item}>{item}</option>
                     ))}
-
                   </select>
-                  {errors.speciality && <span className="error">{errors.speciality}</span>}
+
+                  {errors.speciality && (
+                    <span className="text-red-500 text-sm">
+                      {errors.speciality}
+                    </span>
+                  )}
                 </div>
-                <div className="form-group">
-                  <label>Experience (in years)</label>
+
+                {/* Experience */}
+                <div>
+                  <label className="block font-semibold mb-1">Experience (in years)</label>
                   <input
                     type="number"
                     name="experience"
                     min="0"
+                    placeholder="Enter years of experience"
                     value={formData.experience || ""}
                     onChange={handleChange}
-                    placeholder="Enter years of experience"
-                    className="form-control"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
                   />
-                  {errors.experience && <span className="error">{errors.experience}</span>}
+                  {errors.experience && (
+                    <span className="text-red-500 text-sm">{errors.experience}</span>
+                  )}
                 </div>
               </>
             )}
 
-            <div className="form-group">
-              <label htmlFor="phone">Phone</label>
+            {/* Phone */}
+            <div>
+              <label className="block font-semibold mb-1">Phone</label>
               <input
                 type="tel"
                 name="phone"
+                placeholder="Enter your phone number"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="Enter your phone number"
-                className="form-control"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
               />
-              {errors.phone && <span className="error">{errors.phone}</span>}
+              {errors.phone && (
+                <span className="text-red-500 text-sm">{errors.phone}</span>
+              )}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
+            {/* Email */}
+            <div>
+              <label className="block font-semibold mb-1">Email</label>
               <input
                 type="email"
                 name="email"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter your email"
-                className="form-control"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
               />
-              {errors.email && <span className="error">{errors.email}</span>}
+              {errors.email && (
+                <span className="text-red-500 text-sm">{errors.email}</span>
+              )}
             </div>
 
-            <div className="form-group password-field">
-              <label htmlFor="password">Password</label>
-              <div className="password-wrapper">
+            {/* Password */}
+            <div>
+              <label className="block font-semibold mb-1">Password</label>
+
+              <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
+                  placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
-                  className="form-control"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
                 />
-                <span className="eye-icon" onClick={togglePasswordVisibility}>
+
+                <span
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
+                  onClick={togglePasswordVisibility}
+                >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
               </div>
-              {errors.password && <span className="error">{errors.password}</span>}
+
+              {errors.password && (
+                <span className="text-red-500 text-sm">{errors.password}</span>
+              )}
             </div>
 
-            <div className="btn-group">
-              <button type="submit" className="btn btn-primary">Submit</button>
-              <button type="reset" className="btn btn-danger" onClick={handleReset}>Reset</button>
+            {/* Buttons */}
+            <div className="flex items-center justify-end gap-3 pt-2 pb-4">
+              
+
+              <button
+                type="reset"
+                onClick={handleReset}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Reset
+              </button>
+              
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Submit
+              </button>
             </div>
+
           </form>
         </div>
+
       </div>
     </div>
+
   );
 }
 

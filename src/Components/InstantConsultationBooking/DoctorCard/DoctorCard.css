@@ -1,4 +1,4 @@
-.doctor-card-container {width:100%; border:1px solid #ccc; border-radius:8px; overflow:hidden; display:inline-block; margin:10px; box-shadow:0 0px 4px rgba(0, 0, 0, 0.1); margin-bottom:20px; transition:all 0.3s ease;}
+/*.doctor-card-container {width:100%; border:1px solid #ccc; border-radius:8px; overflow:hidden; display:inline-block; margin:10px; box-shadow:0 0px 4px rgba(0, 0, 0, 0.1); margin-bottom:20px; transition:all 0.3s ease;}
 .doctor-card-container:hover {box-shadow:0 0px 8px rgba(0, 0, 0, 0.6); transform:scale(1.05);}
 .cancel-appointment {background-color:red;}
 .doctor-card-details-container {padding:20px;}
@@ -43,4 +43,4 @@ height: 90vh; overflow: auto;
 .appointment-confirmation .bookedInfo p {
   margin: 6px 0;
   font-size: 1.08rem;
-}
+}*/

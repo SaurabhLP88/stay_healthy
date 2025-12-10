@@ -1,4 +1,5 @@
-* {margin:0; box-sizing:border-box;}
+
+/** {margin:0; box-sizing:border-box;}
 button, a, li {cursor:pointer;}
 ul {list-style:none;}
 a {text-decoration:none; color:#2190FF;}
@@ -40,7 +41,6 @@ button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%;
 .service-card img {width:auto; height:auto; object-fit:contain; margin-bottom:15px;}
 .service-card h3 {font-size:1.1rem; font-weight:500; color:#333;}
 
-/* Doctor dashboard */
 .doctor-dashboard {padding:1rem 20px 0px;}
 .dash-title {font-size:28px; margin-bottom:20px; font-weight:700; color:#333;}
 .stats-grid {display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:20px;}
@@ -64,5 +64,5 @@ button {transition:all 0.5s ease-in-out; font-size:1em; padding:1em; width:100%;
 .hero-section h4 {font-size:21px; text-align:center; padding:0px 4rem;}
 .image {width:500px;}
 .hero-section .button {margin-top:15px; width:45%;}
-}
+}*/
 

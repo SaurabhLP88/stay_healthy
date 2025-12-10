@@ -153,92 +153,57 @@ const BookingConsultation = () => {
 
   return (
 
-    <div className="searchpage-container">
+    <div className="text-gray-700 px-4 pt-4">
+
       <FindDoctorSearch onSearch={handleSearch} />
-      <div className="search-results-container">
-          {/* {isSearched ? ( */}
-              <div className="search-results-cover">
-                  <h2 className="search-results-title"><span style={{ color: "#2190FF" }}>{(isSearched ? filteredDoctors : doctors).length}</span> {selectedSpeciality} doctors are available</h2>                              
-                    {(isSearched ? filteredDoctors : doctors).length > 0 ? (
-                      <>
-                        <h3 className="search-results-subtitle">Book appointments with minimum wait-time & verified doctor details</h3>      
-                        <div className="doctor-results-container">
-                          {(isSearched ? filteredDoctors : doctors).map((doctor, index) => {
-                            const imagePath = require(`../../../assets/images/${doctor.image}`);
-                            //console.log('doctor appointment:', doctor);
-                            return (
-                              <DoctorCard
-                                  key={index}
-                                  doctorId={doctor._id}
-                                  name={doctor.name}
-                                  speciality={doctor.speciality}
-                                  experience={doctor.experience}
-                                  ratings={doctor.ratings}
-                                  image={imagePath}
-                                  bookingType="scheduled"
-                                  //onBook={(appointmentData) => handleBook(appointmentData)}
-                                  onBook={(appointmentData) => handleBook(doctor, appointmentData)}
-                                  //onBook={null}
-                                  //setNotification={setNotification}
-                              />
 
-                              /*<DoctorCard
-                                key={doctor._id || index}
-                                doctor={doctor}
-                                image={imagePath}
-                                onBook={handleBook}
-                              />*/
-                            )
-                          })}
-                        </div>
-                      </>                      
-                    ) : (
-                        <p className='text-center'>No doctors found for {searchParams.get('speciality')}.</p>
-                    )}                  
+      <div className="mt-6">
+        <div className="m-0">
+
+          <h2 className="text-2xl font-bold text-center mb-3">
+            <span className="text-blue-600">
+              {(isSearched ? filteredDoctors : doctors).length}
+            </span>
+            {" "}
+            {selectedSpeciality} doctors are available
+          </h2>
+
+          {(isSearched ? filteredDoctors : doctors).length > 0 ? (
+            <>
+              <h3 className="text-center text-gray-600 mb-6 text-sm md:text-base">
+                Book appointments with minimum wait-time & verified doctor details
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 max-w-6xl mx-auto">
+                {(isSearched ? filteredDoctors : doctors).map((doctor, index) => {
+                  const imagePath = require(`../../../assets/images/${doctor.image}`);
+                  return (
+                    <DoctorCard
+                      key={index}
+                      doctorId={doctor._id}
+                      name={doctor.name}
+                      speciality={doctor.speciality}
+                      experience={doctor.experience}
+                      ratings={doctor.ratings}
+                      image={imagePath}
+                      bookingType="scheduled"
+                      onBook={(appointmentData) => handleBook(doctor, appointmentData)}
+                    />
+                  );
+                })}
               </div>
-          {/*) : null} */}
-      </div>
-    
+            </>
+          ) : (
+            <p className="text-center text-gray-600">
+              No doctors found for {searchParams.get("speciality")}.
+            </p>
+          )}
 
-
-    {/* <div className="booking-consultation-page">
-
-      <FindDoctorSearch onResults={handleSearchResults} />
-
-      Display search results 
-      <div className="search-results">
-        {doctors.length === 0 ? (
-          <p>No doctors found yet. Try searching specialties like "cardiologist", "dermatologist".</p>
-        ) : (
-          doctors.map((doc) => (
-            <DoctorCard
-              key={doc.id || doc._id || doc.name}
-              doctor={doc}
-              isBooked={isDoctorBooked(doc)}
-              onBook={handleBook}
-              onCancel={handleCancel}
-            />
-          ))
-        )}
+        </div>
       </div>
 
-      <div className="my-bookings">
-        <h3>My Bookings</h3>
-        {bookings.length === 0 ? (
-          <p>No bookings yet.</p>
-        ) : (
-          bookings.map((b) => (
-            <div key={b.id} className="booking-item">
-              <strong>{b.doctorName}</strong> — {b.patientName} on {b.appointmentDate} at {b.appointmentTime}
-              <button onClick={() => handleCancel({ id: b.doctorId, name: b.doctorName })} className="btn btn-danger">Cancel</button>
-            </div>
-          ))
-        )}
-      </div>
-
-    </div>*/}
-    
     </div>
+
 
   );
 };

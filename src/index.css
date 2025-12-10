@@ -1,15 +1,98 @@
-body, input, button, textarea, select {
-  font-family:"Poppins", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;  
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+@layer utilities {
 
-body {
-  margin: 0;
+  @keyframes blobani {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.2); }
+    60% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(120%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+  }
+
+  .slide-down-enter {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  .slide-down-enter-active {
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform .25s ease, opacity .25s ease;
+  }
+  .animate-scaleIn {
+    animation: scaleIn 0.25s ease-out;
+  }
+
+  .main {
+    min-height: calc(100vh - 63px);
+    padding-top: 95px;
+    padding-bottom: 25px;
+  }
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(45deg, #2190FF 2.34%, #b673f8 100.78%);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  /* Hero blobs */
+  .blob, .blob2 {
+    position: absolute;
+    height: 150px;
+    width: 200px;
+    border-radius: 100px;
+    animation: blobani 8s infinite ease;
+  }
+
+  .blob {
+    top: 0;
+    left: 0;
+    right: 55%;
+    bottom: 25%;
+    margin: auto;
+  }
+
+  .blob2 {
+    top: 0;
+    left: 0;
+    right: -55%;
+    bottom: -25%;
+    margin: auto;
+  }
+
+  line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

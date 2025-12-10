@@ -94,105 +94,115 @@ const LandingPage = () => {
 
   return (
     <>
+      {/* HERO SECTION */}
       {!showServices && role !== "doctor" && (
-        <section className="hero-section">
-          <div>
-            <div data-aos="fade-up" className="flex-hero">
-              <h1>
-                Your Health<br />
-                <span className="text-gradient">Our Responsibility</span>
-              </h1>
+        <section className="flex flex-col align-middle justify-center relative min-h-[calc(100vh-200px)] text-center">
 
-              <div className="blob-cont">
-                <div className="blue blob"></div>
-              </div>
-              <div className="blob-cont">
-                <div className="blue1 blob"></div>
-              </div>
+          {/* Blobs */}
+          <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+            <div className="blob bg-blue-800/40 blur-3xl"></div>
+          </div>
+          <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+            <div className="blob2 bg-blue-700/40 blur-3xl"></div>
+          </div>
 
-              <h4>
-                Book appointments, consult doctors, and manage your health — all in one place.
-              </h4>
+          <div className="flex flex-col items-center gap-6 px-4" data-aos="fade-up">
 
-              <button className="button" onClick={handleGetStarted}>
-                Get Started
-              </button>
-            </div>
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+              Your Health <br />
+              <span className="gradient-text">Our Responsibility</span>
+            </h1>
+
+            <h4 className="text-gray-500 text-lg md:text-xl max-w-3xl px-4 md:px-20">
+              Book appointments, consult doctors, and manage your health — all in one place.
+            </h4>
+
+            <button
+              className="mt-4 px-8 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition w-40 md:w-52"
+              onClick={handleGetStarted}
+            >
+              Get Started
+            </button>
           </div>
         </section>
       )}
 
+      {/* SERVICES SECTION */}
       {showServices && role !== "doctor" && (
-        <section id="services" className="services-section">
-          <h2 className="section-title">Best Services</h2>
-          <p className="section-subtitle">Love yourself enough to live a healthy lifestyle.</p>
+        <section id="services" className="px-6 md:px-12 pb-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3">
+            Best Services
+          </h2>
+          <p className="text-lg text-gray-600 mb-10">
+            Love yourself enough to live a healthy lifestyle.
+          </p>
 
-          <div className="services-container">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+
             <div
-              className="service-card"
+              className="service-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition cursor-pointer"
               onClick={() => handleNavigate("/instant-consultation")}
             >
-              <img src={instant} alt="Instant Consultation" />
-              <h3>Instant Consultation</h3>
+              <img src={instant} alt="Instant Consultation" className="w-auto h-80 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-700">Instant Consultation</h3>
             </div>
 
             <div
-              className="service-card"
+              className="service-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition cursor-pointer"
               onClick={() => handleNavigate("/book-consultation")}
             >
-              <img src={book} alt="Book Appointment" />
-              <h3>Book an Appointment</h3>
+              <img src={book} alt="Book Appointment" className="w-auto h-80 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-700">Book an Appointment</h3>
             </div>
 
-            <Link to="/self-check" className="service-card">
-              <img src={self} alt="Self Checkup" />
-              <h3>Self Checkup</h3>
+            <Link to="/self-check" className="service-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition cursor-pointer">
+              <img src={self} alt="Self Checkup" className="w-auto h-80 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-700">Self Checkup</h3>
             </Link>
 
-            <Link to="/health-tips" className="service-card">
-              <img src={tips} alt="Health Tips Guidance" />
-              <h3>Health Tips and Guidance</h3>
+            <Link to="/health-tips" className="service-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition cursor-pointer">
+              <img src={tips} alt="Health Tips Guidance" className="w-auto h-80 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-700">Health Tips & Guidance</h3>
             </Link>
 
           </div>
         </section>
       )}
 
-       {role === "doctor" && (
-          <div className="doctor-dashboard">
+      {/* DOCTOR DASHBOARD */}
+      {role === "doctor" && (
+        <div className="p-0">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">Doctor Dashboard</h1>
 
-            <h1 className="dash-title">Doctor Dashboard</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
 
-            <div className="stats-grid">
-
-              <div className="stat-card">
-                <h3>Today's Appointments</h3>
-                <p className="stat-number">{todayAppointments}</p>
-              </div>
-
-              <div className="stat-card">
-                <h3>Pending Appointments</h3>
-                <p className="stat-number">{pendingAppointments}</p>
-              </div>
-
-              <div className="stat-card">
-                <h3>Completed Appointments</h3>
-                <p className="stat-number">{completedAppointments}</p>
-              </div>
-
-              <div className="stat-card upcoming">
-                <h3>Next Appointment</h3>
-                <p className="next-time">{nextAppointmentName}</p>
-                <p className="next-phone">{nextAppointmentPhone}</p>
-                <p className="next-name">{nextAppointmentDate}</p>  
-                <p className="next-name">{nextAppointmentTime}</p>
-              </div>
-
+            <div className="bg-white rounded-xl p-6 shadow-md text-center hover:-translate-y-1 transition">
+              <h3 className="text-lg font-semibold mb-2">Today's Appointments</h3>
+              <p className="text-4xl font-bold text-blue-500">{todayAppointments}</p>
             </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-md text-center hover:-translate-y-1 transition">
+              <h3 className="text-lg font-semibold mb-2">Pending Appointments</h3>
+              <p className="text-4xl font-bold text-blue-500">{pendingAppointments}</p>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-md text-center hover:-translate-y-1 transition">
+              <h3 className="text-lg font-semibold mb-2">Completed Appointments</h3>
+              <p className="text-4xl font-bold text-blue-500">{completedAppointments}</p>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-md text-center hover:-translate-y-1 transition">
+              <h3 className="text-lg font-semibold mb-2">Next Appointment</h3>
+              <p className="text-xl font-bold text-green-600">{nextAppointmentName}</p>
+              <p className="text-gray-700">{nextAppointmentPhone}</p>
+              <p className="text-gray-600">{nextAppointmentDate}</p>
+              <p className="text-gray-600">{nextAppointmentTime}</p>
+            </div>
+
           </div>
-        )}
-
-
+        </div>
+      )}
+      
     </>
   );
 };

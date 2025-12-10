@@ -57,85 +57,112 @@ const ReviewForm = ({ doctorId, appointmentId, userId, onSubmit, onClose }) => {
   
   return (
 
-    <div className="review-modal" onClick={onClose}>
-      <div className="review-modal-content" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 bg-black/50 flex justify-center items-center z-[999] p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white p-6 rounded-xl w-full max-w-md shadow-xl animate-scaleIn"
+        onClick={(e) => e.stopPropagation()}
+      >
 
-        <div className="review-header">
-          <button className="cancel-btn" onClick={onClose}>x</button>
+        {/* Close Button */}
+        <div className="flex justify-end">
+          <button
+            className="text-gray-700 text-2xl font-bold hover:text-black transition"
+            onClick={onClose}
+          >
+            ×
+          </button>
         </div>
 
-        <h3 className="review-title">Give Review for <span style={{ color: "#1e88e5" }}>{appointmentId?.doctorName}</span></h3>
-        
-        <div className="review-container">
+        {/* Title */}
+        <h3 className="text-center text-xl font-semibold mb-4">
+          Give Review for{" "}
+          <span className="text-blue-600 font-bold">
+            {appointmentId?.doctorName}
+          </span>
+        </h3>
 
-          {/*{!showForm ? (
-            <button className="open-btn" onClick={handleButtonClick}>
-              Open Feedback Form
+        <div>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+
+            {showWarning && (
+              <p className="bg-red-50 text-red-600 p-2 rounded-md text-center font-medium">
+                Please fill out all fields before submitting.
+              </p>
+            )}
+
+            {/* Title */}
+            <div className="flex flex-col">
+              <label className="font-semibold mb-1">Title:</label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                placeholder="Enter your title"
+                value={formData.title}
+                onChange={handleChange}
+                className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+
+            {/* Description */}
+            <div className="flex flex-col">
+              <label className="font-semibold mb-1">Description:</label>
+              <textarea
+                id="description"
+                name="description"
+                placeholder="Write your description"
+                value={formData.description}
+                onChange={handleChange}
+                className="border border-gray-300 rounded-md p-2 h-40 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
+              ></textarea>
+            </div>
+
+            {/* Rating */}
+            <div>
+              <label className="font-semibold">Rating (1–5):</label>
+              <div className="flex gap-2 text-3xl mt-1">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <span
+                    key={num}
+                    className={`cursor-pointer transition ${
+                      formData.rating >= num ? "text-yellow-400" : "text-gray-300"
+                    }`}
+                    onClick={() => {
+                      console.log("[ReviewForm] Rating selected:", num);
+                      setFormData({ ...formData, rating: num });
+                    }}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+              Submit Feedback
             </button>
-          ) : (*/}
-            <form className="review-form" onSubmit={handleSubmit}>
+          </form>
 
-              {showWarning && (
-                <p className="warning">Please fill out all fields before submitting.</p>
-              )}
-
-              <div className="form-group">
-                <label htmlFor="name">Title:</label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  placeholder="Enter your title"
-                  value={formData.title}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="review">Description:</label>
-                <textarea
-                  id="description"
-                  name="description"
-                  placeholder="Write your description"
-                  value={formData.description}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="rating">Rating (1–5):</label>
-                <div className="stars">
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <span
-                      key={num}
-                      className={`star ${formData.rating >= num ? "active" : ""}`}
-                      onClick={() => {
-                        console.log("[ReviewForm] Rating selected:", num);
-                        setFormData({ ...formData, rating: num });
-                      }}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <button type="submit" className="submit-btn">
-                Submit Feedback
-              </button>
-            </form>
-          {/* })} */}
-
+          {/* Submitted Output */}
           {submittedMessage && (
-            <div className="submitted-box">
-              <h3>✅ Submitted Data:</h3>
-              <pre>{submittedMessage}</pre>
+            <div className="mt-5 bg-green-50 p-4 rounded-lg text-green-700">
+              <h3 className="font-bold mb-2">✅ Submitted Data:</h3>
+              <pre className="bg-white p-3 rounded-md text-sm overflow-x-auto">
+    {submittedMessage}
+              </pre>
             </div>
           )}
-            
         </div>
       </div>
-    </div>    
+    </div>
+
   );
 }
 

@@ -14,6 +14,9 @@ const Reviews = () => {
 
   console.log("[Reviews] Session Data ->", { userId, doctorId, role });
 
+  const thClass = "text-left px-3 py-4 whitespace-nowrap";
+  const tdClass = "text-left px-3 py-2";
+
   useEffect(() => {
     const interval = setInterval(() => {
       const uid = sessionStorage.getItem("userId");
@@ -74,82 +77,87 @@ const Reviews = () => {
   }, [role]);
 
   const list = role === "doctor" ? doctorReviews : patientReviews;
-  console.log("[Reviews] Final list rendered on screen:", list);
+  console.log("[Reviews] Final list rendered on screen:", list);  
 
   return (
-    <div className="reviews-container">
-      <h2 className="reviews-title">Reviews {role.toLowerCase() === "doctor" ? "by Patients" : "for Doctors"}</h2>
+    <div className="px-4">
+
+      <div className="text-center mb-5">
+          <h1 className="text-3xl font-semibold text-blue-600 tracking-wide">Reviews {role.toLowerCase() === "doctor" ? "by Patients" : "for Doctors"}</h1>
+        </div>
 
       {list.length === 0 ? (
-        <p className="no-reviews">No reviews available</p>
+        <p className="text-center text-gray-600 text-lg py-6">No reviews available</p>
       ) : (
+        <div className="overflow-x-auto shadow-md rounded-lg">
+          <table className="w-full bg-white border border-gray-200 rounded-lg">
+            <thead>
+              <tr className="bg-gray-100 text-gray-700 text-sm font-semibold">
+                {role === "doctor" ? (
+                  <>
+                    <th className={thClass}>Patient Name</th>
+                    <th className={thClass}>Phone</th>
+                    <th className={thClass}>Given On</th>
+                    <th className={thClass}>Review Details</th>
+                    <th className={thClass}>Rating</th>
+                  </>
+                ) : (
+                  <>
+                    <th className={thClass}>Doctor Name</th>
+                    <th className={thClass}>Speciality</th>
+                    <th className={thClass}>Review Details</th>
+                    <th className={thClass}>Rating</th>
+                  </>
+                )}
+              </tr>
+            </thead>
 
-      <table className="reviews-table">
-        <thead>
-          <tr>
-
-            {role === "doctor" ? (
-              // Doctor view
-              <>
-                <th>Patient Name</th>
-                <th>Phone</th>
-                <th>Given On</th>
-                <th>Review Details</th>
-                <th>Rating</th>
-              </>
-            ) : (
-              // Patient view
-              <>
-                <th>Doctor Name</th>
-                <th>Speciality</th>
-                <th>Review Details</th>
-                <th>Rating</th>
-              </>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {list.map((a, index) => (
-            <tr key={`${a.id}-${index}`}>
-
-              {role === "doctor" ? (
-                // Doctor view
-                <>
-                  <td align="center">{a.patientName}</td>
-                  <td align="center">{a.phone}</td>
-                  <td align="center">
-                    {new Date(a.createdAt).toLocaleString()}
-                  </td>
-                  <td align="center">
-                    <div className="doc-cell">
-                      <div className="doc-name">{a.title || "—"}</div>
-                      <div className="doc-small">{a.review || "—"}</div>
-                    </div>
-                  </td>
-                  <td align="center">{a.rating ? "⭐".repeat(a.rating) : "—"}</td>
-                </>
-              ) : (
-                // Patient view
-                <>
-                  <td align="center">{a.doctorName}</td>
-                  <td align="center">{a.speciality}</td>
-                  <td align="center">
-                    <div className="doc-cell">
-                      <div className="doc-name">{a.title || "—"}</div>
-                      <div className="doc-small">{a.review || "—"}</div>
-                    </div>
-                  </td>
-                  <td align="center">{a.rating ? "⭐".repeat(a.rating) : "—"}</td>
-                </>
-              )}
-                            
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
+            <tbody>
+              {list.map((a, index) => (
+                <tr
+                  key={`${a.id}-${index}`}
+                  className="text-center text-gray-700 border-b hover:bg-gray-50"
+                >
+                  {role === "doctor" ? (
+                    <>
+                      <td className={tdClass}>{a.patientName}</td>
+                      <td className={tdClass}>{a.phone}</td>
+                      <td className={tdClass}>
+                        {new Date(a.createdAt).toLocaleString()}
+                      </td>
+                      <td className={tdClass}>
+                        <div className="text-left">
+                          <div className="font-semibold">{a.title || "—"}</div>
+                          <div className="text-sm text-gray-500">{a.review || "—"}</div>
+                        </div>
+                      </td>
+                      <td className={tdClass}>
+                        {a.rating ? "⭐".repeat(a.rating) : "—"}
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className={tdClass}>{a.doctorName}</td>
+                      <td className={tdClass}>{a.speciality}</td>
+                      <td className={tdClass}>
+                        <div className="text-left">
+                          <div className="font-semibold">{a.title || "—"}</div>
+                          <div className="text-sm text-gray-500">{a.review || "—"}</div>
+                        </div>
+                      </td>
+                      <td className={tdClass}>
+                        {a.rating ? "⭐".repeat(a.rating) : "—"}
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
+
   );
 };
 

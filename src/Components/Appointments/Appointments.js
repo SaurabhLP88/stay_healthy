@@ -34,11 +34,13 @@ function formatTime(isoOrTime) {
 const StatusPill = ({ status }) => {
   const s = (status || "").toLowerCase();
   const className =
-    s === "completed" || s === "completed" ? "pill pill-green" :
-    s === "expired" || s === "expired" ? "pill pill-blue" :
-    s === "cancelled" || s === "cancelled" ? "pill pill-red" :
-    "pill pill-gray";
-  return <span className={className}>{status}</span>;
+    s === "completed" ? "text-green-600 font-bold" :
+    s === "expired" ? "text-red-600 font-bold" :
+    s === "cancelled" ? "text-blue-600 font-bold" :
+    s === "pending" ? "text-orange-600 font-bold" :
+    "text-gray-500 font-bold";
+  const formatted = s.charAt(0).toUpperCase() + s.slice(1);
+  return <span className={className}>{formatted}</span>;
 };
 
 const Appointments = () => {
@@ -53,6 +55,9 @@ const Appointments = () => {
   const authtoken = sessionStorage.getItem("auth-token");
   const email = sessionStorage.getItem("email");
   const role = sessionStorage.getItem("role");
+
+  const thClass = "text-left px-3 py-3 whitespace-nowrap";
+  const tdClass = "text-left px-3 py-2";
 
   useEffect(() => {
     if (!authtoken || !email) {
@@ -260,183 +265,188 @@ const Appointments = () => {
 
   return (
     <>
-      <div className="appointments-page">
-          <div className="appointments-header">
-            <h2>Your Appointments</h2>
-            <p className="muted">Past, present and future appointments are listed here</p>
-          </div>
+      <div className="m-0">
 
-        <section className="appointments-card">
+        {/* HEADER */}
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold text-blue-600 tracking-wide mb-3">Your Appointments</h2>
+          <p className="text-gray-500">Past, present and future appointments are listed here</p>
+        </div>
 
+        {/* CARD WRAPPER */}
+        <div className="bg-white shadow-xl rounded-xl mb-5">
+
+          {/* LOADING / ERROR / EMPTY */}
           {loading ? (
-            <div className="appt-loading">Loading appointments…</div>
+            <div className="text-center font-semibold text-gray-700">Loading appointments…</div>
           ) : error ? (
-            <div className="appt-error">{error}</div>
+            <div className="text-center text-red-600 font-semibold">{error}</div>
           ) : appointments.length === 0 ? (
-            <div className="appt-empty">
-              You don’t have any appointments yet. 
+            <div className="text-center text-gray-700 font-semibold">
+              You don’t have any appointments yet.
               {role.toLowerCase() === "doctor" && (
-                <Link to="/book-consultation">Book one now</Link>
+                <Link to="/book-consultation" className="text-blue-600 underline ml-1">Book one now</Link>
               )}
             </div>
           ) : (
-              <>
-                <div className="table-wrap">
-                  <table className="appt-table" role="table" aria-label="Your appointments">
-                    <thead>
-                      <tr>
+            <>
+              {/* TABLE SCROLL WRAPPER */}
+              <div className="overflow-x-auto">
+                <table className="min-w-[900px] w-full border-collapse" role="table">
+
+                  {/* TABLE HEADER */}
+                  <thead>
+                    <tr className="border-b bg-gray-50">
+
+                      {role.toLowerCase() === "doctor" ? (
+                        <>
+                          <th className={thClass}>Patient Name</th>
+                          <th className={thClass}>Patient Phone</th>
+                          <th className={thClass}>Date</th>
+                          <th className={thClass}>Time</th>
+                          <th className={thClass}>Status</th>
+                          <th className={thClass}>Actions</th>
+                        </>
+                      ) : (
+                        <>
+                          <th className={thClass}>Patient Name</th>
+                          <th className={thClass}>Booking Type</th>
+                          <th className={thClass}>Doctor Name</th>
+                          <th className={thClass}>Speciality</th>
+                          <th className={thClass}>Date</th>
+                          <th className={thClass}>Time</th>
+                          <th className={thClass}>Status</th>
+                          <th className={thClass}>Actions</th>
+                        </>
+                      )}
+
+                    </tr>
+                  </thead>
+
+                  {/* TABLE BODY */}
+                  <tbody>
+                    {appointments.map((a, index) => (
+                      <tr key={index} className="border-b hover:bg-gray-50">
+
+                        {/* =============================== DOCTOR VIEW =============================== */}
                         {role.toLowerCase() === "doctor" ? (
                           <>
-                            <th>Patient Name</th>
-                            <th>Patient Phone</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <td className={tdClass}>{a.patientName}</td>
+                            <td className={tdClass}>{a.phoneNumber}</td>
+                            <td className={tdClass}>{formatDate(a.appointmentDate)}</td>
+                            <td className={tdClass}>{formatTime(a.appointmentTime)}</td>
+                            <td className={tdClass}>
+                              <StatusPill status={a.status} />
+                            </td>
+
+                            <td className="px-3 py-2 space-x-2 whitespace-nowrap">
+                              {a.status === "booked" ? (
+                                <>
+                                  <button className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 text-sm">
+                                    {busyId === a._id ? "Cancelling" : "Cancel"}
+                                  </button>
+
+                                  <button className="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700 text-sm">
+                                    Complete
+                                  </button>
+                                </>
+                              ) : (
+                                <span className="text-gray-400">—</span>
+                              )}
+                            </td>
                           </>
                         ) : (
+                          /* =============================== PATIENT VIEW =============================== */
                           <>
-                            <th>Patient Name</th>
-                            <th>Booking Type</th>
-                            <th>Doctor Name</th>
-                            <th>Speciality</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <td className={tdClass}>
+                              <div>
+                                <div className="font-semibold">{a.patientName}</div>
+                                <div className="text-gray-500 text-sm">{a.phoneNumber}</div>
+                              </div>
+                            </td>
+
+                            <td className={tdClass}>
+                              {a.bookingType === "instant"
+                                ? "Instant"
+                                : a.bookingType === "scheduled"
+                                ? "Scheduled"
+                                : "-"}
+                            </td>
+
+                            <td className={tdClass}>{a.doctorName}</td>
+                            <td className={tdClass}>{a.doctorSpeciality}</td>
+                            <td className={tdClass}>{formatDate(a.appointmentDate)}</td>
+                            <td className={tdClass}>{formatTime(a.appointmentTime)}</td>
+
+                            <td className={tdClass}>
+                              <StatusPill status={a.status} />
+                            </td>
+
+                            <td className="px-3 py-2 space-y-2 whitespace-nowrap">
+
+                              {/* BOOK AGAIN */}
+                              {["expired", "completed", "cancelled"].includes(a.status?.toLowerCase()) && (
+                                <button 
+                                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                                  onClick={() => handleBookAgain(a)}>
+                                  Book Again
+                                </button>
+                              )}
+
+                              {/* REPORT */}
+                              {a.reportUrl && (
+                                <a
+                                  href={a.reportUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="px-3 py-1 border border-gray-600 rounded text-sm hover:bg-gray-800 hover:text-white ms-2"
+                                >
+                                  Download Report
+                                </a>
+                              )}
+
+                              {/* REVIEW */}
+                              {a.status?.toLowerCase() === "completed" && (
+                                <button 
+                                  className="px-3 py-1 border border-blue-600 text-blue-600 rounded text-sm hover:bg-blue-600 hover:text-white ms-2"
+                                  onClick={() => {
+                                    if (a.hasReview) {
+                                      navigate("/reviews");
+                                    } else {
+                                      handleAddReview(a);
+                                    }
+                                  }}
+                                  >
+                                  {a.hasReview ? "View Review" : "Add Review"}
+                                </button>
+                              )}
+
+                              {/* CANCEL */}
+                              {a.status?.toLowerCase() === "booked" && (
+                                <button 
+                                  className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 ms-2" 
+                                  onClick={() => confirmCancel(a._id)} 
+                                  disabled={busyId === a._id}>
+                                  {busyId === a._id ? "Cancelling" : "Cancel"}
+                                </button>
+                              )}
+                            </td>
                           </>
                         )}
+
                       </tr>
-                    </thead>
+                    ))}
+                  </tbody>
 
-                    <tbody>
-                      {appointments.map((a, index) => {
-                        //const doctor = a.doctor || a.doctorDetails || {};
-                        const doctorName = a.doctorName || "Doctor";
-                        const specialty = a.doctorSpeciality || "-";
-                        const apptDate = a.appointmentDate || "";
-                        const apptTime = a.appointmentTime || "";
-                        return (
-                          <tr key={`${a._id || a.id}-${index}`}>
-
-                            {role.toLowerCase() === "doctor" ? (
-                              // Doctor view
-                              <>
-
-                                <td>{a.patientName}</td>
-                                <td>{a.phoneNumber}</td>
-                                <td>{formatDate(a.appointmentDate)}</td>
-                                <td>{formatTime(a.appointmentTime)}</td>
-                                <td><StatusPill status={a.status} /></td>
-
-                                <td className="actions-cell">
-                                  {a.status === "booked" ? (
-                                    <>
-                                      <button
-                                        className="btn small danger"
-                                        onClick={() => confirmCancel(a._id)}
-                                        disabled={busyId === a._id}
-                                      >
-                                        {busyId === a._id ? "Cancelling" : "Cancel"}
-                                      </button>
-                                      <button
-                                        className="btn btn-primary small"
-                                        onClick={() => confirmComplete(a._id)}
-                                      >
-                                        Complete
-                                      </button>
-                                    </>
-                                  ) : (
-                                    <span className="no-actions">—</span> 
-                                  )}
-                                </td>
-
-                              </>
-                            ) : (
-                              // Patient view
-                              <>                              
-                                <td>
-                                  <div className="doc-cell">
-                                    <div className="doc-name">{a.patientName}</div>
-                                    <div className="doc-small">{a.phoneNumber}</div>
-                                  </div>
-                                </td>
-                                <td>
-                                  {a.bookingType === "instant" ? "Instant": a.bookingType === "scheduled"? "Scheduled": "-"}
-                                </td>
-                                <td>{doctorName}</td>
-                                <td>{specialty}</td>
-                                <td>{formatDate(apptDate)}</td>
-                                <td>{formatTime(apptTime)}</td>
-                                <td><StatusPill status={a.status || "Pending"} /></td>
-                                <td className="actions-cell">
-
-                                  {/* BOOK AGAIN — when expired, completed, or cancelled */}
-                                  {["expired", "completed", "cancelled"].includes(a.status?.toLowerCase()) && (
-                                    <button
-                                      className="btn btn-primary small"
-                                      onClick={() => handleBookAgain(a)}
-                                    >
-                                      Book Again
-                                    </button>
-                                  )}
-
-                                  {/* DOWNLOAD REPORT — only if report exists */}
-                                  {a.reportUrl && (
-                                    <a
-                                      className="btn small outline"
-                                      href={a.reportUrl}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                    >
-                                      Download Report
-                                    </a>
-                                  )}
-
-                                  {/* ADD / VIEW REVIEW — only when completed */}
-                                  {a.status?.toLowerCase() === "completed" && (
-                                    <>
-                                      <button
-                                        className="btn small outline"
-                                        onClick={() => {
-                                          if (a.hasReview) {
-                                            navigate("/reviews");
-                                          } else {
-                                            handleAddReview(a);
-                                          }
-                                        }}
-                                      >
-                                        {a.hasReview ? "View Review" : "Add Review"}
-                                      </button>
-                                    </>
-                                  )}
-
-                                  {/* CANCEL — only when booked */}
-                                  {a.status?.toLowerCase() === "booked" && (
-                                    <button
-                                      className="btn small danger"
-                                      onClick={() => confirmCancel(a._id)}
-                                      disabled={busyId === a._id}
-                                    >
-                                      {busyId === a._id ? "Cancelling" : "Cancel"}
-                                    </button>
-                                  )}
-
-                                </td>
-                              </>
-                            )}
-
-
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                </table>
+              </div>
             </>
           )}
-        </section>
+
+        </div>
+
       </div>
+
       
       {role.toLowerCase() === "patient" && (
         <>

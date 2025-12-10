@@ -172,93 +172,115 @@ const DoctorCard = ({ doctorId, image, name, speciality, experience, ratings, on
   const isExpired = apptStatus === "expired";
 
   return (
-    <div className="doctor-card-container">
-      <div className="doctor-card-details-container">
-        <div className="doctor-card-profile-image-container">
-          <img src={image} alt="Instant Consultation" />
+    <div className="w-full border border-gray-300 rounded-lg shadow-sm hover:shadow-lg hover:scale-[1.03] transition-all duration-300 mb-5">
+
+      {/* Doctor Details */}
+      <div className="p-5">
+        <div className="text-center mb-3">
+          <img
+            src={image}
+            alt="Instant Consultation"
+            className="w-32 h-32 rounded-full border-2 border-indigo-600 mx-auto object-cover"
+          />
         </div>
-        <div className="doctor-card-details">
-          <div className="doctor-card-detail-name">{name}</div>
-          <div className="doctor-card-detail-speciality">{speciality}</div>
-          <div className="doctor-card-detail-experience">{experience} years experience</div>
-          <div className="doctor-card-detail-consultationfees">Ratings: {starRating || "0"}</div>
+
+        <div className="text-center">
+          <div className="text-lg font-bold mb-1">{name}</div>
+          <div className="text-base text-gray-700 mb-1">{speciality}</div>
+          <div className="text-sm font-semibold text-gray-500 mb-1">
+            {experience} years experience
+          </div>
+          <div className="text-sm font-semibold mb-1">
+            Ratings: {starRating || "0"}
+          </div>
         </div>
       </div>
 
-      <div className="doctor-card-options-container">
+      {/* Book Button */}
+      <div className="p-0">
         <Popup
-          trigger={            
-
-            <button className={`btn btn-primary book-appointment-btn ${isBooked ? "cancel-appointment" : ""}`}  onClick={handleBookingClick}>
+          trigger={
+            <button
+              className={`w-full px-4 py-3 text-white font-semibold rounded-b-md transition ${
+                isBooked
+                  ? "bg-red-600 hover:bg-red-700"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+              onClick={handleBookingClick}
+            >
               {isBooked && <div>Cancel Appointment</div>}
               {isExpired && <div>Book Appointment Again</div>}
               {!isBooked && !isExpired && <div>Book Appointment</div>}
-              <div>No Booking Fee</div>
+              <div className="text-xs opacity-90">No Booking Fee</div>
             </button>
-
           }
           modal
           open={showModal}
           onClose={() => setShowModal(false)}
         >
           {(close) => (
-            <div className="appointment-main">
-              <div className="doctor-card-details-container">
-                <div className="doctor-card-profile-image-container">
-                  <img src={image} alt="Instant Consultation" />
-                </div>
-                <div className="doctor-card-details">
-                  <div className="doctor-card-detail-name">{name}</div>
-                  <div className="doctor-card-detail-speciality">{speciality}</div>
-                  <div className="doctor-card-detail-experience">{experience} years experience</div>
-                  <div className="doctor-card-detail-consultationfees">Ratings: {starRating || "0"}</div>
-                </div>
-              </div>             
+            <div className="h-[90vh] overflow-auto p-4">
 
-              {isBooked ? (
-                <>
-                  <div className='appointment-confirmation'>
-                    <h3>Appointment Booked!</h3>
-                    {appointments.map((appointment) => (
-                      <div className="bookedInfo" key={appointment._id}>
-                        <p><strong>Name:</strong> {appointment.patientName}</p>
-                        <p><strong>Phone Number:</strong> {appointment.phoneNumber}</p>
-                        <p><strong>Date of Appointment:</strong> {appointment.appointmentDate}</p>
-                        <p><strong>Time Slot:</strong> {appointment.appointmentTime}</p>
-                        <button className='btn btn-primary' onClick={() => handleCancel(appointment._id, close)}>Cancel Appointment</button>
-                      </div>
-                    ))}
+              {/* Doctor details inside popup */}
+              <div className="p-4 flex flex-col items-center border-b border-gray-200 mb-5">
+                <img
+                  src={image}
+                  alt="Instant Consultation"
+                  className="w-28 h-28 rounded-full object-cover mb-3"
+                />
+                <div className="text-center">
+                  <div className="text-lg font-bold mb-1">{name}</div>
+                  <div className="text-base text-gray-700 mb-1">{speciality}</div>
+                  <div className="text-sm font-semibold text-gray-500 mb-1">
+                    {experience} years experience
                   </div>
-                </>
+                  <div className="text-sm font-semibold mb-1">
+                    Ratings: {starRating || "0"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Booked State */}
+              {isBooked ? (
+                <div className="max-w-md mx-auto mt-4 p-4 bg-white shadow rounded-md">
+                  <h3 className="text-xl font-bold text-blue-600 text-center mb-4">
+                    Appointment Booked!
+                  </h3>
+
+                  {appointments.map((appointment) => (
+                    <div key={appointment._id} className="mb-4 border-b pb-3">
+                      <p><strong>Name:</strong> {appointment.patientName}</p>
+                      <p><strong>Phone Number:</strong> {appointment.phoneNumber}</p>
+                      <p><strong>Date of Appointment:</strong> {appointment.appointmentDate}</p>
+                      <p><strong>Time Slot:</strong> {appointment.appointmentTime}</p>
+
+                      <button
+                        className="mt-3 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+                        onClick={() => handleCancel(appointment._id, close)}
+                      >
+                        Cancel Appointment
+                      </button>
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <AppointmentForm
                   doctorId={doctorId}
                   doctorName={name}
                   doctorSpeciality={speciality}
-                  onSubmit={(data) => { 
-                    //console.log("handleFormSubmit:", data);
+                  onSubmit={(data) => {
                     handleFormSubmit(data);
                     close();
                   }}
                 />
               )}
-            </div>            
+            </div>
           )}
         </Popup>
       </div>
 
-
-      {/*
-      {notification && (
-        <Notification
-          title={notification.title}
-          message={notification.message}
-          onClose={() => setNotification(null)}
-        />
-      )}
-      */}
-
     </div>
+
   );
 };
 

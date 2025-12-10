@@ -50,26 +50,49 @@ const HealthTips = () => {
   }, []);
 
   return (
-    <section className="health-tips-section">
-      <h1 className="section-title">Health Tips for a Better You</h1>
-      <p className="section-subtitle">
-        Small daily habits can make a big difference in your long-term health.
-      </p>
+    <div className="px-6 md:px-12 text-center">
 
-      <div className="tips-grid">
+      {/* Title */}
+
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-blue-600 tracking-wide mb-3">Health Tips</h1>
+        <p className="text-gray-600 text-sm md:text-base mb-0">
+          Small daily habits can make a big difference in your long-term health.
+        </p>
+      </div>
+
+      {/* Tips Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+
         {tips.map((tip, index) => {
           const imagePath = require(`../../assets/images/${tip.image}`);
-
           return (
-            <div key={index} className="tip-card" data-aos="fade-up">
-              <img src={imagePath} alt={tip.title} className="tip-image" />
-              <h3 className="tip-title">{tip.title}</h3>
-              <p className="tip-description">{tip.description}</p>
+            <div
+              key={index}
+              data-aos="fade-up"
+              className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2"
+            >
+              <img
+                src={imagePath}
+                alt={tip.title}
+                className="w-full h-60 object-contain mb-4"
+              />
+
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                {tip.title}
+              </h3>
+
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {tip.description}
+              </p>
             </div>
           );
         })}
+
       </div>
-    </section>
+
+    </div>
+
   );
 };
 

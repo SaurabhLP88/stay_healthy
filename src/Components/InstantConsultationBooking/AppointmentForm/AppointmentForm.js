@@ -38,10 +38,10 @@ const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) =
   };
 
   const getFilteredTimeSlots = () => {
-    if (!appointmentDate) return timeSlots;
-
-    const today = new Date().toISOString().split("T")[0];
-    if (appointmentDate !== today) return timeSlots;
+    if (!appointmentDate) return [];
+    const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0];
+    if (appointmentDate < today) return [];
+    if (appointmentDate > today) return timeSlots;
 
     const now = new Date();
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -169,66 +169,85 @@ const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) =
 
   return (
     
-      <form onSubmit={handleSubmit} className="appointment-form">
-        <h3>Book Appointment</h3>
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-5 p-5 bg-gray-100 border border-gray-300 rounded-lg shadow-sm">
+        <h3 className="text-center text-xl font-semibold mb-4">Book Appointment</h3>
 
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
-          <input className="form-control" type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your full name" />
-          {errors.name && <span className="error-text">{errors.name}</span>}
+        <div className="mb-3">
+          <label htmlFor="name" className="block font-semibold mb-1">Name:</label>
+          <input
+            className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your full name"
+          />
+          {errors.name && <span className="text-red-600 text-sm">{errors.name}</span>}
         </div>
 
-        <div className="form-group">
-          <label htmlFor="phoneNumber">Phone Number:</label>
-          <input className="form-control" type="tel" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Enter 10-digit mobile number" />
-          {errors.phoneNumber && <span className="error-text">{errors.phoneNumber}</span>}
+        <div className="mb-3">
+          <label htmlFor="phoneNumber" className="block font-semibold mb-1">Phone Number:</label>
+          <input
+            className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="tel"
+            id="phoneNumber"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            placeholder="Enter 10-digit mobile number"
+          />
+          {errors.phoneNumber && <span className="text-red-600 text-sm">{errors.phoneNumber}</span>}
         </div>
-        
+
         {location.pathname !== "/instant-consultation" && (
-        <>
-          <div className="form-group">
-            <label htmlFor="appointmentDate">Appointment Date:</label>
-            <input
-              className="form-control"
-              type="date"
-              id="appointmentDate"
-              value={appointmentDate}
-              min={new Date().toISOString().split("T")[0]}
-              onChange={(e) => setAppointmentDate(e.target.value)}
-            />
-            {errors.appointmentDate && (
-              <span className="error-text">{errors.appointmentDate}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="appointmentTime">Time Slot:</label>
-            <select
-              id="appointmentTime"
-              className="form-control"
-              value={appointmentTime}
-              onChange={(e) => setAppointmentTime(e.target.value)}            
-            >
-              <option value="">-- Select a Time Slot --</option>
-              {getFilteredTimeSlots().length === 0 ? (
-                <option value="">No time slots available today</option>
-              ) : (
-                getFilteredTimeSlots().map((slot, index) => (
-                  <option key={index} value={slot}>
-                    {slot}
-                  </option>
-                ))
+          <>
+            <div className="mb-3">
+              <label htmlFor="appointmentDate" className="block font-semibold mb-1">Appointment Date:</label>
+              <input
+                className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="date"
+                id="appointmentDate"
+                value={appointmentDate}
+                min={new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0]}
+                onChange={(e) => setAppointmentDate(e.target.value)}
+              />
+              {errors.appointmentDate && (
+                <span className="text-red-600 text-sm">{errors.appointmentDate}</span>
               )}
-            </select>
-            {errors.appointmentTime && (
-              <span className="error-text">{errors.appointmentTime}</span>
-            )}
-          </div>
-            </>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="appointmentTime" className="block font-semibold mb-1">Time Slot:</label>
+              <select
+                id="appointmentTime"
+                className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={appointmentTime}
+                onChange={(e) => setAppointmentTime(e.target.value)}
+              >
+                <option value="">-- Select a Time Slot --</option>
+
+                {getFilteredTimeSlots().length === 0 ? (
+                  <option value="">No time slots available today</option>
+                ) : (
+                  getFilteredTimeSlots().map((slot, index) => (
+                    <option key={index} value={slot}>{slot}</option>
+                  ))
+                )}
+              </select>
+              {errors.appointmentTime && (
+                <span className="text-red-600 text-sm">{errors.appointmentTime}</span>
+              )}
+            </div>
+          </>
         )}
 
-        <button type="submit" className="btn btn-primary">Book Now</button>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+        >
+          Book Now
+        </button>
       </form>
+
    
   );
 };

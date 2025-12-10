@@ -72,9 +72,9 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
   };
 
   return (    
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} username={username} />
-      <div className="main">{children}</div>
+      <div className="main container mx-auto px-4">{children}</div>
       <Footer />
       {loggedIn && notification && (
         <Notification

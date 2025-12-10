@@ -1,4 +1,4 @@
-.reviews-container {max-width:1200px; margin:auto; padding:0em 20px 0em;}
+/*.reviews-container {max-width:1200px; margin:auto; padding:0em 20px 0em;}
 .reviews-title {text-align:center; margin:1em 0 1em; color:#222; font-size:32px;}
 .reviews-table {width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 .reviews-table th, .reviews-table td {border:1px solid #eee; padding:5px 10px; }
@@ -6,4 +6,4 @@
 .review-btn {background-color:#0078d4; color:#fff; padding:5px 10px; border:none; border-radius:6px; cursor:pointer; transition:0.3s; margin-top: 0; width: auto;}
 .review-btn:hover {background-color:#005fa3;}
 .disabled-btn {background-color:#ccc; color:#666; cursor:not-allowed; pointer-events:none;}
-.no-reviews {text-align:center;}
+.no-reviews {text-align:center;}*/

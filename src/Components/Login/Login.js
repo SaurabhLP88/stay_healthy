@@ -98,127 +98,183 @@ function Login({ setLoggedIn }) {
   };
 
   return (
-    <div className="container">
-      <div className="login-grid">
-        <div className="login-text">
-          <h2>{!showForgot ? "Login" : "Forgot Password"}</h2>
-        </div>        
+    <div className="max-w-md mx-auto px-4 pt-0">
+      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-2xl">
+
+        {/* Heading */}
+        <div className="text-center mb-2">
+          <h1 className="text-3xl font-semibold text-blue-600 tracking-wide">{!showForgot ? "Login" : "Forgot Password"}</h1>
+        </div>
 
         {!showForgot ? (
           <>
-            <div className="login-text">
+            {/* Signup Link */}
+            <div className="text-center text-sm mb-4">
               Are you a new member?{" "}
-              <Link to="/signup">Sign Up Here</Link>
+              <Link to="/signup" className="text-blue-600 hover:underline">
+                Sign Up Here
+              </Link>
             </div>
-            <div className="login-form">
-              <form onSubmit={handleSubmit}>
 
-                <div className="form-group">
-                  <label>Login as</label>
-                  <div className="radio-group">
-                    <label>
+            {/* Login Form */}
+            <div className="pt-2">
+              <form onSubmit={handleSubmit} className="space-y-4">
+
+                {/* Role Selection */}
+                <div>
+                  <label className="block font-semibold mb-1">Login as</label>
+
+                  <div className="flex items-center gap-6">
+                    <label className="flex items-center gap-2 text-gray-700">
                       <input
                         type="radio"
                         name="role"
                         value="Doctor"
                         checked={formData.role === "Doctor"}
                         onChange={handleChange}
+                        className="accent-blue-600"
                       />
                       Doctor
                     </label>
-                    <label>
+
+                    <label className="flex items-center gap-2 text-gray-700">
                       <input
                         type="radio"
                         name="role"
                         value="Patient"
                         checked={formData.role === "Patient"}
                         onChange={handleChange}
+                        className="accent-blue-600"
                       />
                       Patient
                     </label>
                   </div>
-                  {errors.role && <span className="error">{errors.role}</span>}
+
+                  {errors.role && (
+                    <span className="text-red-500 text-sm">{errors.role}</span>
+                  )}
                 </div>
 
-
-                <div className="form-group">
-                  <label>Email</label>
+                {/* Email */}
+                <div>
+                  <label className="block font-semibold mb-1">Email</label>
                   <input
                     type="email"
                     name="email"
+                    placeholder="Enter your email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="Enter your email"
-                    className="form-control"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-base focus:ring-2 focus:ring-blue-400 outline-none"
                   />
-                  {errors.email && <span className="error">{errors.email}</span>}
+                  {errors.email && (
+                    <span className="text-red-500 text-sm">{errors.email}</span>
+                  )}
                 </div>
 
-                <div className="form-group password-field">
-                  <label htmlFor="password">Password</label>
-                  <div className="password-wrapper">
+                {/* Password */}
+                <div>
+                  <label className="block font-semibold mb-1">Password</label>
+
+                  <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
+                      placeholder="Enter your password"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="Enter your password"
-                      className="form-control"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-base focus:ring-2 focus:ring-blue-400 outline-none"
                     />
-                    <span className="eye-icon" onClick={togglePasswordVisibility}>
+
+                    <span
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    >
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </span>
                   </div>
-                  {errors.password && <span className="error">{errors.password}</span>}
+
+                  {errors.password && (
+                    <span className="text-red-500 text-sm">{errors.password}</span>
+                  )}
                 </div>
 
-                <div className="btn-group">
-                  <button type="submit" className="btn btn-primary">Login</button>
+                {/* Buttons */}
+
+                <div className="flex items-center justify-between gap-3 pt-2">
+                  
                   <button
-                    type="reset"
-                    className="btn btn-danger"
-                    onClick={() => setFormData({ email: "", password: "", role: "" })}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowForgot(true);
+                    }}
+                    className="text-blue-600 hover:underline text-sm"
                   >
-                    Reset
+                    Forgot Password?
                   </button>
-                </div>
 
-                <div className="link-text">
-                  <button type="button" onClick={(e) => { e.preventDefault(); setShowForgot(true); }}>Forgot Password?</button>
+                  <div className="flex items-center justify-end gap-3 pt-2">
+                    <button
+                      type="reset"
+                      onClick={() => setFormData({ email: "", password: "", role: "" })}
+                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    >
+                      Reset
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Login
+                    </button>
+                  </div>
+
                 </div>
+                
               </form>
             </div>
-
           </>
         ) : (
           <>            
-            <div className="link-text">
-              <button type="button" onClick={(e) => { e.preventDefault(); setShowForgot(false); }}>Login Again? </button>
-            </div>
-            <div className="forgot-form">
-              <form>
-                <div className="form-group">
-                  <label>Email</label>
+
+            {/* Forgot Password Form */}
+            <div className="pt-2">
+              <form className="space-y-4">
+                <div>
+                  <label className="block font-semibold mb-1">Email</label>
                   <input
                     type="email"
                     name="forgotEmail"
                     placeholder="Enter your email"
-                    className="form-control"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-base focus:ring-2 focus:ring-blue-400 outline-none"
                   />
                 </div>
 
-                <div className="btn-group">
-                  <button type="submit" className="btn btn-primary">Send Reset Link</button>
-                 
+                <div className="flex items-center justify-between gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowForgot(false);
+                    }}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Login Again?
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Send Reset Link
+                  </button>
                 </div>
               </form>
             </div>
           </>
         )}
-
-
       </div>
     </div>
+
   );
 }
 
