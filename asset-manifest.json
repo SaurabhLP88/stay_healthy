@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/stay_healthy/static/css/main.bc45fd38.css",
-    "main.js": "/stay_healthy/static/js/main.4e8ea73f.js",
+    "main.css": "/stay_healthy/static/css/main.8e71fb09.css",
+    "main.js": "/stay_healthy/static/js/main.3e9dae0b.js",
     "static/js/845.620824ad.chunk.js": "/stay_healthy/static/js/845.620824ad.chunk.js",
     "static/media/Physician_Doctor.mp4": "/stay_healthy/static/media/Physician_Doctor.7fe5c8e9c5ebe174efff.mp4",
     "static/media/Sample-Report.pdf": "/stay_healthy/static/media/Sample-Report.7b2f38e20e0de188d41f.pdf",
@@ -16,12 +16,12 @@
     "static/media/water.svg": "/stay_healthy/static/media/water.1adc2b656516eab112d4a1a0ec763027.svg",
     "static/media/logo.svg": "/stay_healthy/static/media/logo.6ce24c58023cc2f8fd88.svg",
     "index.html": "/stay_healthy/index.html",
-    "main.bc45fd38.css.map": "/stay_healthy/static/css/main.bc45fd38.css.map",
-    "main.4e8ea73f.js.map": "/stay_healthy/static/js/main.4e8ea73f.js.map",
+    "main.8e71fb09.css.map": "/stay_healthy/static/css/main.8e71fb09.css.map",
+    "main.3e9dae0b.js.map": "/stay_healthy/static/js/main.3e9dae0b.js.map",
     "845.620824ad.chunk.js.map": "/stay_healthy/static/js/845.620824ad.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.bc45fd38.css",
-    "static/js/main.4e8ea73f.js"
+    "static/css/main.8e71fb09.css",
+    "static/js/main.3e9dae0b.js"
   ]
 }
