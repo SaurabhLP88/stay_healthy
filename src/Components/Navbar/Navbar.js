@@ -23,6 +23,7 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
     role,
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const syncNavbar = () => {
       const name = sessionStorage.getItem("name") || "";
@@ -63,8 +64,7 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
       window.removeEventListener("storage", syncNavbar);
       window.removeEventListener("session-update", syncNavbar);
     };
-  }, [parentUsername]);
-
+  }, [parentUsername, setLoggedIn]);
 
   const handleClick = () => {
     console.log("[Navbar] Menu Toggle", "color: violet", { click: !click });

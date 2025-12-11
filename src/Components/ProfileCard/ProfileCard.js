@@ -11,19 +11,11 @@ const ProfileForm = () => {
   const [updatedDetails, setUpdatedDetails] = useState({ password: "" });
   const [editMode, setEditMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordChanged, setPasswordChanged] = useState(false);
+  //const [passwordChanged, setPasswordChanged] = useState(false);
 
   const role = sessionStorage.getItem("role");
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    const authtoken = sessionStorage.getItem("auth-token");
-    if (!authtoken) {
-      navigate("/login");
-    } else {
-      fetchUserProfile();
-    }
-  }, [navigate]);
+  const navigate = useNavigate();  
 
   const fetchUserProfile = async () => {
     try {
@@ -60,6 +52,16 @@ const ProfileForm = () => {
       // Handle error case
     }
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const authtoken = sessionStorage.getItem("auth-token");
+    if (!authtoken) {
+      navigate("/login");
+    } else {
+      fetchUserProfile();
+    }
+  }, [navigate]);
 
   const handleEdit = () => {
     console.log("🟡 Edit Mode Enabled");
@@ -147,7 +149,7 @@ const ProfileForm = () => {
         setEditMode(false);
         
         if (updatedDetails.password) {
-          setPasswordChanged(true);
+          //setPasswordChanged(true);
           sessionStorage.clear();
           window.dispatchEvent(new Event("session-update"));
           alert("Password Updated Successfully!");

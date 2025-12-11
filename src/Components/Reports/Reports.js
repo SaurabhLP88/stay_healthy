@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Reports.css";
-import sampleReport from "../../assets/documents/Sample-Report.pdf";
+//import sampleReport from "../../assets/documents/Sample-Report.pdf";
 
 function Reports() {
   const [reportsData, setReportsData] = useState([]);

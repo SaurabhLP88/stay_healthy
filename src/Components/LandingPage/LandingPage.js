@@ -32,6 +32,7 @@ const LandingPage = () => {
   const serviceClasses = "service-card bg-white border border-gray-200 rounded-xl p-3 md:p-6 shadow-lg hover:shadow-xl transition cursor-pointer";
   const imageClasses = "w-auto h-80 mx-auto mb-2 md:mb-4";
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (role === "doctor") {
       fetchDoctorStats();

@@ -74,7 +74,7 @@ const Reviews = () => {
         }
       })
       .catch((err) => console.error("[Reviews] Error fetching reviews:", err));
-  }, [role]);
+  }, [role, doctorId, userId]);
 
   const list = role === "doctor" ? doctorReviews : patientReviews;
   console.log("[Reviews] Final list rendered on screen:", list);  

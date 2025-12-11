@@ -9,7 +9,7 @@ const ReviewForm = ({ doctorId, appointmentId, userId, onSubmit, onClose }) => {
 
   //const [selectedDoctor, setSelectedDoctor] = useState(null);
   //const [showForm, setShowForm] = useState(false);
-  const [submittedMessage, setSubmittedMessage] = useState('');
+  //const [submittedMessage, setSubmittedMessage] = useState('');
   const [showWarning, setShowWarning] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -150,15 +150,15 @@ const ReviewForm = ({ doctorId, appointmentId, userId, onSubmit, onClose }) => {
             </button>
           </form>
 
-          {/* Submitted Output */}
+          {/* Submitted Output
           {submittedMessage && (
             <div className="mt-5 bg-green-50 p-4 rounded-lg text-green-700">
               <h3 className="font-bold mb-2">✅ Submitted Data:</h3>
               <pre className="bg-white p-3 rounded-md text-sm overflow-x-auto">
-    {submittedMessage}
+                {submittedMessage}
               </pre>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
