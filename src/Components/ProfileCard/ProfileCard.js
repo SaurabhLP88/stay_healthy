@@ -172,9 +172,9 @@ const ProfileForm = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-gray-100 rounded-lg">
+    <div className="max-w-xl mx-auto p-3 md:p-6 bg-gray-100 rounded-lg">
 
-      <div className="text-center mb-5">
+      <div className="text-center mb-3 md:mb-5">
           <h1 className="text-3xl font-bold text-blue-600 tracking-wide">Your Profile</h1>
         </div>
 

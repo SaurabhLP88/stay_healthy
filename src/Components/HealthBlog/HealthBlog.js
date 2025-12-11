@@ -106,11 +106,11 @@ const HealthBlog = () => {
     console.log("Search Filter Result:", filteredVideosBySearch);
 
   return (
-    <div className="max-w-5xl mx-auto px-4">
+    <div className="max-w-5xl mx-auto px-0">
 
       {/* Title */}
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-blue-600 tracking-wide mb-3">Health Blog</h1>
+      <div className="text-center mb-5 md:mb-10">
+        <h1 className="text-3xl font-bold text-blue-600 tracking-wide mb-1 md:mb-3">Health Blog</h1>
         <p className="text-gray-600 text-sm md:text-base mb-0">
           Stay informed with medical news, training videos, and daily health tips.
         </p>
@@ -123,12 +123,12 @@ const HealthBlog = () => {
           placeholder="Search videos and tips..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-3/4 md:w-1/2 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          className="w-full md:w-1/2 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
         />
       </div>
 
       {/* Category Tabs */}
-      <div className="flex justify-center gap-3 overflow-x-auto pb-2 mb-6 scrollbar-hide">
+      <div className="flex md:justify-center gap-3 overflow-x-auto pb-2 mb-6 scrollbar-hide">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -144,7 +144,7 @@ const HealthBlog = () => {
       {/* VIDEOS SECTION */}
       <div className="mb-10">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
 
           {filteredVideosBySearch.length === 0 && (
             <p className="text-center text-gray-500 col-span-full">No videos found.</p>
@@ -153,7 +153,7 @@ const HealthBlog = () => {
           {filteredVideosBySearch.slice(0, visibleCount).map((video, index) => {
             const thumb = require(`../../assets/images/${video.thumbnail}`);
             return (
-              <div key={index} className="bg-white rounded-xl shadow-md p-4">
+              <div key={index} className="bg-white border border-gray-300 rounded-xl shadow-md p-4">
 
                 <img
                   src={thumb}
@@ -218,13 +218,13 @@ const HealthBlog = () => {
           )}
 
           {tips.map((tip, index) => (
-            <div key={index} className="bg-white p-4 rounded-lg shadow mb-3">
+            <div key={index} className="bg-white border border-gray-300 px-4 py-2 md:py-4 rounded-lg shadow mb-3">
 
               <div
                 className="flex justify-between cursor-pointer"
                 onClick={() => setExpandedTip(expandedTip === index ? null : index)}
               >
-                <h3 className="font-semibold">{tip.title}</h3>
+                <h3 className="font-semibold mt-1">{tip.title}</h3>
                 <span className="text-xl font-bold select-none">
                   {expandedTip === index ? "−" : "+"}
                 </span>

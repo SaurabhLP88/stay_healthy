@@ -50,19 +50,19 @@ const HealthTips = () => {
   }, []);
 
   return (
-    <div className="px-6 md:px-12 text-center">
+    <div className="px-1 md:px-6 text-center">
 
       {/* Title */}
 
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-blue-600 tracking-wide mb-3">Health Tips</h1>
+      <div className="text-center mb-5 md:mb-10">
+        <h1 className="text-3xl font-bold text-blue-600 tracking-wide mb-1 md:mb-3">Health Tips</h1>
         <p className="text-gray-600 text-sm md:text-base mb-0">
           Small daily habits can make a big difference in your long-term health.
         </p>
       </div>
 
       {/* Tips Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center mb-4">
 
         {tips.map((tip, index) => {
           const imagePath = require(`../../assets/images/${tip.image}`);
@@ -70,19 +70,19 @@ const HealthTips = () => {
             <div
               key={index}
               data-aos="fade-up"
-              className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2"
+              className="bg-white border border-gray-200 p-3 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2"
             >
               <img
                 src={imagePath}
                 alt={tip.title}
-                className="w-full h-60 object-contain mb-4"
+                className="w-full h-60 object-contain mb-2 md:mb-4"
               />
 
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              <h3 className="text-lg font-semibold text-gray-800 mb-0 md:mb-2">
                 {tip.title}
               </h3>
 
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed m-0">
                 {tip.description}
               </p>
             </div>

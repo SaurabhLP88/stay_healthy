@@ -3,7 +3,7 @@ import "./Footer.css";
 
 const Footer = () => {
   return (
-    <footer className="w-full py-5 text-center bg-gray-100 border-t border-gray-300 text-gray-600 text-sm">
+    <footer className="w-full flex justify-center align-middle px-2 py-3 h-90 text-center bg-gray-100 border-t border-gray-300 text-gray-600 text-sm">
       <p>
         © {new Date().getFullYear()} StayHealthy — Built with ❤️ by&nbsp;
         <a

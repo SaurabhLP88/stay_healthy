@@ -268,8 +268,8 @@ const Appointments = () => {
       <div className="m-0">
 
         {/* HEADER */}
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-blue-600 tracking-wide mb-3">Your Appointments</h2>
+        <div className="text-center mb-5 md:mb-10">
+          <h2 className="text-3xl font-bold text-blue-600 tracking-wide mb-2 md:mb-4">Your Appointments</h2>
           <p className="text-gray-500">Past, present and future appointments are listed here</p>
         </div>
 
@@ -376,18 +376,18 @@ const Appointments = () => {
                             <td className={tdClass}>{a.doctorName}</td>
                             <td className={tdClass}>{a.doctorSpeciality}</td>
                             <td className={tdClass}>{formatDate(a.appointmentDate)}</td>
-                            <td className={tdClass}>{formatTime(a.appointmentTime)}</td>
+                            <td className={tdClass + ' whitespace-nowrap'}>{formatTime(a.appointmentTime)}</td>
 
                             <td className={tdClass}>
                               <StatusPill status={a.status} />
                             </td>
 
-                            <td className="px-3 py-2 space-y-2 whitespace-nowrap">
+                            <td className="px-3 py-2 space-x-2 whitespace-nowrap">
 
                               {/* BOOK AGAIN */}
                               {["expired", "completed", "cancelled"].includes(a.status?.toLowerCase()) && (
                                 <button 
-                                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 whitespace-nowrap"
                                   onClick={() => handleBookAgain(a)}>
                                   Book Again
                                 </button>
@@ -399,7 +399,7 @@ const Appointments = () => {
                                   href={a.reportUrl}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="px-3 py-1 border border-gray-600 rounded text-sm hover:bg-gray-800 hover:text-white ms-2"
+                                  className="px-3 py-1 border border-gray-600 rounded text-sm hover:bg-gray-800 hover:text-white whitespace-nowrap"
                                 >
                                   Download Report
                                 </a>
@@ -408,7 +408,7 @@ const Appointments = () => {
                               {/* REVIEW */}
                               {a.status?.toLowerCase() === "completed" && (
                                 <button 
-                                  className="px-3 py-1 border border-blue-600 text-blue-600 rounded text-sm hover:bg-blue-600 hover:text-white ms-2"
+                                  className="px-3 py-1 border border-blue-600 text-blue-600 rounded text-sm hover:bg-blue-600 hover:text-white whitespace-nowrap"
                                   onClick={() => {
                                     if (a.hasReview) {
                                       navigate("/reviews");
@@ -424,7 +424,7 @@ const Appointments = () => {
                               {/* CANCEL */}
                               {a.status?.toLowerCase() === "booked" && (
                                 <button 
-                                  className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 ms-2" 
+                                  className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 whitespace-nowrap" 
                                   onClick={() => confirmCancel(a._id)} 
                                   disabled={busyId === a._id}>
                                   {busyId === a._id ? "Cancelling" : "Cancel"}

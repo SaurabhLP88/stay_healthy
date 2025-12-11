@@ -107,7 +107,7 @@ function SignUp({ setLoggedIn }) {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 pt-0">
+    <div className="max-w-md mx-auto px-0 pt-0">
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-2xl">
 
         {/* Heading */}

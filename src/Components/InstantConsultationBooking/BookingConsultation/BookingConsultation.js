@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { API_URL } from "../../../config";
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { sendNotification } from "../../../utils/notify";
 import FindDoctorSearch from "../FindDoctorSearch/FindDoctorSearch"; // adjust path if needed
 import DoctorCard from "../DoctorCard/DoctorCard";
@@ -24,6 +24,29 @@ const BookingConsultation = () => {
   const speciality = searchParams.get("speciality");
 
   useEffect(() => {
+
+    const getDoctorsDetails = () => {
+      //console.log("BookingConsultation.js getDoctorsDetails");
+      //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
+      fetch(`${API_URL}/api/doctors`)
+      .then(res => res.json())
+      .then(data => {
+          setDoctors(data);
+
+          if (searchParams.get('speciality')) {
+              const filtered = data.filter(
+                  doctor => doctor.speciality.toLowerCase() === searchParams.get('speciality').toLowerCase()
+              );
+              setFilteredDoctors(filtered);
+              setIsSearched(true);
+          } else {
+              setFilteredDoctors([]);
+              setIsSearched(false);
+          }
+      })
+      .catch(err => console.error(err));
+    }
+
     //console.log("BookingConsultation.js useEffect");
     getDoctorsDetails();
 
@@ -46,29 +69,7 @@ const BookingConsultation = () => {
     if (!d) return "";
     const [year, month, day] = d.split("-");
     return `${day}/${month}/${year}`;
-  };*/
-
-  const getDoctorsDetails = () => {
-    //console.log("BookingConsultation.js getDoctorsDetails");
-      //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
-      fetch(`${API_URL}/api/doctors`)
-      .then(res => res.json())
-      .then(data => {
-          setDoctors(data);
-
-          if (searchParams.get('speciality')) {
-              const filtered = data.filter(
-                  doctor => doctor.speciality.toLowerCase() === searchParams.get('speciality').toLowerCase()
-              );
-              setFilteredDoctors(filtered);
-              setIsSearched(true);
-          } else {
-              setFilteredDoctors([]);
-              setIsSearched(false);
-          }
-      })
-      .catch(err => console.error(err));
-  }
+  };*/  
   
   const handleSearch = (searchText) => {
     //console.log("BookingConsultation.js handleSearch");
@@ -153,14 +154,14 @@ const BookingConsultation = () => {
 
   return (
 
-    <div className="text-gray-700 px-4 pt-4">
+    <div className="text-gray-700">
 
       <FindDoctorSearch onSearch={handleSearch} />
 
       <div className="mt-6">
-        <div className="m-0">
+        <div className="max-w-5xl mx-auto">
 
-          <h2 className="text-2xl font-bold text-center mb-3">
+          <h2 className="text-2xl font-bold text-center mb-2">
             <span className="text-blue-600">
               {(isSearched ? filteredDoctors : doctors).length}
             </span>
@@ -170,11 +171,11 @@ const BookingConsultation = () => {
 
           {(isSearched ? filteredDoctors : doctors).length > 0 ? (
             <>
-              <h3 className="text-center text-gray-600 mb-6 text-sm md:text-base">
+              <h3 className="text-center text-gray-600 mb-6 text-sm">
                 Book appointments with minimum wait-time & verified doctor details
               </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 max-w-6xl mx-auto">
+              <div className="grid gap-3 md:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-8xl mx-auto">
                 {(isSearched ? filteredDoctors : doctors).map((doctor, index) => {
                   const imagePath = require(`../../../assets/images/${doctor.image}`);
                   return (
@@ -194,7 +195,7 @@ const BookingConsultation = () => {
               </div>
             </>
           ) : (
-            <p className="text-center text-gray-600">
+            <p className="text-center text-gray-600 text-sm mt-4">
               No doctors found for {searchParams.get("speciality")}.
             </p>
           )}

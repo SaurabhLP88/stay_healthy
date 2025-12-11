@@ -172,15 +172,15 @@ const DoctorCard = ({ doctorId, image, name, speciality, experience, ratings, on
   const isExpired = apptStatus === "expired";
 
   return (
-    <div className="w-full border border-gray-300 rounded-lg shadow-sm hover:shadow-lg hover:scale-[1.03] transition-all duration-300 mb-5">
+    <div className="w-full border border-gray-300 rounded-lg shadow-sm hover:shadow-lg hover:scale-[1.03] transition-all duration-300">
 
       {/* Doctor Details */}
-      <div className="p-5">
+      <div className="p-3 md:p-5">
         <div className="text-center mb-3">
           <img
             src={image}
             alt="Instant Consultation"
-            className="w-32 h-32 rounded-full border-2 border-indigo-600 mx-auto object-cover"
+            className="size-32 md:size-48 rounded-full border-2 border-indigo-600 mx-auto object-cover"
           />
         </div>
 
@@ -191,7 +191,7 @@ const DoctorCard = ({ doctorId, image, name, speciality, experience, ratings, on
             {experience} years experience
           </div>
           <div className="text-sm font-semibold mb-1">
-            Ratings: {starRating || "0"}
+            Ratings: <span className='block md:inline'>{starRating || "0"}</span>
           </div>
         </div>
       </div>
@@ -201,7 +201,7 @@ const DoctorCard = ({ doctorId, image, name, speciality, experience, ratings, on
         <Popup
           trigger={
             <button
-              className={`w-full px-4 py-3 text-white font-semibold rounded-b-md transition ${
+              className={`w-full px-1 md:px-4 py-3 text-white font-semibold rounded-b-md transition ${
                 isBooked
                   ? "bg-red-600 hover:bg-red-700"
                   : "bg-blue-600 hover:bg-blue-700"
@@ -209,24 +209,34 @@ const DoctorCard = ({ doctorId, image, name, speciality, experience, ratings, on
               onClick={handleBookingClick}
             >
               {isBooked && <div>Cancel Appointment</div>}
-              {isExpired && <div>Book Appointment Again</div>}
+              {isExpired && <div>Book Again</div>}
               {!isBooked && !isExpired && <div>Book Appointment</div>}
               <div className="text-xs opacity-90">No Booking Fee</div>
             </button>
           }
+          className="my-popup"
+          contentClass="my-popup-content"
+          overlayClass="my-popup-overlay"
           modal
           open={showModal}
           onClose={() => setShowModal(false)}
         >
           {(close) => (
-            <div className="h-[90vh] overflow-auto p-4">
+            <div className="max-h-[90vh] overflow-auto p-0">
+
+              <button
+                className="md:hidden absolute top-3 right-3 text-gray-700 text-3xl"
+                onClick={close}
+              >
+                ×
+              </button>
 
               {/* Doctor details inside popup */}
               <div className="p-4 flex flex-col items-center border-b border-gray-200 mb-5">
                 <img
                   src={image}
                   alt="Instant Consultation"
-                  className="w-28 h-28 rounded-full object-cover mb-3"
+                  className="size-32 object-contain mb-3"
                 />
                 <div className="text-center">
                   <div className="text-lg font-bold mb-1">{name}</div>

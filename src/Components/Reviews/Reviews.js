@@ -80,7 +80,7 @@ const Reviews = () => {
   console.log("[Reviews] Final list rendered on screen:", list);  
 
   return (
-    <div className="px-4">
+    <div className="px-0 mb-5">
 
       <div className="text-center mb-5">
           <h1 className="text-3xl font-semibold text-blue-600 tracking-wide">Reviews {role.toLowerCase() === "doctor" ? "by Patients" : "for Doctors"}</h1>

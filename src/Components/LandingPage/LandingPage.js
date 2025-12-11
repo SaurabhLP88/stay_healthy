@@ -22,13 +22,15 @@ const LandingPage = () => {
   const [nextAppointmentName, setNextAppointmentName] = useState("No upcoming");  
   const [nextAppointmentTime, setNextAppointmentTime] = useState("");
   const [nextAppointmentDate, setNextAppointmentDate] = useState("");
-  const [nextAppointmentPhone, setNextAppointmentPhone] = useState("");
-  
+  const [nextAppointmentPhone, setNextAppointmentPhone] = useState("");  
   
   const navigate = useNavigate();
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
   const role = sessionStorage.getItem("role")?.toLowerCase();
   const doctorId = sessionStorage.getItem("doctorId");
+
+  const serviceClasses = "service-card bg-white border border-gray-200 rounded-xl p-3 md:p-6 shadow-lg hover:shadow-xl transition cursor-pointer";
+  const imageClasses = "w-auto h-80 mx-auto mb-2 md:mb-4";
 
   useEffect(() => {
     if (role === "doctor") {
@@ -96,7 +98,7 @@ const LandingPage = () => {
     <>
       {/* HERO SECTION */}
       {!showServices && role !== "doctor" && (
-        <section className="flex flex-col align-middle justify-center relative min-h-[calc(100vh-200px)] text-center">
+        <section className="flex flex-col align-middle justify-center relative min-h-[calc(100vh-190px)] text-center overflow-hidden -mx-2 px-4 md:-mx-0 md:px-0">
 
           {/* Blobs */}
           <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
@@ -106,7 +108,7 @@ const LandingPage = () => {
             <div className="blob2 bg-blue-700/40 blur-3xl"></div>
           </div>
 
-          <div className="flex flex-col items-center gap-6 px-4" data-aos="fade-up">
+          <div className="flex flex-col items-center gap-6" data-aos="fade-up">
 
             <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
               Your Health <br />
@@ -129,39 +131,39 @@ const LandingPage = () => {
 
       {/* SERVICES SECTION */}
       {showServices && role !== "doctor" && (
-        <section id="services" className="px-6 md:px-12 pb-12 text-center">
+        <section id="services" className="px-2 md:px-5 pb-12 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3">
             Best Services
           </h2>
-          <p className="text-lg text-gray-600 mb-10">
+          <p className="text-lg text-gray-600 mb-5 md:mb-10">
             Love yourself enough to live a healthy lifestyle.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-8 justify-items-center">
 
             <div
-              className="service-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition cursor-pointer"
+              className={serviceClasses}
               onClick={() => handleNavigate("/instant-consultation")}
             >
-              <img src={instant} alt="Instant Consultation" className="w-auto h-80 mx-auto mb-4" />
+              <img src={instant} alt="Instant Consultation" className={imageClasses} />
               <h3 className="text-lg font-medium text-gray-700">Instant Consultation</h3>
             </div>
 
             <div
-              className="service-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition cursor-pointer"
+              className={serviceClasses}
               onClick={() => handleNavigate("/book-consultation")}
             >
-              <img src={book} alt="Book Appointment" className="w-auto h-80 mx-auto mb-4" />
+              <img src={book} alt="Book Appointment" className={imageClasses} />
               <h3 className="text-lg font-medium text-gray-700">Book an Appointment</h3>
             </div>
 
-            <Link to="/self-check" className="service-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition cursor-pointer">
-              <img src={self} alt="Self Checkup" className="w-auto h-80 mx-auto mb-4" />
+            <Link to="/self-check" className={serviceClasses}>
+              <img src={self} alt="Self Checkup" className={imageClasses} />
               <h3 className="text-lg font-medium text-gray-700">Self Checkup</h3>
             </Link>
 
-            <Link to="/health-tips" className="service-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition cursor-pointer">
-              <img src={tips} alt="Health Tips Guidance" className="w-auto h-80 mx-auto mb-4" />
+            <Link to="/health-tips" className={serviceClasses}>
+              <img src={tips} alt="Health Tips Guidance" className={imageClasses} />
               <h3 className="text-lg font-medium text-gray-700">Health Tips & Guidance</h3>
             </Link>
 

@@ -42,7 +42,7 @@ const SelfCheck = () => {
   }, []);
 
   return (
-    <div className="px-4">
+    <div className="px-1">
 
       {/* HEADER */}
       <div className="bg-blue-50 p-6 rounded-xl flex flex-col md:flex-row items-center gap-6 mb-8">
@@ -57,7 +57,7 @@ const SelfCheck = () => {
         </div>
 
         {/* Right Text */}
-        <div className="flex-1 md:flex-[4]">
+        <div className="flex-1 md:flex-[4] text-center md:text-left">
           <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-3">
             Self Health Checkup
           </h1>

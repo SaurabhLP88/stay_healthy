@@ -169,7 +169,7 @@ const AppointmentForm = ({ doctorId, doctorName, doctorSpeciality, onSubmit }) =
 
   return (
     
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-5 p-5 bg-gray-100 border border-gray-300 rounded-lg shadow-sm">
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-0 p-5 bg-gray-100 border border-gray-300 rounded-lg shadow-sm">
         <h3 className="text-center text-xl font-semibold mb-4">Book Appointment</h3>
 
         <div className="mb-3">

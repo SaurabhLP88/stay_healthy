@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaBars, FaTimes, FaUserMd } from "react-icons/fa";
 import "./Navbar.css";
 
 function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
   const [click, setClick] = useState(false);
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
-  //const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   
   const navigate = useNavigate();
   //console.log("Navbar.js Loaded");
   //const role = sessionStorage.getItem("role")?.toLowerCase();
 
-  const navClasses = "block px-3 py-2 text-gray-800 hover:text-blue-600";
-  const authClasses = "block px-4 py-2 rounded-full border border-blue-600 hover:bg-blue-600 hover:text-white transition";
+  const navClasses = "block px-2 md:px-1 lg:px-3 py-2 text-gray-800 hover:text-blue-600";
+  const authClasses = "inline-block lg:block mt-3 lg:mt-0 px-4 py-2 rounded-full border border-blue-600 hover:bg-blue-600 hover:text-white transition";
   const dropdownClasses = "block px-4 py-2 hover:bg-gray-100";
 
   console.log("[Navbar Render]", {
@@ -95,43 +96,43 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
 
           {/* Logo */}
-          <Link to="/" className="text-2xl font-semibold text-blue-600 flex items-center gap-2">
-            StayHealthy <i className="fa fa-user-md"></i>
+          <Link to="/" onClick={() => setClick(false)} className="text-2xl font-semibold text-blue-600 flex items-center gap-2">
+            StayHealthy <FaUserMd className="text-blue-600 text-2xl" />
           </Link>
 
           {/* Hamburger icon (mobile only) */}
           <button
             onClick={handleClick}
-            className="text-2xl md:hidden text-gray-700 focus:outline-none"
+            className="text-2xl lg:hidden text-gray-700 focus:outline-none"
           >
-            <i className={click ? "fa fa-times" : "fa fa-bars"}></i>
+            {click ? <FaTimes /> : <FaBars />}
           </button>
 
           {/* ONE NAV MENU — works for BOTH mobile & desktop */}
           <ul
             className={`
-              flex flex-col md:flex-row md:items-center md:gap-6
-              absolute md:static left-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none
-              transition-all duration-300
-              ${click ? "top-16 py-4 opacity-100" : "top-[-300px] opacity-0 md:opacity-100"}
+              flex flex-col lg:flex-row lg:items-center gap-0 md:gap-0 lg:gap-3 xl:gap-6
+              absolute lg:static left-0 w-full lg:w-auto bg-white lg:bg-transparent shadow-md lg:shadow-none
+              transition-all duration-300 text-center lg:text-left text-md md:text-sm lg:text-md
+              ${click ? "top-16 py-4 opacity-100" : "top-[-400px] opacity-0 lg:opacity-100"}
             `}
           >
 
-            <li><Link to="/" className={navClasses}>
+            <li><Link to="/" className={navClasses} onClick={() => setClick(false)}>
               {role !== "doctor" ? "Home" : "Dashboard"}
             </Link></li>
 
             {loggedIn && (
-              <li><Link to="/appointments" className={navClasses}>
+              <li><Link to="/appointments" className={navClasses} onClick={() => setClick(false)}>
                 Appointments
               </Link></li>
             )}
 
-            <li><Link to="/health-blog" className={navClasses}>
+            <li><Link to="/health-blog" className={navClasses} onClick={() => setClick(false)}>
               Health Blog
             </Link></li>
 
-            <li><Link to="/reviews" className={navClasses}>
+            <li><Link to="/reviews" className={navClasses} onClick={() => setClick(false)}>
               Reviews
             </Link></li>
 
@@ -139,20 +140,25 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
               <>
                 {username && (
                   <li className="relative group">
-                    <div className="flex items-center gap-1 px-4 py-2 cursor-pointer">
+                    <div className="flex justify-center items-center gap-1 px-4 py-2 cursor-pointer">
                       Welcome, <span className="">{role === "doctor" ? "Dr." : ""} {username}</span>                      
-                      <span className="ml-1 transition-transform duration-200 group-hover:rotate-180 text-gray-800 hover:text-blue-600">
+                      <span
+                        onClick={() => setDropdownOpen(!dropdownOpen)} 
+                        className="ml-1 transition-transform duration-200 group-hover:rotate-180 text-gray-800 hover:text-blue-600"
+                      >
                         ▼
                       </span>
                     </div>
                     <ul
-                      className="
-                        absolute right-0 top-full pt-1 mt-0 min-w-[160px] bg-white shadow-md rounded-md hidden group-hover:block
-                      "
+                      className={`
+                        static md:absolute right-0 top-full pt-1 mt-0 min-w-[160px] bg-white shadow-none md:shadow-md md:rounded-md group-hover:block
+                        ${dropdownOpen ? "!block" : "block lg:!hidden"}                        
+                      `}
                     >
                       <li>
                         <Link
                           to="/profile"
+                          onClick={() => setClick(false)}
                           className={dropdownClasses}
                         >
                           Your Profile
@@ -163,6 +169,7 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
                         <li>
                           <Link
                             to="/reports"
+                            onClick={() => setClick(false)}
                             className={dropdownClasses}
                           >
                             Your Reports
@@ -176,7 +183,7 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
 
                 <li>
                   <button
-                    onClick={(e) => { e.preventDefault(); handleLogout(); }}
+                    onClick={(e) => { e.preventDefault(); handleLogout(); setClick(false); }}
                     className={authClasses}>
                     Logout
                   </button>
@@ -186,12 +193,14 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }) {
               <>
                 <li>
                   <Link to="/signup"
+                    onClick={() => setClick(false)}
                     className={authClasses}>
                     Sign Up
                   </Link>
                 </li>
                 <li>
                   <Link to="/login"
+                    onClick={() => setClick(false)}
                     className={authClasses}>
                     Login
                   </Link>

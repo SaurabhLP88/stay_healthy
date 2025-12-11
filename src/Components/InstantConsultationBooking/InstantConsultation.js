@@ -218,7 +218,7 @@ const InstantConsultation = () => {
                         {(isSearched ? filteredDoctors : doctors).length > 0 ? (
                             <>
                                 <h3 className="text-center text-gray-600 mb-6 text-sm">Book appointments with minimum wait-time & verified doctor details</h3>
-                                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-8xl mx-auto">
+                                <div className="grid gap-3 md:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-8xl mx-auto">
                                     {(isSearched ? filteredDoctors : doctors).map((doctor, index) => {
                                         const imagePath = require(`../../assets/images/${doctor.image}`);
                                         return (
