@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../../config";
 import "./HealthTips.css";
 
-import water from "../../assets/images/water.svg";
-import meal from "../../assets/images/meal.svg";
-import exercise from "../../assets/images/exercise.svg";
-import sleep from "../../assets/images/sleep.svg";
+//import water from "../../assets/images/water.svg";
+//import meal from "../../assets/images/meal.svg";
+//import exercise from "../../assets/images/exercise.svg";
+//import sleep from "../../assets/images/sleep.svg";
 
 const HealthTips = () => {
   //console.log("HealthTips.js Loaded");

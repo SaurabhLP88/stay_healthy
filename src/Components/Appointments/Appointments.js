@@ -219,11 +219,11 @@ const Appointments = () => {
       setBusyId(null);
     }
   };
-  const confirmComplete = (id) => {
+  /*const confirmComplete = (id) => {
     const ok = window.confirm("Mark this appointment as completed?");
     if (!ok) return;
     handleComplete(id);
-  };
+  };*/
 
   const submitReview = async (formData) => {
     try {
@@ -342,11 +342,15 @@ const Appointments = () => {
                             <td className="px-3 py-2 space-x-2 whitespace-nowrap">
                               {a.status === "booked" ? (
                                 <>
-                                  <button className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 text-sm">
+                                  <button 
+                                    className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 text-sm"
+                                    onClick={() => confirmCancel(a._id)}>
                                     {busyId === a._id ? "Cancelling" : "Cancel"}
                                   </button>
 
-                                  <button className="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700 text-sm">
+                                  <button 
+                                    className="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700 text-sm"
+                                    onClick={() => handleComplete(a._id)}> 
                                     Complete
                                   </button>
                                 </>

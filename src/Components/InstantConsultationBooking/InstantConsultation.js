@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { API_URL } from "../../config";
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { sendNotification } from "../../utils/notify";
 import FindDoctorSearch from './FindDoctorSearch/FindDoctorSearch';
 import DoctorCard from './DoctorCard/DoctorCard';
@@ -13,7 +13,7 @@ const InstantConsultation = () => {
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [isSearched, setIsSearched] = useState(false);
-    const [selectedSpeciality, setSelectedSpeciality] = useState("");
+    const [selectedSpeciality] = useState("");
     //const [bookings, setBookings] = useState([]);
     //const [notification, setNotification] = useState(null);
 
@@ -23,6 +23,26 @@ const InstantConsultation = () => {
     //console.log("InstantConsultation.js Loaded");
 
     useEffect(() => {
+        const getDoctorsDetails = () => {
+            //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
+            fetch(`${API_URL}/api/doctors`)
+            .then(res => res.json())
+            .then(data => {
+                setDoctors(data);
+
+                if (searchParams.get('speciality')) {
+                    const filtered = data.filter(
+                        doctor => doctor.speciality.toLowerCase() === searchParams.get('speciality').toLowerCase()
+                    );
+                    setFilteredDoctors(filtered);
+                    setIsSearched(true);
+                } else {
+                    setFilteredDoctors([]);
+                    setIsSearched(false);
+                }
+            })
+            .catch(err => console.log(err));
+        }
         getDoctorsDetails();
     }, [searchParams]);
 
@@ -52,28 +72,7 @@ const InstantConsultation = () => {
         }
 
         return d;
-    };*/
-
-    const getDoctorsDetails = () => {
-        //fetch('https://api.npoint.io/9a5543d36f1460da2f63')
-        fetch(`${API_URL}/api/doctors`)
-        .then(res => res.json())
-        .then(data => {
-            setDoctors(data);
-
-            if (searchParams.get('speciality')) {
-                const filtered = data.filter(
-                    doctor => doctor.speciality.toLowerCase() === searchParams.get('speciality').toLowerCase()
-                );
-                setFilteredDoctors(filtered);
-                setIsSearched(true);
-            } else {
-                setFilteredDoctors([]);
-                setIsSearched(false);
-            }
-        })
-        .catch(err => console.log(err));
-    }
+    };*/    
 
     const handleSearch = (searchText) => {
         if (!searchText) {

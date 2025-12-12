@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../../config";
 import "./HealthBlog.css";
 
-import meal from "../../assets/images/meal.svg";
-import exercise from "../../assets/images/exercise.svg";
-import self from "../../assets/images/self.svg";
+//import meal from "../../assets/images/meal.svg";
+//import exercise from "../../assets/images/exercise.svg";
+//import self from "../../assets/images/self.svg";
 
 const categories = [
   "All",

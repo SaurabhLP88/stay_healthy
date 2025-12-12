@@ -34,10 +34,50 @@ const LandingPage = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+
+    async function fetchDoctorStats() {
+      try {
+        console.log("📌 Fetching doctor stats for doctorId:", doctorId);
+        const res = await fetch(`${API_URL}/api/doctors/stats?doctorId=${doctorId}`);
+        console.log("Raw response:", res);
+        const data = await res.json();
+        console.log("📌 Parsed Stats Data:", data);
+
+        // Log each individual value
+        console.log("👉 Today Appointments Count:", data.today);
+        console.log("👉 Pending Appointments Count:", data.pending);
+        console.log("👉 Completed Appointments Count:", data.completed);
+        console.log("👉 Next Appointment Data:", data.next);
+
+        setTodayAppointments(data.today ?? 0);
+        setPendingAppointments(data.pending ?? 0);
+        setCompletedAppointments(data.completed ?? 0);
+
+        if (data.next) {
+          console.log("⏭ Setting Next Appointment:", data.next);
+
+          setNextAppointmentTime(data.next.time || "");
+          setNextAppointmentName(data.next.patient || "No upcoming");
+          setNextAppointmentDate(data.next.date || "");
+          setNextAppointmentPhone(data.next.phone || "");
+        } else {
+          console.log("⏭ No upcoming appointment found");
+
+          setNextAppointmentTime("");
+          setNextAppointmentName("No upcoming");
+          setNextAppointmentDate("");
+          setNextAppointmentPhone("");
+        }
+
+      } catch (err) {
+        console.error("Dashboard Error:", err);
+      }
+    }
+
     if (role === "doctor") {
       fetchDoctorStats();
     }
-  }, [role]);  
+  }, [role, doctorId]);  
 
   //const doctorId = doctor?._id;
   
@@ -54,46 +94,7 @@ const LandingPage = () => {
     setShowServices(true);
     const section = document.getElementById("services");
     if (section) section.scrollIntoView({ behavior: "smooth" });
-  };
-
-  async function fetchDoctorStats() {
-    try {
-      console.log("📌 Fetching doctor stats for doctorId:", doctorId);
-      const res = await fetch(`${API_URL}/api/doctors/stats?doctorId=${doctorId}`);
-      console.log("Raw response:", res);
-      const data = await res.json();
-      console.log("📌 Parsed Stats Data:", data);
-
-      // Log each individual value
-      console.log("👉 Today Appointments Count:", data.today);
-      console.log("👉 Pending Appointments Count:", data.pending);
-      console.log("👉 Completed Appointments Count:", data.completed);
-      console.log("👉 Next Appointment Data:", data.next);
-
-      setTodayAppointments(data.today ?? 0);
-      setPendingAppointments(data.pending ?? 0);
-      setCompletedAppointments(data.completed ?? 0);
-
-      if (data.next) {
-        console.log("⏭ Setting Next Appointment:", data.next);
-
-        setNextAppointmentTime(data.next.time || "");
-        setNextAppointmentName(data.next.patient || "No upcoming");
-        setNextAppointmentDate(data.next.date || "");
-        setNextAppointmentPhone(data.next.phone || "");
-      } else {
-        console.log("⏭ No upcoming appointment found");
-
-        setNextAppointmentTime("");
-        setNextAppointmentName("No upcoming");
-        setNextAppointmentDate("");
-        setNextAppointmentPhone("");
-      }
-
-    } catch (err) {
-      console.error("Dashboard Error:", err);
-    }
-  }
+  };  
 
   return (
     <>

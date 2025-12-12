@@ -48,7 +48,7 @@ const Home = ({ children, loggedIn, setLoggedIn }) => {
       window.removeEventListener("notification-deleted", handleDelete);
       window.removeEventListener("session-update", syncUsername);
     };
-  }, [loggedIn]);
+  }, [loggedIn, notification]);
   
   const loadExistingAppointment = async () => {
     const token = sessionStorage.getItem("auth-token");

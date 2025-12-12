@@ -15,53 +15,54 @@ const ProfileForm = () => {
 
   const role = sessionStorage.getItem("role");
 
-  const navigate = useNavigate();  
-
-  const fetchUserProfile = async () => {
-    try {
-      const authtoken = sessionStorage.getItem("auth-token");
-      const email = sessionStorage.getItem("email"); // Get the email from session storage
-      console.log("🔵 Fetching Profile — Email:", email);
-      if (!authtoken) {
-        navigate("/login");
-      } else {
-        const endpoint = role === "Doctor" 
-          ? `${API_URL}/api/doctors/profile`
-          : `${API_URL}/api/auth/user`;
-
-        console.log("🔵 API Endpoint:", endpoint);
-        const response = await fetch(endpoint, {
-          headers: {
-            "Authorization": `Bearer ${authtoken}`,
-            "email": email
-          }
-        });
-        console.log("🔵 Profile Fetch Status:", response.status);
-        if (response.ok) {
-          const user = await response.json();
-          console.log("✅ Profile Data Received:", user);
-          setUserDetails(user);
-          setUpdatedDetails({ ...user, password: "" });
-        } else {
-          console.log("❌ Failed to fetch profile:", response.status);
-          throw new Error("Failed to fetch user profile");
-        }
-      }
-    } catch (error) {
-      console.log("❌ Error inside fetchUserProfile:", error);
-      // Handle error case
-    }
-  };
+  const navigate = useNavigate();    
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const authtoken = sessionStorage.getItem("auth-token");
+
+    const fetchUserProfile = async () => {
+      try {
+        const authtoken = sessionStorage.getItem("auth-token");
+        const email = sessionStorage.getItem("email"); // Get the email from session storage
+        console.log("🔵 Fetching Profile — Email:", email);
+        if (!authtoken) {
+          navigate("/login");
+        } else {
+          const endpoint = role === "Doctor" 
+            ? `${API_URL}/api/doctors/profile`
+            : `${API_URL}/api/auth/user`;
+
+          console.log("🔵 API Endpoint:", endpoint);
+          const response = await fetch(endpoint, {
+            headers: {
+              "Authorization": `Bearer ${authtoken}`,
+              "email": email
+            }
+          });
+          console.log("🔵 Profile Fetch Status:", response.status);
+          if (response.ok) {
+            const user = await response.json();
+            console.log("✅ Profile Data Received:", user);
+            setUserDetails(user);
+            setUpdatedDetails({ ...user, password: "" });
+          } else {
+            console.log("❌ Failed to fetch profile:", response.status);
+            throw new Error("Failed to fetch user profile");
+          }
+        }
+      } catch (error) {
+        console.log("❌ Error inside fetchUserProfile:", error);
+        // Handle error case
+      }
+    };
+
     if (!authtoken) {
       navigate("/login");
     } else {
       fetchUserProfile();
     }
-  }, [navigate]);
+  }, [navigate, role]);
 
   const handleEdit = () => {
     console.log("🟡 Edit Mode Enabled");

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Navigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaSearch, FaUserMd } from 'react-icons/fa';
 import initSpeciality from "../../../utils/specialities";
 
@@ -15,7 +15,7 @@ const FindDoctorSearch = () => {
 
     const [doctorResultHidden, setDoctorResultHidden] = useState(true);
     const [searchDoctor, setSearchDoctor] = useState('');
-    const [specialities, setSpecialities] = useState(initSpeciality);
+    const [specialities] = useState(initSpeciality);
     const navigate = useNavigate();
     const location = useLocation();
 
