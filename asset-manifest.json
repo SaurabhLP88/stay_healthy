@@ -1,27 +1,26 @@
 {
   "files": {
     "main.css": "/stay_healthy/static/css/main.8e71fb09.css",
-    "main.js": "/stay_healthy/static/js/main.3e9dae0b.js",
+    "main.js": "/stay_healthy/static/js/main.7d082965.js",
     "static/js/845.620824ad.chunk.js": "/stay_healthy/static/js/845.620824ad.chunk.js",
     "static/media/Physician_Doctor.mp4": "/stay_healthy/static/media/Physician_Doctor.7fe5c8e9c5ebe174efff.mp4",
-    "static/media/Sample-Report.pdf": "/stay_healthy/static/media/Sample-Report.7b2f38e20e0de188d41f.pdf",
     "static/media/doctor1.png": "/stay_healthy/static/media/doctor1.b38e0e26ee079d87416d.png",
-    "static/media/sleep.svg": "/stay_healthy/static/media/sleep.28e69ad87026fd3f9bf5964937b79893.svg",
-    "static/media/meal.svg": "/stay_healthy/static/media/meal.5ca8253c8f8d33d6985ac3d11240e372.svg",
-    "static/media/tips.svg": "/stay_healthy/static/media/tips.44a7fa878213426ba1580e9d4c5334e4.svg",
-    "static/media/book.svg": "/stay_healthy/static/media/book.d5e760f600835c1a9d6d7fbd499d062f.svg",
-    "static/media/exercise.svg": "/stay_healthy/static/media/exercise.a5e381d6f88471539e0ce80a1d173fa4.svg",
-    "static/media/instant.svg": "/stay_healthy/static/media/instant.7861f1d2464c5d968469106b45690433.svg",
-    "static/media/self.svg": "/stay_healthy/static/media/self.e0a907f1cf8affb704fa37977eac80ae.svg",
-    "static/media/water.svg": "/stay_healthy/static/media/water.1adc2b656516eab112d4a1a0ec763027.svg",
+    "static/media/sleep.svg": "/stay_healthy/static/media/sleep.25f75fe31c4d448ae404.svg",
+    "static/media/meal.svg": "/stay_healthy/static/media/meal.124fb0e7d086b773dfc1.svg",
+    "static/media/tips.svg": "/stay_healthy/static/media/tips.a4f713a6ccb53651a2dacbf79c52b980.svg",
+    "static/media/book.svg": "/stay_healthy/static/media/book.e2084f02723a6a11d23ceb488fa380e2.svg",
+    "static/media/exercise.svg": "/stay_healthy/static/media/exercise.489e2efc924234d9e186.svg",
+    "static/media/instant.svg": "/stay_healthy/static/media/instant.b1be21027b578cb64ab8973a005cd5db.svg",
+    "static/media/self.svg": "/stay_healthy/static/media/self.c4953d3cab91db1d6bae1f906c0cff2c.svg",
+    "static/media/water.svg": "/stay_healthy/static/media/water.8682d95a39ee798e3d0b.svg",
     "static/media/logo.svg": "/stay_healthy/static/media/logo.6ce24c58023cc2f8fd88.svg",
     "index.html": "/stay_healthy/index.html",
     "main.8e71fb09.css.map": "/stay_healthy/static/css/main.8e71fb09.css.map",
-    "main.3e9dae0b.js.map": "/stay_healthy/static/js/main.3e9dae0b.js.map",
+    "main.7d082965.js.map": "/stay_healthy/static/js/main.7d082965.js.map",
     "845.620824ad.chunk.js.map": "/stay_healthy/static/js/845.620824ad.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8e71fb09.css",
-    "static/js/main.3e9dae0b.js"
+    "static/js/main.7d082965.js"
   ]
 }
