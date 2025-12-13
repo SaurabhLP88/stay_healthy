@@ -1,0 +1,288 @@
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+//import { API_URL } from "../../../config";
+import "./AppointmentForm.css";
+
+interface AppointmentFormProps {
+  doctorId: string;
+  doctorName: string;
+  doctorSpeciality: string;
+  onSubmit?: (data: AppointmentPayload) => void;
+}
+
+interface AppointmentPayload {
+  doctorId: string;
+  doctorName: string;
+  doctorSpeciality: string;
+  patientName: string;
+  phoneNumber: string;
+  appointmentDate: string;
+  appointmentTime: string;
+}
+
+type ErrorState = {
+  name?: string;
+  phoneNumber?: string;
+  appointmentDate?: string;
+  appointmentTime?: string;
+};
+
+const AppointmentForm: React.FC<AppointmentFormProps> = ({
+  doctorId,
+  doctorName,
+  doctorSpeciality,
+  onSubmit,
+}) => {
+  //console.log("AppointmentForm.js Loaded");
+
+  const timeSlots = [
+    "09:00 AM - 09:30 AM",
+    "10:00 AM - 10:30 AM",
+    "11:00 AM - 11:30 AM",
+    "12:00 PM - 12:30 PM",
+    "02:00 PM - 02:30 PM",
+    "03:00 PM - 03:30 PM",
+    "04:00 PM - 04:30 PM",
+    "05:00 PM - 05:30 PM"
+  ];
+
+  const [name, setName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [appointmentDate, setAppointmentDate] = useState<string>("");
+  const [appointmentTime, setAppointmentTime] = useState<string>("");
+  const [errors, setErrors] = useState<ErrorState>({});
+  const location = useLocation();
+
+  const isWithinInstantHours = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    const minutes = now.getMinutes();
+
+    const currentTime = hour * 60 + minutes; // convert to minutes
+
+    const start = 9 * 60;       // 9:00 AM → 540 minutes
+    const end = 17 * 60 + 30;   // 5:30 PM → 1050 minutes
+
+    return currentTime >= start && currentTime <= end;
+  };
+
+  const getFilteredTimeSlots = (): string[] => {
+    if (!appointmentDate) return [];
+
+    const today = new Date(
+      Date.now() - new Date().getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .split("T")[0];
+
+    if (appointmentDate < today) return [];
+    if (appointmentDate > today) return timeSlots;
+
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    return timeSlots.filter((slot) => {
+      const [start] = slot.split(" - ");        // "09:00 AM"
+      const [time, modifier] = start.split(" "); // "09:00", "AM"
+      const [hh, mm] = time.split(":");          // strings
+
+      let hours = Number(hh);
+      const minutes = Number(mm);
+
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+
+      const slotMinutes = hours * 60 + minutes;
+
+      return slotMinutes >= currentMinutes;
+    });
+  };
+
+
+  // 🟩 Validation for Instant Consultation
+  const validateInstantForm = (): ErrorState => {
+    const newErrors: ErrorState = {};
+    if (!name.trim()) newErrors.name = "Full name is required.";
+    else if (!/^[A-Za-z\s]+$/.test(name))
+      newErrors.name = "Name should contain only letters.";
+
+    if (!phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required.";
+    else if (!/^\d{10}$/.test(phoneNumber))
+      newErrors.phoneNumber = "Enter a valid 10-digit phone number.";
+
+    return newErrors;
+  };
+
+  // 🟦 Validation for Book Consultation
+  const validateBookingForm = (): ErrorState => {
+    const newErrors = validateInstantForm();
+
+    if (!appointmentDate)
+      newErrors.appointmentDate = "Select an appointment date.";
+    if (!appointmentTime)
+      newErrors.appointmentTime = "Select a time slot.";
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log("Form submitted");
+
+    if (location.pathname === "/instant-consultation") {
+      if (!isWithinInstantHours()) {
+        alert("You can’t book an instant consultation right now. Doctors are available between 9:00 AM and 5:30 PM only. Kindly book a scheduled appointment instead.");
+        return;
+      }
+    }
+
+   const validationFn =
+      location.pathname === "/instant-consultation"
+        ? validateInstantForm
+        : validateBookingForm;
+
+    /*console.log("Using validation function:", 
+      location.pathname === "/instant-consultation"
+        ? "validateInstantForm"
+        : "validateBookingForm"
+    );*/
+
+    const newErrors = validationFn();
+    console.log("Validation result:", newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      
+      console.log("Errors found, not submitting");
+      setErrors(newErrors);
+      return;
+    }    
+
+    //console.log("Validation passed, preparing form data");
+
+    const formData = {
+      doctorId,
+      doctorName,
+      doctorSpeciality,
+      patientName: name,
+      phoneNumber,
+      appointmentDate:
+        location.pathname === "/instant-consultation"
+          ? new Date().toLocaleDateString()
+          : appointmentDate,
+      appointmentTime:
+        location.pathname === "/instant-consultation"
+          ? new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : appointmentTime,
+    };
+
+    try {
+      // If parent provided an onSubmit handler, delegate (prevent duplicate POST)
+      if (onSubmit) {
+        console.log("Delegating save to parent via onSubmit:", formData);
+        onSubmit(formData);
+      } else {
+        console.log("No onSubmit prop — posting directly from AppointmentForm:", formData);
+        console.warn("Appointment saved from AppointmentForm");
+      }
+
+      alert("Appointment booked successfully!");
+
+      // Reset form
+      setName("");
+      setPhoneNumber("");
+      setAppointmentDate("");
+      setAppointmentTime("");
+      setErrors({});
+    } catch (err) {
+      console.error("Error saving appointment:", err);
+      alert("Could not save appointment, please try again.");
+    }
+  };
+
+  return (
+    
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-0 p-5 bg-gray-100 border border-gray-300 rounded-lg shadow-sm">
+        <h3 className="text-center text-xl font-semibold mb-4">Book Appointment</h3>
+
+        <div className="mb-3">
+          <label htmlFor="name" className="block font-semibold mb-1">Name:</label>
+          <input
+            className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your full name"
+          />
+          {errors.name && <span className="text-red-600 text-sm">{errors.name}</span>}
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="phoneNumber" className="block font-semibold mb-1">Phone Number:</label>
+          <input
+            className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="tel"
+            id="phoneNumber"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            placeholder="Enter 10-digit mobile number"
+          />
+          {errors.phoneNumber && <span className="text-red-600 text-sm">{errors.phoneNumber}</span>}
+        </div>
+
+        {location.pathname !== "/instant-consultation" && (
+          <>
+            <div className="mb-3">
+              <label htmlFor="appointmentDate" className="block font-semibold mb-1">Appointment Date:</label>
+              <input
+                className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="date"
+                id="appointmentDate"
+                value={appointmentDate}
+                min={new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0]}
+                onChange={(e) => setAppointmentDate(e.target.value)}
+              />
+              {errors.appointmentDate && (
+                <span className="text-red-600 text-sm">{errors.appointmentDate}</span>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="appointmentTime" className="block font-semibold mb-1">Time Slot:</label>
+              <select
+                id="appointmentTime"
+                className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={appointmentTime}
+                onChange={(e) => setAppointmentTime(e.target.value)}
+              >
+                <option value="">-- Select a Time Slot --</option>
+
+                {getFilteredTimeSlots().length === 0 ? (
+                  <option value="">No time slots available today</option>
+                ) : (
+                  getFilteredTimeSlots().map((slot, index) => (
+                    <option key={index} value={slot}>{slot}</option>
+                  ))
+                )}
+              </select>
+              {errors.appointmentTime && (
+                <span className="text-red-600 text-sm">{errors.appointmentTime}</span>
+              )}
+            </div>
+          </>
+        )}
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+        >
+          Book Now
+        </button>
+      </form>
+
+   
+  );
+};
+
+export default AppointmentForm;

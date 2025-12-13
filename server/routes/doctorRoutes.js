@@ -41,11 +41,12 @@ router.get("/stats", async (req, res) => {
   try {
     const doctorId = req.query.doctorId;
     console.log("📌 /stats called with doctorId:", doctorId);
+    const doctor = await DoctorModel.findById(doctorId);
 
     if (!doctorId) {
       console.log("❌ No doctorId provided");
       return res.status(400).json({ error: "doctorId is required" });
-    }
+    }    
 
     // Fetch all appointments
     const appointments = await AppointmentModel.find({ doctorId })
@@ -58,25 +59,54 @@ router.get("/stats", async (req, res) => {
     console.log("📌 Today's date (YYYY-MM-DD) =", todayStr);
 
     // Calculate today, pending, completed
-    const todayAppointments = appointments.filter(a => a.appointmentDate === todayStr);
+    const todayAppointments = appointments.filter(a =>
+      (
+        // Scheduled → match today
+        a.bookingType === "scheduled" &&
+        a.appointmentDate === todayStr &&
+        !["expired", "cancelled"].includes(a.status)
+      ) ||
+      (
+        // Instant → always today if active
+        a.bookingType === "instant" &&
+        ["booked", "pending"].includes(a.status)
+      )
+    );
     const pendingAppointments = appointments.filter(a => a.status === "pending");
     const completedAppointments = appointments.filter(a => a.status === "completed");
+    const cancelledAppointments = appointments.filter(
+      a => a.status === "cancelled"
+    );
+    const totalInstantAppointments = appointments.filter(a =>
+      a.bookingType === "instant" &&
+      ["booked", "pending", "completed"].includes(a.status)
+    );
+    const totalScheduledAppointments = appointments.filter(a =>
+      a.bookingType === "scheduled" &&
+      ["booked", "pending", "completed"].includes(a.status)
+    );
 
     console.log("👉 Today count:", todayAppointments.length);
     console.log("👉 Pending count:", pendingAppointments.length);
     console.log("👉 Completed count:", completedAppointments.length);
+    console.log("👉 Cancelled count:", cancelledAppointments.length);
 
     // Next appointment logic
     const upcoming = appointments
-      .filter(a => a.status !== "completed")
+      .filter(a =>
+        ["booked", "pending"].includes(a.status)
+      )
       .filter(a => {
-        const [startTime] = a.appointmentTime.split(" - ");
+        if (a.bookingType === "instant") return true;
+        const timeParts = a.appointmentTime.split(" - ");
+        const startTime = timeParts[0];
         const apptDateTime = new Date(`${a.appointmentDate} ${startTime}`);
+        //if (a.bookingType === "instant") return true;
         return apptDateTime > new Date();
       })
       .sort((a, b) => {
-        const [timeA] = a.appointmentTime.split(" - ");
-        const [timeB] = b.appointmentTime.split(" - ");
+        const timeA = a.appointmentTime.split(" - ")[0];
+        const timeB = b.appointmentTime.split(" - ")[0];
         return new Date(`${a.appointmentDate} ${timeA}`) - new Date(`${b.appointmentDate} ${timeB}`);
       });
 
@@ -99,9 +129,21 @@ router.get("/stats", async (req, res) => {
     }
 
     const response = {
+      doctor: {
+        name: doctor.name,
+        image: doctor.image,
+        speciality: doctor.speciality,
+        phone: doctor.phone,
+        experience: doctor.experience,
+        email: doctor.email,
+      },
       today: todayAppointments.length,
       pending: pendingAppointments.length,
       completed: completedAppointments.length,
+      cancelled: cancelledAppointments.length,
+      totalInstantAppointments: totalInstantAppointments.length,
+      totalScheduledAppointments: totalScheduledAppointments.length,
+
       next: nextAppointment,
     };
 

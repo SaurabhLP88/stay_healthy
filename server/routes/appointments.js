@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const Appointment = require("../models/Appointment");
 const Notification = require("../models/Notification");
-const Doctor = require("../models/Doctor");
+//const Doctor = require("../models/Doctor");
 
 // Create appointment
 /*router.post("/", async (req, res) => {
@@ -55,7 +55,7 @@ router.post("/book", async (req, res) => {
       //doctorId: doctor ? doctor._id : null,
       userId,
       bookingType,
-      status: bookingType === "instant" ? "booked" : "booked"
+      status: bookingType === "instant" ? "pending" : "booked"
     });
 
     return res.json({ success: true, appointment });
@@ -64,6 +64,66 @@ router.post("/book", async (req, res) => {
     return res.status(500).json({ error: "Booking failed" });
   }
 });
+
+async function normalizeAppointmentStatus(appt) {
+  const timeParts = appt.appointmentTime.split(" - ");
+  const startTime = timeParts[0];
+  const endTime = timeParts[1] || timeParts[0];
+
+  console.log(
+    `⏱️ Time parsed | ${appt._id} | start=${startTime} | end=${endTime}`
+  );
+
+  const start = convertToDate(appt.appointmentDate, startTime);
+  const end = convertToDate(appt.appointmentDate, endTime);
+  const now = new Date();
+
+  let newStatus = appt.status;
+
+  // 🔒 FINAL STATES — do NOT auto-change
+  if (["completed", "cancelled"].includes(appt.status)) {
+    console.log(`🔐 Final status preserved for ${appt._id}: ${appt.status}`);
+    return appt;
+  }
+
+  // 🕒 Time-based transitions ONLY for active bookings
+  if (appt.bookingType === "instant" && appt.status === "pending") {
+    if (now > end) {
+      newStatus = "expired";
+    } else {
+      return appt; // ⛔ do not downgrade to booked
+    }
+  }
+  else if (now >= start && now <= end) {
+    newStatus = "pending";
+  } 
+  else if (now > end) {
+    newStatus = "expired";
+  }
+
+  console.log(
+    `🧠 STATUS CHECK | Appt: ${appt._id}\n` +
+    `   Date: ${appt.appointmentDate}\n` +
+    `   Time: ${appt.appointmentTime}\n` +
+    `   Now:  ${now.toISOString()}\n` +
+    `   Start:${start.toISOString()}\n` +
+    `   End:  ${end.toISOString()}\n` +
+    `   Old Status: ${appt.status}\n` +
+    `   New Status: ${newStatus}`
+  );
+
+  // ✅ Persist ONLY if changed
+  if (newStatus !== appt.status) {
+    appt.status = newStatus;
+    await appt.save();
+    console.log(`💾 DB UPDATED → ${appt._id} | status = ${newStatus}`);
+  } else {
+    console.log(`⏭️ No DB update needed for ${appt._id}`);
+  }
+
+  return appt;
+}
+
 
 router.get("/my", async (req, res) => {
   try {
@@ -85,7 +145,26 @@ router.get("/my", async (req, res) => {
       );
     });
 
-    appointments = appointments.map((appt, index) => {
+    appointments = await Promise.all(
+      appointments.map(async (appt, index) => {
+        await normalizeAppointmentStatus(appt);
+
+        const startTime = appt.appointmentTime.split(" - ")[0];
+        const sortKey = convertToDate(appt.appointmentDate, startTime);
+
+        console.log(
+          `→ FIXED SORTKEY (${index + 1}): ${appt.appointmentDate} ${startTime} ==>`,
+          sortKey
+        );
+
+        return {
+          ...appt.toObject(),
+          sortKey
+        };
+      })
+    );
+
+    /*appointments = appointments.map((appt, index) => {
       const [startTime, endTime] = appt.appointmentTime.split(" - ");
 
       let day, month, year;
@@ -122,6 +201,14 @@ router.get("/my", async (req, res) => {
       const now = new Date();
 
       // Sort key remains the same
+      let status = appt.status;
+
+      // ✅ Mark expired ONLY if still booked
+      if (status === "booked" && now > endDateTime) {
+        status = "expired";
+      }
+
+      // Sort key remains the same
       const sortKey = startDateTime;
 
       console.log(
@@ -131,9 +218,10 @@ router.get("/my", async (req, res) => {
 
       return {
         ...appt.toObject(),
+        status,
         sortKey
       };
-    });
+    });*/
 
     console.log("\n================ BEFORE SORT ================");
     appointments.forEach((a, i) => {
@@ -196,7 +284,14 @@ router.get("/doctor/:doctorId", async (req, res) => {
     const now = new Date();
 
     // Auto-update expired/pending status (same logic as /my)
-    appointments = appointments.map((appt, index) => {
+    appointments = await Promise.all(
+      appointments.map(async (appt, index) => {
+        await normalizeAppointmentStatus(appt);
+        return appt;
+      })
+    );
+    
+    /*appointments = appointments.map((appt, index) => {
       const [startTime] = appt.appointmentTime.split(" - ");
       console.log(
         `\n⏱️ Processing Appointment #${index + 1}:`,
@@ -212,15 +307,15 @@ router.get("/doctor/:doctorId", async (req, res) => {
       }
 
       return appt;
-    });
+    });*/
 
     appointments.sort((a, b) => {
       // Convert appointment a
-      const [startA] = a.appointmentTime.split(" - ");
+      const startA = a.appointmentTime.split(" - ")[0];
       const dateA = convertToDate(a.appointmentDate, startA);
 
       // Convert appointment b
-      const [startB] = b.appointmentTime.split(" - ");
+      const startB = b.appointmentTime.split(" - ")[0];
       const dateB = convertToDate(b.appointmentDate, startB);
 
       console.log(

@@ -1,6 +1,21 @@
 
 # 🏥 StayHealthy – Medical Appointment Booking System
 
+![Build Status](https://img.shields.io/github/actions/workflow/status/SaurabhLP88/stay_healthy/deploy.yml?branch=main)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)
+![Docker Compose](https://img.shields.io/badge/Docker--Compose-Enabled-blueviolet?logo=docker)
+![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?logo=node.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?logo=mongodb)
+![JWT](https://img.shields.io/badge/Auth-JWT-orange?logo=jsonwebtokens)
+![TypeScript](https://img.shields.io/badge/TypeScript-Used-3178C6?logo=typescript)
+![SEO](https://img.shields.io/badge/SEO-Optimized-success)
+![License](https://img.shields.io/github/license/SaurabhLP88/stay_healthy)
+![Repo Size](https://img.shields.io/github/repo-size/SaurabhLP88/stay_healthy)
+![Last Commit](https://img.shields.io/github/last-commit/SaurabhLP88/stay_healthy)
+![Made with Love](https://img.shields.io/badge/Made%20with-Love-red)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
+
 StayHealthy is a **Medical Appointment Booking System** designed to streamline online appointment booking and digital health management. It provides dedicated dashboards for patients and doctors, enabling smooth appointment scheduling, profile management, notifications, and medical record tracking.
 
 ## 🚀 Project Overview
@@ -78,6 +93,9 @@ StayHealthy allows users to:
 📱 Responsive UI
 - Fully responsive design using React + Bootstrap/Tailwind.
 - Optimized for mobile and desktop users.
+
+📈 SEO Integration
+- SEO optimized with dynamic meta tags using react-helmet-async
 
 ## ⚙️ Installation & Setup
 
