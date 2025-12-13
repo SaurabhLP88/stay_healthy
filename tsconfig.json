@@ -9,7 +9,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "ESNext",
     "target": "ES6",
-    //"types": [],
+    "types": ["node", "jest", "react", "react-dom"],
     // For nodejs:
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     // "types": ["node"],
