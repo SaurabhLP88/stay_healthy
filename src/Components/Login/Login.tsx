@@ -85,12 +85,12 @@ function Login({ setLoggedIn }: LoginProps) {
         sessionStorage.setItem("auth-token", result.authtoken);
         return result;
       } else {
-        console.log(result.error || result.message || "Login failed");
+        alert(result.error || result.message || "Login failed");
         return null;
       }
     } catch (error) {
       console.error("Login error:", error);
-      console.log("Something went wrong. Please try again.");
+      alert("Something went wrong. Please try again.");
       return null;
     }
   };
@@ -102,7 +102,7 @@ function Login({ setLoggedIn }: LoginProps) {
 
     const result = await apiCallToLogin(formData);
     if (result) {
-      console.log("Login successful!");
+      alert("Login successful!");
 
       sessionStorage.setItem("isLoggedIn", "true");
       sessionStorage.setItem("role", result.role);

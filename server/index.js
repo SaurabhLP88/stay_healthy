@@ -4,6 +4,7 @@
  * GitHub: https://github.com/SaurabhLP88
  */
 
+require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
 const connectToMongo = require('./db');
@@ -11,9 +12,19 @@ const app = express();
 //const path = require('path');
 const PORT = process.env.PORT || 8181;
 
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://saurabhlp88.github.io"
+    ],
+    credentials: true
+  })
+);
+
 // Middleware
 app.use(express.json());
-app.use(cors());
+//app.use(cors());
 
 // Connect to MongoDB
 connectToMongo();
@@ -42,5 +53,12 @@ app.get('/', (req, res) => {
 
   // Start the server
 app.listen(PORT, () => {
-console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
+});
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "StayHealthy API is running"
+  });
 });
