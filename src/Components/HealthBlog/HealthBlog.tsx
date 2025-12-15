@@ -145,13 +145,14 @@ const HealthBlog = () => {
 
       {/* VIDEOS SECTION */}
       <div className="mb-10">
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-
-          {filteredVideosBySearch.length === 0 && (
-            <p className="text-center text-gray-500 col-span-full">No videos found.</p>
+        
+        {filteredVideosBySearch.length === 0 && (
+            <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-2 mb-5">
+              <p className="text-center text-gray-900 col-span-full">No videos found.</p>
+            </div>
           )}
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"> 
           {filteredVideosBySearch.slice(0, visibleCount).map((video, index) => {
             const thumb = require(`../../assets/images/${video.thumbnail}`);
             return (
@@ -211,12 +212,14 @@ const HealthBlog = () => {
 
       {/* DAILY TIPS SECTION */}
       <div className="mb-10">
-        <h2 className="text-2xl font-semibold mb-4">Daily Health Tips</h2>
+        <h2 className="text-2xl text-center font-semibold mb-4">Daily Health Tips</h2>
 
         <div>
 
           {tips.length === 0 && (
-            <p className="text-center text-gray-500">No daily tips found.</p>
+            <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-2 mb-5">
+              <p className="text-center text-gray-900 col-span-full">No daily tips found.</p>
+            </div>
           )}
 
           {tips.map((tip, index) => (

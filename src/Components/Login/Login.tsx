@@ -59,12 +59,19 @@ function Login({ setLoggedIn }: LoginProps) {
   const validate = () => {
     const tempErrors: LoginErrors = {};
 
-    if (!formData.email) tempErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
+    if (!formData.email) {
+      tempErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       tempErrors.email = "Enter a valid email";
+    }
 
-    if (!formData.password) tempErrors.password = "Password is required";
-    if (!formData.role) tempErrors.role = "Please select your role";
+    if (!formData.password) {
+      tempErrors.password = "Password is required";
+    }
+
+    if (!formData.role) {
+      tempErrors.role = "Please select your role";
+    }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -147,7 +154,7 @@ function Login({ setLoggedIn }: LoginProps) {
 
             {/* Login Form */}
             <div className="pt-2">
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} noValidate className="space-y-4">
 
                 {/* Role Selection */}
                 <div>
@@ -189,7 +196,7 @@ function Login({ setLoggedIn }: LoginProps) {
                   <label htmlFor="email" className="block font-semibold mb-1">Email</label>
                   <input
                     id="email"
-                    type="email"
+                    type="text"
                     name="email"
                     placeholder="Enter your email"
                     value={formData.email}
@@ -212,7 +219,7 @@ function Login({ setLoggedIn }: LoginProps) {
                       name="password"
                       placeholder="Enter your password"
                       value={formData.password}
-                      onChange={handleChange}
+                      onChange={handleChange}                      
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-base focus:ring-2 focus:ring-blue-400 outline-none"
                     />
 
@@ -253,7 +260,7 @@ function Login({ setLoggedIn }: LoginProps) {
                       Reset
                     </button>
                     <button
-                      type="submit"
+                      type="submit"                      
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     >
                       Login

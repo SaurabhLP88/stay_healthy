@@ -171,8 +171,9 @@ const ProfileForm: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
 
           <div>
-            <label className="block mb-1 font-semibold">Email</label>
+            <label htmlFor="email" className="block mb-1 font-semibold">Email</label>
             <input
+              id="email"
               type="email"
               name="email"
               className="w-full px-3 py-2 border border-gray-300 rounded bg-gray-200 cursor-not-allowed"
@@ -182,8 +183,9 @@ const ProfileForm: React.FC = () => {
           </div>
 
           <div>
-            <label className="block mb-1 font-semibold">Name</label>
+            <label htmlFor="name" className="block mb-1 font-semibold">Name</label>
             <input
+              id="name"
               type="text"
               name="name"
               className="w-full px-3 py-2 border border-gray-300 rounded"
@@ -195,8 +197,9 @@ const ProfileForm: React.FC = () => {
           {role === "Doctor" && (
             <>
               <div>
-                <label className="block mb-1 font-semibold">Speciality</label>
+                <label htmlFor="speciality" className="block mb-1 font-semibold">Speciality</label>
                 <select
+                  id="speciality"
                   name="speciality"
                   value={updatedDetails.speciality || ""}
                   onChange={handleInputChange}
@@ -210,8 +213,9 @@ const ProfileForm: React.FC = () => {
               </div>
 
               <div>
-                <label className="block mb-1 font-semibold">Experience (years)</label>
+                <label htmlFor="experience" className="block mb-1 font-semibold">Experience (years)</label>
                 <input
+                  id="experience"
                   type="number"
                   min="0"
                   name="experience"
@@ -224,8 +228,9 @@ const ProfileForm: React.FC = () => {
           )}
 
           <div>
-            <label className="block mb-1 font-semibold">Phone</label>
+            <label htmlFor="phone" className="block mb-1 font-semibold">Phone</label>
             <input
+              id="phone"
               type="text"
               name="phone"
               className="w-full px-3 py-2 border border-gray-300 rounded"
@@ -235,10 +240,10 @@ const ProfileForm: React.FC = () => {
           </div>
 
           <div>
-            <label className="block mb-1 font-semibold">New Password (optional)</label>
-
+            <label htmlFor="password" className="block mb-1 font-semibold">New Password (optional)</label>
             <div className="relative">
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 className="w-full px-3 py-2 border border-gray-300 rounded"
@@ -282,13 +287,13 @@ const ProfileForm: React.FC = () => {
 
           {role === "Doctor" && (
             <>
-              <p className="mb-2"><b>Speciality:</b> {userDetails.speciality}</p>
-              <p className="mb-2"><b>Experience:</b> {userDetails.experience} years</p>
+              <p className="mb-2"><strong>Speciality:</strong> {userDetails.speciality}</p>
+              <p className="mb-2"><strong>Experience:</strong> {userDetails.experience} years</p>
             </>
           )}
 
-          <p className="mb-2"><b>Email:</b> {userDetails.email}</p>
-          <p className="mb-4"><b>Phone:</b> {userDetails.phone}</p>
+          <p className="mb-2"><strong>Email:</strong> {userDetails.email}</p>
+          <p className="mb-4"><strong>Phone:</strong> {userDetails.phone}</p>
 
           <button
             onClick={handleEdit}

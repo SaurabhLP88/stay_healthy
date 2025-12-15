@@ -155,6 +155,8 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }: NavbarProps
               {role !== "doctor" ? "Home" : "Dashboard"}
             </Link></li>
 
+            <li><Link to="/about" className={navClasses} onClick={() => setClick(false)}>About</Link></li>
+
             {loggedIn && (
               <li><Link to="/appointments" className={navClasses} onClick={() => setClick(false)}>
                 Appointments
@@ -178,7 +180,10 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }: NavbarProps
                     onMouseEnter={() => setDropdownOpen(true)}
                     onMouseLeave={() => setDropdownOpen(false)}
                   >
-                    <div className="flex justify-center items-center gap-1 px-4 py-2 cursor-pointer">
+                    <div 
+                      className="flex justify-center items-center gap-1 px-4 py-3 cursor-pointer"
+                      
+                      >
                       Welcome, <span className="">{role === "doctor" ? "Dr." : ""} {username}</span>                      
                       <span
                         className="ml-1 transition-transform duration-200 group-hover:rotate-180 text-gray-800 hover:text-blue-600"
@@ -188,7 +193,7 @@ function Navbar({ loggedIn, setLoggedIn, username: parentUsername }: NavbarProps
                     </div>
                     <ul
                       className={`
-                        static md:absolute right-0 top-full pt-1 mt-0 min-w-[160px] bg-white shadow-none md:shadow-md md:rounded-md group-hover:block
+                        static md:absolute right-0 top-full pt-2 mt-0 min-w-[160px] bg-white shadow-none md:shadow-md md:rounded-md
                         ${dropdownOpen ? "!block" : "block lg:!hidden"}                        
                       `}
                     >
