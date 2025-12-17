@@ -4,7 +4,7 @@
  * GitHub: https://github.com/SaurabhLP88
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 
 import Setauthtoken from "./Setauthtoken";
@@ -29,7 +29,18 @@ import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 import CrashTest from "./CrashTest";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(
+    Boolean(sessionStorage.getItem("auth-token"))
+  );
+
+  useEffect(() => {
+    const syncLogin = () => {
+      setLoggedIn(Boolean(sessionStorage.getItem("auth-token")));
+    };
+
+    window.addEventListener("session-update", syncLogin);
+    return () => window.removeEventListener("session-update", syncLogin);
+  }, []);
 
   //console.log("App.js Loaded");
   //basename={process.env.PUBLIC_URL}

@@ -15,11 +15,9 @@
 ![Auth](https://img.shields.io/badge/Auth-Role%20Based-blue)
 ![Security](https://img.shields.io/badge/Security-JWT%20Protected-critical)
 ![REST API](https://img.shields.io/badge/API-RESTful-success)
-![MVC](https://img.shields.io/badge/Architecture-MVC-informational)
 ![Mongoose](https://img.shields.io/badge/ODM-Mongoose-880000?logo=mongoose)
 ![Status Engine](https://img.shields.io/badge/Status-Time%20Driven-important)
 ![Backend Logic](https://img.shields.io/badge/Logic-Backend%20Driven-blue)
-![Real Time](https://img.shields.io/badge/Updates-Automatic-success)
 ![SPA](https://img.shields.io/badge/App-SPA-blue)
 ![Responsive](https://img.shields.io/badge/UI-Responsive-success)
 ![UX](https://img.shields.io/badge/UX-User%20Friendly-brightgreen)
@@ -28,14 +26,12 @@
 ![Environment](https://img.shields.io/badge/Env-.env%20Configured-yellow)
 ![Active](https://img.shields.io/badge/Maintained-Yes-success)
 ![PRs](https://img.shields.io/badge/PRs-Welcome-brightgreen)
-
 ![Build Status](https://img.shields.io/github/actions/workflow/status/SaurabhLP88/stay_healthy/.github/workflows/deploy.yml?branch=main)
 ![License](https://img.shields.io/github/license/SaurabhLP88/stay_healthy)
 ![Repo Size](https://img.shields.io/github/repo-size/SaurabhLP88/stay_healthy)
 ![Last Commit](https://img.shields.io/github/last-commit/SaurabhLP88/stay_healthy)
 ![Issues](https://img.shields.io/github/issues/SaurabhLP88/stay_healthy)
 ![Stars](https://img.shields.io/github/stars/SaurabhLP88/stay_healthy?style=social)
-
 ![Made with Love](https://img.shields.io/badge/Made%20with-Love-red)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
 
@@ -71,24 +67,31 @@ StayHealthy allows users to:
 
 **Frontend:**
 - HTML5, CSS3, JavaScript (ES6)
-- React.js (for building the dynamic UI)
-- React Router
-- Tailwind CSS for responsive design
-- Fetch API
-- Session Storage
-- Cypress (Testing)
+- React.js (Functional components, Hooks)
+- React Router DOM (protected routes, navigation)
+- Tailwind CSS (responsive UI)
+- Fetch API (REST API communication)
+- Session Storage (auth token handling)
+- Conditional Rendering (status-based UI: Booked / Completed / Cancelled)
+
+**Testing:**
+- Jest and React Testing Library
+- Cypress (E2E testing, API-dependent UI testing, Handling async UI states & timeouts)
 
 **Backend:**
-- Node.js with Express.js for REST APIs
-- MongoDB + Mongoose for data storage
-- JWT for user authentication
+- Node.js with Express.js (REST APIs, Middleware-based architecture)
+- MongoDB + Mongoose for data storage (Schema validation, Relations)
+- JWT for user authentication (JSON Web Tokens)
 - bcrypt for secure password hashing
+- CORS
+- Environment Variables (dotenv)
+- Centralized Error Handling
+- Role-based API access
 
 **Tools & Deployment:**
 - Git & GitHub for version control
 - Postman for API testing
 - Deployed on GitHub Pages
-- REST APIs
 - Role-based authorization
 - Environment-based configuration
 
@@ -102,7 +105,7 @@ StayHealthy allows users to:
 - Protected routes based on authentication state
 
 📅 Appointment Management
-- Real-time slot selection.
+- Predefined slot-based appointment booking
 - Appointment approval system for doctors.
 - Patients can cancel or reschedule appointments.
 - Doctors can confirm or reject requests.
@@ -128,7 +131,7 @@ StayHealthy allows users to:
 - Optimized for mobile and desktop users.
 
 📈 SEO Integration
-- SEO optimized with dynamic meta tags using react-helmet-async
+- Basic SEO support using react-helmet-async
 
 ## ⚙️ Installation & Setup
 
@@ -144,17 +147,23 @@ To run this project locally, follow these steps:
 `cd server`  
 `npm install`
 
+### Start the backend server
+`npm start`
+
 ### Install frontend dependencies (if separate)
 `cd..`  
 `npm install`
 
-### Start the backend server
-`cd ..`  
+### Start the frontend server
 `npm start`
+
+### Run Tests
+`npm test`
+`npx cypress open`
 
 Then open your browser and visit:  
 
-http://localhost:5000
+http://localhost:3000
 
 ## 🧠 Learning Objectives
 
@@ -174,6 +183,7 @@ StayHealthy/
 │
 ├── /                     # Frontend (React)
 ├── server/               # Backend (Node.js / Express)
+├── cypress/              # Cypress test cases
 ├── models/               # Database models
 ├── routes/               # API routes (auth, appointments, doctors, etc.) and business logic
 ├── public/               # Static assets

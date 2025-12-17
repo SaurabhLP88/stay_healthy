@@ -2,13 +2,19 @@ import { useState } from "react";
 import { FaBell, FaTimes } from "react-icons/fa";
 import "./Notification.css";
 
-interface NotificationProps {
+interface NotificationProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   message: string;
   onClose?: () => void;
 }
 
-const Notification = ({ title, message, onClose }: NotificationProps) => {
+const Notification = ({
+  title,
+  message,
+  onClose,
+  ...props
+}: NotificationProps) => {
   const [open, setOpen] = useState(false);
   console.log("Notification set Loaded:", {
       title: title,
@@ -16,10 +22,11 @@ const Notification = ({ title, message, onClose }: NotificationProps) => {
   });
 
   return (
-    <div className="fixed bottom-[80px] right-5 z-[9999]">
+    <div {...props} className="fixed bottom-[80px] right-5 z-[9999]">
       {!open && (
         <button
           className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg animate-bell"
+          data-testid="notification-bell"
           onClick={() => setOpen(true)}
         >
           <FaBell size={22} />
@@ -34,6 +41,7 @@ const Notification = ({ title, message, onClose }: NotificationProps) => {
         >
           <button
             className="absolute top-2 right-2 text-white hover:text-gray-200"
+            data-testid="notification-close"
             onClick={() => {
               setOpen(false);
               onClose?.();

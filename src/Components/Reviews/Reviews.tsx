@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from "../../config";
 
+import Loader from "../Loader/Loader";
+
 import "./Reviews.css";
 
 interface PatientReview {
@@ -29,6 +31,8 @@ const Reviews: React.FC = () => {
 
   const [patientReviews, setPatientReviews] = useState<PatientReview[]>([]);
   const [doctorReviews, setDoctorReviews] = useState<DoctorReview[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const [userId, setUserId] = useState<string>(sessionStorage.getItem("userId") || "");
   const [doctorId, setDoctorId] = useState<string>(sessionStorage.getItem("doctorId") || "");
@@ -57,42 +61,62 @@ const Reviews: React.FC = () => {
   useEffect(() => {
     let url = "";
 
-    // Case 1: Logged out → show public reviews
+    setLoading(true);
+    setError("");
+
+    // Case 1: Logged out → public reviews
     if (!role) {
       fetch(`${API_URL}/api/reviews/public`)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to load reviews");
+          return res.json();
+        })
         .then(data => {
           setPatientReviews(data.reviews || []);
           setDoctorReviews([]);
-        });
+        })
+        .catch(() => {
+          setError("Unable to load reviews. Please try again later.");
+        })
+        .finally(() => setLoading(false));
       return;
     }
 
-    // Case 2: Doctor logged in → fetch reviews doctor has received
+    // Case 2: Doctor
     if (role === "doctor") {
-      if (!doctorId) return;
+      if (!doctorId) {
+        setLoading(false);
+        return;
+      }
       url = `${API_URL}/api/reviews/doctor/${doctorId}`;
-    } 
-    // Case 3: Patient logged in → fetch reviews patient has submitted
+    }
+    // Case 3: Patient
     else {
-      if (!userId) return;
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
       url = `${API_URL}/api/reviews/patient/${userId}`;
     }
 
-    console.log("[Reviews] Fetching from:", url);
-
     fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("[Reviews] Parsed API Response:", data);
-
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to load reviews");
+        return res.json();
+      })
+      .then(data => {
         if (role === "doctor") {
           setDoctorReviews(data.reviews || []);
+          setPatientReviews([]);
         } else {
           setPatientReviews(data.reviews || []);
+          setDoctorReviews([]);
         }
       })
-      .catch((err) => console.error("[Reviews] Fetch error:", err));
+      .catch(() => {
+        setError("Unable to load reviews. Please try again later.");
+      })
+      .finally(() => setLoading(false));
   }, [role, doctorId, userId]);
 
   const list: ReviewType[] = role === "doctor" ? doctorReviews : patientReviews;
@@ -106,8 +130,16 @@ const Reviews: React.FC = () => {
       </div>
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-xl mb-5">
-        {list.length === 0 ? (
-          <div className="text-center text-gray-700 font-semibold p-3">No reviews available</div>
+        {loading ? (
+          <Loader text="Loading reviews..." />
+        ) : error ? (
+          <div className="text-center text-red-600 font-semibold p-3">
+            {error}
+          </div>
+        ) : list.length === 0 ? (
+          <div className="text-center text-gray-700 font-semibold p-3">
+            No reviews available
+          </div>
         ) : (
           <div className="overflow-x-auto shadow-md rounded-lg">
             <table className="w-full bg-white border border-gray-200 rounded-lg">

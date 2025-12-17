@@ -85,6 +85,7 @@ const Home: React.FC<HomeProps> = ({ children, loggedIn, setLoggedIn }) => {
       <Footer />
       {loggedIn && notification && (
         <Notification
+          data-testid="notification"
           title={notification.title}
           message={notification.message}
           //onClose={markAsRead}

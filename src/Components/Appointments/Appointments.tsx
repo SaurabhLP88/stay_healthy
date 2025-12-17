@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { API_URL } from "../../config";
 
+import Loader from "../Loader/Loader";
 import ReviewForm from "../ReviewForm/ReviewForm";
 import {Appointment} from "../../types/Appointments";
 
@@ -290,7 +291,7 @@ const Appointments = () => {
 
           {/* LOADING / ERROR / EMPTY */}
           {loading ? (
-            <div className="text-center font-semibold text-gray-700 p-3">Loading appointments…</div>
+            <Loader text="Loading appointments..." />
           ) : error ? (
             <div className="text-center text-red-600 font-semibold p-3">{error}</div>
           ) : appointments.length === 0 ? (

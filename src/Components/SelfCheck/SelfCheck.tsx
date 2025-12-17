@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../../config";
+
+import Loader from "../Loader/Loader";
 import MethodCard from "./MethodCard";
+
 import "./SelfCheck.css";
 import selfImg from "../../assets/images/self.svg";
 
@@ -12,12 +15,30 @@ interface SelfCheckMethod {
 
 const SelfCheck: React.FC = () => {
   const [methods, setMethods] = useState<SelfCheckMethod[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${API_URL}/api/selfCheck`)
-      .then((res) => res.json())
-      .then((data) => setMethods(data))
-      .catch((err) => console.error("Error loading methods:", err));
+    const fetchMethods = async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const res = await fetch(`${API_URL}/api/selfCheck`);
+        if (!res.ok) {
+          throw new Error("Failed to load self check methods");
+        }
+        const data = await res.json();
+        setMethods(data);
+      } catch (err) {
+        console.error("Error loading methods:", err);
+        setError("Unable to load self check methods. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMethods();
   }, []);
 
   return (
@@ -56,21 +77,28 @@ const SelfCheck: React.FC = () => {
       <div className="text-center mb-5">
         <h2 className="text-xl md:text-2xl font-bold mb-4">Self Checkup Methods</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mt-4">
-
-          {methods.map((method, index) => {
-            const imagePath = require(`../../assets/images/${method.image}`);
-            return (
-              <MethodCard
-                key={index}
-                title={method.title}
-                image={imagePath}
-                description={method.description}
-              />
-            );
-          })}
-
-        </div>
+        {loading ? (
+          <Loader text="Loading self check methods..." />
+        ) : error ? (
+          <div className="text-center text-red-600 font-semibold">
+            {error}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mt-4">
+            {methods.map((method, index) => {
+              const imagePath = require(`../../assets/images/${method.image}`);
+              return (
+                <MethodCard
+                  key={index}
+                  title={method.title}
+                  image={imagePath}
+                  description={method.description}
+                />
+              );
+            })}
+          </div>
+        )}
+        
       </div>
 
     </div>

@@ -222,7 +222,7 @@ const BookingConsultation = () => {
             </>
           ) : (
             <p className="text-center text-gray-600 text-sm mt-4">
-              No doctors found for {searchParams.get("speciality")}.
+              No doctors found{searchParams.get("speciality") && ` for ${searchParams.get("speciality")}`}.
             </p>
           )}
 

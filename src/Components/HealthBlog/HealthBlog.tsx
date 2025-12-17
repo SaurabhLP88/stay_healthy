@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../../config";
+
+import Loader from "../Loader/Loader";
 import { HealthVideo, HealthTip } from "../../types/HealthBlog";
 
 import "./HealthBlog.css";
-
-//import meal from "../../assets/images/meal.svg";
-//import exercise from "../../assets/images/exercise.svg";
-//import self from "../../assets/images/self.svg";
 
 const categories: string[] = [
   "All",
@@ -19,50 +17,6 @@ const categories: string[] = [
   "Mental Health",
 ];
 
-/*
-const sampleVideos = [
-  {    
-    category: "Fitness",
-    title: "10 Minute Morning Stretch Routine",
-    thumbnail: exercise,
-    description:
-      "A simple stretching routine to relax your muscles and improve flexibility. Can be done by anyone and boosts overall energy.",
-  },
-  {    
-    category: "Diet",
-    title: "Healthy Food Plate Explained",
-    thumbnail: meal,
-    description:
-      "Learn what a healthy balanced meal looks like and how to build healthier eating habits.",
-  },
-  {    
-    category: "Heart",
-    title: "Understanding Blood Pressure",
-    thumbnail: self,
-    description:
-      "This video explains the basics of blood pressure, why it rises, and how to manage it daily.",
-  },
-];
-
-const sampleTips = [
-  {
-    title: "Drink 8 Glasses of Water Daily",
-    content:
-      "Proper hydration boosts metabolism, improves skin health, and helps maintain energy throughout the day.",
-  },
-  {    
-    title: "Do 30 Minutes of Walking",
-    content:
-      "Walking daily reduces stress, improves heart health, and keeps your weight in control.",
-  },
-  {    
-    title: "Practice Deep Breathing",
-    content:
-      "Deep breathing reduces anxiety, increases oxygen flow, and improves mental clarity.",
-  },
-];
-*/
-
 const HealthBlog = () => {
     const [activeCategory, setActiveCategory] = useState<string>("All");
     const [visibleCount, setVisibleCount] = useState<number>(2);
@@ -72,25 +26,38 @@ const HealthBlog = () => {
     const [videos, setVideos] = useState<HealthVideo[]>([]);
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
     const [tips, setTips] = useState<HealthTip[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         setVisibleCount(3);
     }, [activeCategory, searchQuery]);
 
     useEffect(() => {
-      fetch(`${API_URL}/api/healthblog`)
-        .then(res => res.json())
-        .then(data => {
-          console.log("HealthBlog API response:", data);
-          setVideos(data);
-        })
-        .catch(err => console.error("Error loading health videos:", err));
+      setLoading(true);
+      setError("");
 
-      fetch(`${API_URL}/api/healthtips`)
-        .then(res => res.json())
-        .then(data => setTips(data))
-        .catch(err => console.error("Error loading health tips:", err));
-    }, []);    
+      Promise.all([
+        fetch(`${API_URL}/api/healthblog`).then(res => {
+          if (!res.ok) throw new Error("Failed to load videos");
+          return res.json();
+        }),
+        fetch(`${API_URL}/api/healthtips`).then(res => {
+          if (!res.ok) throw new Error("Failed to load tips");
+          return res.json();
+        }),
+      ])
+        .then(([videosData, tipsData]) => {
+          setVideos(videosData || []);
+          setTips(tipsData || []);
+        })
+        .catch(() => {
+          setError("Unable to load health content. Please try again later.");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, []);  
 
     const filteredVideos =
       activeCategory === "All"
@@ -145,59 +112,65 @@ const HealthBlog = () => {
 
       {/* VIDEOS SECTION */}
       <div className="mb-10">
-        
-        {filteredVideosBySearch.length === 0 && (
-            <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-2 mb-5">
+
+        {loading ? (
+          <div className="bg-white border border-gray-200 shadow-xl rounded-xl mb-5">
+            <Loader text="Loading videos..." />
+          </div>
+        ) : error ? (
+          <div className="bg-white border border-gray-200 shadow-xl rounded-xl mb-5 text-center text-red-600 font-semibold p-3">
+              {error}
+            </div>
+        ) : filteredVideosBySearch.length === 0 ? (
+          <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-2 mb-5">
               <p className="text-center text-gray-900 col-span-full">No videos found.</p>
             </div>
-          )}
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"> 
+            {filteredVideosBySearch.slice(0, visibleCount).map((video, index) => {
+              const thumb = require(`../../assets/images/${video.thumbnail}`);
+              return (
+                <div key={index} className="bg-white border border-gray-300 rounded-xl shadow-md p-4">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"> 
-          {filteredVideosBySearch.slice(0, visibleCount).map((video, index) => {
-            const thumb = require(`../../assets/images/${video.thumbnail}`);
-            return (
-              <div key={index} className="bg-white border border-gray-300 rounded-xl shadow-md p-4">
+                  <img
+                    src={thumb}
+                    alt={video.title}
+                    className="w-full h-48 object-contain rounded-md mb-3"
+                  />
 
-                <img
-                  src={thumb}
-                  alt={video.title}
-                  className="w-full h-48 object-contain rounded-md mb-3"
-                />
+                  <h3 className="text-lg font-semibold mb-2">{video.title}</h3>
 
-                <h3 className="text-lg font-semibold mb-2">{video.title}</h3>
+                  <p className="text-sm text-gray-600">
+                    {expandedVideo === index
+                      ? video.description
+                      : video.description.slice(0, 80) + "..."}
+                  </p>
 
-                <p className="text-sm text-gray-600">
-                  {expandedVideo === index
-                    ? video.description
-                    : video.description.slice(0, 80) + "..."}
-                </p>
+                  <div className="flex gap-3 mt-3">
+                    <button
+                      className="flex-1 py-2 text-sm bg-gray-200 hover:bg-gray-300 rounded-lg transition"
+                      onClick={() =>
+                        setExpandedVideo(expandedVideo === index ? null : index)
+                      }
+                    >
+                      {expandedVideo === index ? "Read Less" : "Read More"}
+                    </button>
 
-                <div className="flex gap-3 mt-3">
-                  <button
-                    className="flex-1 py-2 text-sm bg-gray-200 hover:bg-gray-300 rounded-lg transition"
-                    onClick={() =>
-                      setExpandedVideo(expandedVideo === index ? null : index)
-                    }
-                  >
-                    {expandedVideo === index ? "Read Less" : "Read More"}
-                  </button>
-
-                  <button
-                    className="flex-1 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                    onClick={() => setSelectedVideo(video.videofile)}
-                  >
-                    Watch Video
-                  </button>
+                    <button
+                      className="flex-1 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                      onClick={() => setSelectedVideo(video.videofile)}
+                    >
+                      Watch Video
+                    </button>
+                  </div>
                 </div>
+              );
+            })}
 
+          </div>
+          
+        )}        
 
-              </div>
-            );
-          })}
-
-        </div>
-
-        {/* Load More */}
         {visibleCount < filteredVideosBySearch.length && (
           <div className="text-center mt-6">
             <button
@@ -208,6 +181,7 @@ const HealthBlog = () => {
             </button>
           </div>
         )}
+
       </div>
 
       {/* DAILY TIPS SECTION */}
@@ -216,31 +190,41 @@ const HealthBlog = () => {
 
         <div>
 
-          {tips.length === 0 && (
+          {loading ? (
+            <div className="bg-white border border-gray-200 shadow-xl rounded-xl mb-5">
+              <Loader text="Loading daily tips..." />
+            </div>
+          ) : error ? (
+            <div className="bg-white border border-gray-200 shadow-xl rounded-xl mb-5 text-center text-red-600 font-semibold p-3">
+              {error}
+            </div>
+          ) : tips.length === 0 ? (
             <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-2 mb-5">
-              <p className="text-center text-gray-900 col-span-full">No daily tips found.</p>
-            </div>
-          )}
-
-          {tips.map((tip, index) => (
-            <div key={index} className="bg-white border border-gray-300 px-4 py-2 md:py-4 rounded-lg shadow mb-3">
-
-              <div
-                className="flex justify-between cursor-pointer"
-                onClick={() => setExpandedTip(expandedTip === index ? null : index)}
-              >
-                <h3 className="font-semibold mt-1">{tip.title}</h3>
-                <span className="text-xl font-bold select-none">
-                  {expandedTip === index ? "−" : "+"}
-                </span>
+                <p className="text-center text-gray-900 col-span-full">No daily tips found.</p>
               </div>
+          ) : (
+            <div>
+              {tips.map((tip, index) => (
+                <div key={index} className="bg-white border border-gray-300 px-4 py-2 md:py-4 rounded-lg shadow mb-3">
 
-              {expandedTip === index && (
-                <p className="mt-2 text-gray-700 text-sm">{tip.description}</p>
-              )}
+                  <div
+                    className="flex justify-between cursor-pointer"
+                    onClick={() => setExpandedTip(expandedTip === index ? null : index)}
+                  >
+                    <h3 className="font-semibold mt-1">{tip.title}</h3>
+                    <span className="text-xl font-bold select-none">
+                      {expandedTip === index ? "−" : "+"}
+                    </span>
+                  </div>
 
-            </div>
-          ))}
+                  {expandedTip === index && (
+                    <p className="mt-2 text-gray-700 text-sm">{tip.description}</p>
+                  )}
+
+                </div>
+              ))}
+            </div>          
+          )}  
 
         </div>
       </div>

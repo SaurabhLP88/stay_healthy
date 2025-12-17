@@ -18,8 +18,8 @@ jest.mock("./MethodCard", () => {
 jest.mock("../../assets/images/self.svg", () => "self.svg");
 
 // dynamic (used via require)
-jest.mock("../../assets/images/heart.svg", () => "heart.svg");
-jest.mock("../../assets/images/breath.svg", () => "breath.svg");
+jest.mock("../../assets/images/sleep.svg", () => "sleep.svg");
+jest.mock("../../assets/images/water.svg", () => "water.svg");
 
 // ---------------- TESTS ----------------
 describe("SelfCheck", () => {
@@ -51,12 +51,12 @@ describe("SelfCheck", () => {
       json: async () => [
         {
           title: "Heart Rate Check",
-          image: "heart.svg",
+          image: "sleep.svg",
           description: "Measure your pulse regularly",
         },
         {
           title: "Breathing Test",
-          image: "breath.svg",
+          image: "water.svg",
           description: "Observe breathing patterns",
         },
       ],
