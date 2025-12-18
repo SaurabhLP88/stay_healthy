@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
   backend:
@@ -9,16 +8,16 @@ services:
       - ./server/.env
     depends_on:
       - mongo
-    volumes:
-      - ./server:/app
-      - /app/node_modules
 
   frontend:
-    build: .
+    build:
+      context: .
+      args:
+        REACT_APP_API_URL: http://localhost:5000
     ports:
       - "3000:80"
     depends_on:
-      - backend
+      - backend    
 
   mongo:
     image: mongo:6

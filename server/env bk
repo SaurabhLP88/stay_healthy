@@ -1,0 +1,3 @@
+MONGO_URI=mongodb+srv://firsty111_db_user:SaurabhDatabase88@doctorcluster.pmvbbzy.mongodb.net/stayhealthy
+JWT_SECRET=localSecret
+NODE_ENV=development

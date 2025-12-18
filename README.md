@@ -94,6 +94,7 @@ StayHealthy allows users to:
 - Deployed on GitHub Pages
 - Role-based authorization
 - Environment-based configuration
+- Docker Hub deployment
 
 ## 🧩 Key Features
 
@@ -156,14 +157,15 @@ To run this project locally, follow these steps:
 
 ### Start the frontend server
 `npm start`
+Then open your browser and visit:  http://localhost:3000
 
 ### Run Tests
 `npm test`
 `npx cypress open`
 
-Then open your browser and visit:  
+## 🚀 Run with Docker
+`docker-compose up --build`
 
-http://localhost:3000
 
 ## 🧠 Learning Objectives
 

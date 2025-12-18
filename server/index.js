@@ -10,14 +10,15 @@ const cors = require('cors');
 const connectToMongo = require('./db');
 const app = express();
 //const path = require('path');
-const PORT = process.env.PORT || 8181;
+const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: [
+    /*origin: [
       "http://localhost:3000",
       "https://saurabhlp88.github.io"
-    ],
+    ],*/
+    origin: true,
     credentials: true
   })
 );

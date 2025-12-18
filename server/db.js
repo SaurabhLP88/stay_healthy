@@ -31,7 +31,9 @@ const connectToMongo = async (retryCount = 0) => {
       throw new Error("MONGO_URI not defined in environment variables");
     }
 
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI, {
+      dbName: "stayhealthy"
+    });
     console.info("✅ Connected to MongoDB Atlas successfully");
     return;
   } catch (error) {
