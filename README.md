@@ -186,6 +186,7 @@ StayHealthy/
 ├── /                     # Frontend (React)
 ├── server/               # Backend (Node.js / Express)
 ├── cypress/              # Cypress test cases
+├── screenshots/          # Screenshots of the components
 ├── models/               # Database models
 ├── routes/               # API routes (auth, appointments, doctors, etc.) and business logic
 ├── public/               # Static assets
@@ -196,6 +197,43 @@ StayHealthy/
 └── README.md             # Project documentation
 ```
 
+## 📸 Project Screenshots
+
+### 🏠 Landing Page
+![Landing Page](./screenshots/HomePage.png)
+
+### 📌 About Us 
+![About Us](./screenshots/AboutUs.png)
+
+### 🔐 Login
+![Login](./screenshots/Login.png)
+
+### 📝 Sign Up
+![Sign Up](./screenshots/SignUp.png)
+
+### 📊 Doctor Dashboard
+![Doctor Dashboard](./screenshots/DoctorDashboard.png)
+
+### ⚡ Instant Consultation
+![Instant Consultation](./screenshots/BookAppointment.png)
+
+### 📚 Health Blog
+![Health Blog](./screenshots/HealthBlog.png)
+
+### 👨‍⚕️ Doctor Profile
+![Doctor Profile](./screenshots/DoctorProfile.png)
+
+### 📅 Patient Appointments
+![Patient Appointments](./screenshots/PatientAppointments.png)
+
+### ⭐ Reviews
+![Reviews](./screenshots/Reviews.png)
+
+### 🩺 Select Doctors
+![Select Doctors](./screenshots/SelectDoctors.png)
+
+### 🛠 Services
+![Services](./screenshots/Services.png)
 
 ## 🌐 Live Demo & Repository
 
