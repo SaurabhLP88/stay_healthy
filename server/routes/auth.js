@@ -99,6 +99,15 @@ async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
+    if (req.body.role === "Doctor") {
+        const DOCTOR_DOMAIN = "@stayhealthy.com";
+        if (!req.body.email.endsWith(DOCTOR_DOMAIN)) {
+            return res.status(400).json({
+                error: `Doctors must register with a ${DOCTOR_DOMAIN} email`
+            });
+        }
+    }
+
     try {
         const { name, email, password, phone, role, speciality, experience } = req.body;
         console.log(`🔍 Checking existing user for email: ${email}`);

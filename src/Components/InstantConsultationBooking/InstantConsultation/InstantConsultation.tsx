@@ -2,6 +2,8 @@ import{ useEffect, useState } from 'react';
 import { API_URL } from "../../../config";
 import { useSearchParams } from 'react-router-dom';
 import { sendNotification } from "../../../utils/notify";
+
+import Loader from "../../Loader/Loader";
 import FindDoctorSearch from '../FindDoctorSearch/FindDoctorSearch';
 import DoctorCard from '../DoctorCard/DoctorCard';
 //import Notification from "../Notification/Notification";
@@ -31,6 +33,9 @@ const InstantConsultation = () => {
     const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
     const [isSearched, setIsSearched] = useState<boolean>(false);
     const [selectedSpeciality] = useState<string>("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
     //const [bookings, setBookings] = useState([]);
     //const [notification, setNotification] = useState(null);
 
@@ -40,27 +45,32 @@ const InstantConsultation = () => {
     //console.log("InstantConsultation.js Loaded");
 
     useEffect(() => {
+        setError("");
         const getDoctorsDetails = async () => {
             try {
-            const res = await fetch(`${API_URL}/api/doctors`);
-            const data: Doctor[] = await res.json();
+                setLoading(true);
 
-            setDoctors(data);
+                const res = await fetch(`${API_URL}/api/doctors`);
+                const data: Doctor[] = await res.json();
 
-            const speciality = searchParams.get("speciality");
-            if (speciality) {
-                const filtered = data.filter(
-                (doctor) =>
-                    doctor.speciality.toLowerCase() === speciality.toLowerCase()
-                );
-                setFilteredDoctors(filtered);
-                setIsSearched(true);
-            } else {
-                setFilteredDoctors([]);
-                setIsSearched(false);
-            }
-            } catch (err) {
-            console.error("Error fetching doctors:", err);
+                setDoctors(data);
+
+                const speciality = searchParams.get("speciality");
+                if (speciality) {
+                    const filtered = data.filter(
+                        (doctor) =>
+                            doctor.speciality.toLowerCase() === speciality.toLowerCase()
+                    );
+                    setFilteredDoctors(filtered);
+                    setIsSearched(true);
+                } else {
+                    setFilteredDoctors([]);
+                    setIsSearched(false);
+                }
+            } catch {
+                setError("Unable to load doctors. Please try again later.");
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -135,23 +145,35 @@ const InstantConsultation = () => {
             <FindDoctorSearch onSearch={handleSearch} />
             <div className="mt-6">
                 <div className="max-w-5xl mx-auto">
-                    <h2 className="text-2xl font-bold text-center mb-2"><span className="text-blue-500">{(isSearched ? filteredDoctors : doctors).length}</span> {selectedSpeciality} doctors are available</h2>
-                                            
-                    {(isSearched ? filteredDoctors : doctors).length > 0 ? (
-                        <>
-                            <h3 className="text-center text-gray-600 mb-6 text-sm">
-                                Book appointments with minimum wait-time & verified doctor
-                                details
-                            </h3>
-
-                            <div className="grid gap-3 md:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-8xl mx-auto">
-                                {list.map((doctor) => {
+                    <h2 className="text-2xl font-bold text-center mb-2">
+                        <span className="text-blue-500">{(isSearched ? filteredDoctors : doctors).length}</span> {selectedSpeciality} doctors are available
+                    </h2>
+                    <h3 className="text-center text-gray-600 mb-6 text-sm">
+                        Book appointments with minimum wait-time & verified doctor details
+                    </h3>
+                    
+                    {loading ? (
+                        <div className="bg-white border border-gray-200 shadow-xl rounded-xl mb-5">
+                            <Loader text="Loading Doctors..." />
+                        </div>
+                    ) : error ? (
+                        <div className="text-center text-red-600 font-semibold p-3">
+                            {error}
+                        </div>
+                    ) : list.length === 0 ? (
+                        <p className="col-span-full text-center text-gray-600 text-sm mt-4">
+                            No doctors found for {searchParams.get("speciality")}.
+                        </p>
+                    ) : (
+                    
+                        <div className="grid gap-3 md:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-8xl mx-auto">
+                            {list.map((doctor) => {
                                 const imagePath = require(
-                                    `../../../assets/images/${doctor.image}`
+                                `../../../assets/images/${doctor.image}`
                                 );
 
                                 return (
-                                    <DoctorCard
+                                <DoctorCard
                                     key={doctor._id}
                                     doctorId={doctor._id}
                                     name={doctor.name}
@@ -161,29 +183,16 @@ const InstantConsultation = () => {
                                     image={imagePath}
                                     bookingType="instant"
                                     onBook={(appointmentData: AppointmentData) =>
-                                        handleBook(doctor, appointmentData)
+                                    handleBook(doctor, appointmentData)
                                     }
-                                    />
+                                />
                                 );
-                                })}
-                            </div>
-                            </>
-                    ) : (
-                        <p className="text-center text-gray-600 text-sm mt-4">No doctors found for  {searchParams.get('speciality')}.</p>
-                    )}
-                
+                            })}
+                        </div>
+                    )}                        
+                    
                 </div>
-            {/* }) : ''} */}
-        </div>
-        
-
-        {/*{notification && (
-            <Notification
-            title={notification.title}
-            message={notification.message}
-            onClose={() => setNotification(null)}
-            />
-        )}*/}
+            </div>
         </div>
     )
 }

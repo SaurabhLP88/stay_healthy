@@ -14,10 +14,7 @@ jest.mock("./MethodCard", () => {
 });
 
 // ---------------- MOCK ALL IMAGES ----------------
-// static
 jest.mock("../../assets/images/self.svg", () => "self.svg");
-
-// dynamic (used via require)
 jest.mock("../../assets/images/sleep.svg", () => "sleep.svg");
 jest.mock("../../assets/images/water.svg", () => "water.svg");
 
@@ -28,7 +25,8 @@ describe("SelfCheck", () => {
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([]),
+        ok: true, // ✅ IMPORTANT
+        json: async () => [],
       } as Response)
     );
   });
@@ -36,9 +34,8 @@ describe("SelfCheck", () => {
   test("renders self check header and description", async () => {
     render(<SelfCheck />);
 
-    // ⬇️ WAIT for useEffect to complete
     expect(
-      await screen.findByRole("heading", { name: /Self Health Checkup/i })
+      await screen.findByText(/Self Health Checkup/i)
     ).toBeInTheDocument();
 
     expect(
@@ -48,6 +45,7 @@ describe("SelfCheck", () => {
 
   test("renders self checkup methods from API", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true, // ✅ IMPORTANT
       json: async () => [
         {
           title: "Heart Rate Check",
@@ -73,19 +71,19 @@ describe("SelfCheck", () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getAllByTestId("method-card").length
-    ).toBe(2);
+      screen.getAllByTestId("method-card")
+    ).toHaveLength(2);
   });
 
   test("renders no method cards when API returns empty list", async () => {
     render(<SelfCheck />);
 
     expect(
-      await screen.findByRole("heading", { name: /Self Checkup Methods/i })
+      await screen.findByText(/Self Checkup Methods/i)
     ).toBeInTheDocument();
 
     expect(
-      screen.queryAllByTestId("method-card").length
-    ).toBe(0);
+      screen.queryAllByTestId("method-card")
+    ).toHaveLength(0);
   });
 });

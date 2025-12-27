@@ -12,7 +12,7 @@ describe("App Routing", () => {
     cy.visit("/#/about");
 
     cy.contains("About StayHealthy").should("be.visible");
-    cy.contains("What can you do?").should("be.visible");
+    cy.contains("How StayHealthy Works").should("be.visible");
   });
 
   it("navigates to Sign Up page", () => {

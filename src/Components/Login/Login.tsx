@@ -32,6 +32,7 @@ interface LoginResponse {
 
 function Login({ setLoggedIn }: LoginProps) {
   const navigate = useNavigate();
+  const DOCTOR_EMAIL_DOMAIN = "@stayhealthy.com";
 
   const [formData, setFormData] = useState<LoginForm>({
     email: "",
@@ -59,9 +60,20 @@ function Login({ setLoggedIn }: LoginProps) {
   const validate = () => {
     const tempErrors: LoginErrors = {};
 
-    if (!formData.email) {
+    /*if (!formData.email) {
       tempErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      tempErrors.email = "Enter a valid email";
+    }*/
+
+    if (!formData.email) {
+      tempErrors.email = formData.role === "Doctor"
+        ? "Username is required"
+        : "Email is required";
+    } else if (
+      formData.role !== "Doctor" &&
+      !/\S+@\S+\.\S+/.test(formData.email)
+    ) {
       tempErrors.email = "Enter a valid email";
     }
 
@@ -104,16 +116,20 @@ function Login({ setLoggedIn }: LoginProps) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     if (!validate()) return;
 
-    const result = await apiCallToLogin(formData);
+    let payload = { ...formData };
+    if (formData.role === "Doctor") {
+      payload.email = `${formData.email}${DOCTOR_EMAIL_DOMAIN}`;
+    }
+
+    const result = await apiCallToLogin(payload);
     if (result) {
       alert("Login successful!");
 
       sessionStorage.setItem("isLoggedIn", "true");
       sessionStorage.setItem("role", result.role);
-      sessionStorage.setItem("email", result.email || formData.email);
+      sessionStorage.setItem("email", result.email || payload.email);
       sessionStorage.setItem("name", result.name || formData.email.split("@")[0]);
 
       if (result.role === "Doctor") {
@@ -193,16 +209,36 @@ function Login({ setLoggedIn }: LoginProps) {
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="email" className="block font-semibold mb-1">Email</label>
-                  <input
-                    id="email"
-                    type="text"
-                    name="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-base focus:ring-2 focus:ring-blue-400 outline-none"
-                  />
+                  <label htmlFor="email" className="block font-semibold mb-1">
+                    {formData.role === "Doctor" ? "Username" : "Email"}
+                  </label>
+
+                  <div className={`flex items-center ${
+                    formData.role === "Doctor" ? "border border-gray-300 rounded-md overflow-hidden" : ""
+                  }`}>
+                    <input
+                      id="email"
+                      type="text"
+                      name="email"
+                      placeholder={
+                        formData.role === "Doctor"
+                          ? "Enter username"
+                          : "Enter your email"
+                      }
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={`px-3 py-2 outline-none ${
+                        formData.role === "Doctor" ? "flex-1" : "w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+                      }`}
+                    />
+
+                    {/* Show domain suffix only for Doctor */}
+                    {formData.role === "Doctor" && (
+                      <span className="px-4 py-2 bg-gray-100 border-l border-gray-300 text-gray-700 text-md whitespace-nowrap">
+                        {DOCTOR_EMAIL_DOMAIN}
+                      </span>
+                    )}
+                  </div>
                   {errors.email && (
                     <span className="text-red-500 text-sm">{errors.email}</span>
                   )}

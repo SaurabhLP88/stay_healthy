@@ -7,36 +7,44 @@ describe("About Page", () => {
     cy.contains("About StayHealthy").should("be.visible");
   });
 
-  it("renders application description", () => {
+  it("renders intro description", () => {
     cy.contains(
-      "StayHealthy is a Medical Appointment Booking System designed to streamline online appointment booking and digital health management."
+      "StayHealthy is a digital healthcare platform created to simplify the way people discover doctors"
     ).should("be.visible");
   });
 
-  it("renders 'What can you do?' list correctly", () => {
-    cy.contains("What can you do?").should("be.visible");
+  it("renders 'Why StayHealthy?' section", () => {
+    cy.contains("Why StayHealthy?").should("be.visible");
 
-    cy.get("#what").within(() => {
-      cy.get("li").should("have.length", 5);
-
-      cy.contains("Read health blogs and daily tips");
-      cy.contains("Watch educational health videos");
-      cy.contains("Search and book doctor appointments");
-      cy.contains("Manage appointment history");
-      cy.contains("Receive notifications and reviews");
-    });
+    cy.contains(
+      "Finding the right doctor, remembering appointments, and keeping track of medical records"
+    ).should("be.visible");
   });
 
-  it("renders 'How to use the app' list correctly", () => {
-    cy.contains("How to use the app").should("be.visible");
+  it("renders 'How StayHealthy Works' section with 3 steps", () => {
+    cy.contains("How StayHealthy Works").should("be.visible");
 
-    cy.get("#how").within(() => {
-      cy.get("li").should("have.length", 4);
+    cy.contains("Create an Account").should("be.visible");
+    cy.contains("Find & Book Doctors").should("be.visible");
+    cy.contains("Manage Everything").should("be.visible");
+  });
 
-      cy.get("li").eq(0).should("contain.text", "Register or login as a patient");
-      cy.get("li").eq(1).should("contain.text", "Browse health content");
-      cy.get("li").eq(2).should("contain.text", "Search doctors and book appointments");
-      cy.get("li").eq(3).should("contain.text", "Manage everything from your dashboard");
-    });
+  it("renders 'What You Can Do on StayHealthy' list", () => {
+    cy.contains("What You Can Do on StayHealthy").should("be.visible");
+
+    cy.contains("Discover doctors and healthcare services").should("be.visible");
+    cy.contains("Book and manage appointments seamlessly").should("be.visible");
+    cy.contains("View appointment history and medical reports").should("be.visible");
+    cy.contains("Share feedback and reviews after consultations").should("be.visible");
+    cy.contains("Receive timely updates and notifications").should("be.visible");
+  });
+
+  it("renders Vision section", () => {
+    cy.contains("Our Vision").should("be.visible");
+
+    cy.contains(
+      "StayHealthy aims to make healthcare more accessible and organized"
+    ).should("be.visible");
   });
 });
+

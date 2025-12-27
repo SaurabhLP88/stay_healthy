@@ -24,6 +24,7 @@ type FormErrors = Partial<Record<keyof SignUpFormData, string>>;
 
 function SignUp({ setLoggedIn }: SignUpProps) {
   const navigate = useNavigate();
+  const DOCTOR_EMAIL_DOMAIN = "@stayhealthy.com";
 
   const initialFormState: SignUpFormData = {
     name: "",
@@ -38,6 +39,7 @@ function SignUp({ setLoggedIn }: SignUpProps) {
   const [formData, setFormData] = useState<SignUpFormData>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [doctorUsername, setDoctorUsername] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -47,6 +49,7 @@ function SignUp({ setLoggedIn }: SignUpProps) {
 
   const handleReset = () => {
     setFormData(initialFormState);
+    setDoctorUsername("");
     setErrors({});
   };
 
@@ -58,22 +61,31 @@ function SignUp({ setLoggedIn }: SignUpProps) {
     else if (!/^\d{10}$/.test(formData.phone))
       tempErrors.phone = "Enter valid 10-digit phone";
 
-    if (!formData.email) tempErrors.email = "Email is required";
+    /*if (!formData.email) tempErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
-      tempErrors.email = "Enter a valid email";
-
-    if (!formData.password) tempErrors.password = "Password is required";
-    else if (formData.password.length < 6)
-      tempErrors.password = "Password must be at least 6 characters";
-
-    if (!formData.role) tempErrors.role = "Please select your role";
+      tempErrors.email = "Enter a valid email";*/
 
     if (formData.role === "Doctor") {
       if (!formData.speciality)
         tempErrors.speciality = "Speciality is required";
       if (!formData.experience)
         tempErrors.experience = "Experience is required";
+      if (!doctorUsername)
+        tempErrors.email = "Doctor username is required";
+      else if (!/^[a-zA-Z0-9._]+$/.test(doctorUsername))
+        tempErrors.email = "Only letters, numbers, dot and underscore allowed";
+    } else {
+      if (!formData.email)
+        tempErrors.email = "Email is required";
+      else if (!/\S+@\S+\.\S+/.test(formData.email))
+        tempErrors.email = "Enter a valid email";
     }
+
+    if (!formData.password) tempErrors.password = "Password is required";
+    else if (formData.password.length < 6)
+      tempErrors.password = "Password must be at least 6 characters";
+
+    if (!formData.role) tempErrors.role = "Please select your role";
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -107,7 +119,15 @@ function SignUp({ setLoggedIn }: SignUpProps) {
 
     if (!validate()) return;
 
-    const result = await apiCallToRegister(formData);
+    const finalFormData = {
+      ...formData,
+      email:
+        formData.role === "Doctor"
+          ? `${doctorUsername}${DOCTOR_EMAIL_DOMAIN}`
+          : formData.email,
+    };
+
+    const result = await apiCallToRegister(finalFormData);
     if (result) {
       alert("Registration successful! Please login.");
       setFormData(initialFormState);
@@ -261,7 +281,8 @@ function SignUp({ setLoggedIn }: SignUpProps) {
             {/* Email */}
             <div>
               <label htmlFor="email" className="block font-semibold mb-1">Email</label>
-              <input
+
+              {/*<input
                 id="email"
                 type="email"
                 name="email"
@@ -269,7 +290,35 @@ function SignUp({ setLoggedIn }: SignUpProps) {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
-              />
+              />*/}
+
+              {formData.role === "Doctor" ? (
+                /* Doctor Email (username + fixed domain) */
+                <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                  <input
+                    type="text"
+                    placeholder="username"
+                    value={doctorUsername}
+                    onChange={(e) => setDoctorUsername(e.target.value)}
+                    className="flex-1 px-3 py-2 outline-none"
+                  />
+                  <span className="px-4 py-2 bg-gray-100 border-l border-gray-300 text-gray-700 text-md whitespace-nowrap">
+                    {DOCTOR_EMAIL_DOMAIN}
+                  </span>
+                </div>
+              ) : (
+                /* Patient Email (normal) */
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
+                />
+              )}
+
               {errors.email && (
                 <span className="text-red-500 text-sm">{errors.email}</span>
               )}

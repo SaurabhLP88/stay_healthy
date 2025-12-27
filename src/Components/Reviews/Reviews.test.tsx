@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Reviews from "./Reviews";
 
 global.fetch = jest.fn();
@@ -11,6 +11,7 @@ describe("Reviews", () => {
 
   test("shows public reviews when user is not logged in", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
       json: async () => ({
         reviews: [
           {
@@ -26,9 +27,18 @@ describe("Reviews", () => {
 
     render(<Reviews />);
 
-    expect(await screen.findByText(/Dr. Smith/i)).toBeInTheDocument();
-    expect(screen.getByText(/Cardiology/i)).toBeInTheDocument();
-    expect(screen.getByText(/Great doctor/i)).toBeInTheDocument();
+    // wait for table cell containing doctor name
+    expect(
+      await screen.findByRole("cell", { name: /dr\. smith/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("cell", { name: /cardiology/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/great doctor/i)
+    ).toBeInTheDocument();
   });
 
   test("shows patient reviews when patient is logged in", async () => {
@@ -36,6 +46,7 @@ describe("Reviews", () => {
     sessionStorage.setItem("userId", "user123");
 
     (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
       json: async () => ({
         reviews: [
           {
@@ -51,8 +62,13 @@ describe("Reviews", () => {
 
     render(<Reviews />);
 
-    expect(await screen.findByText(/Dr. Adams/i)).toBeInTheDocument();
-    expect(screen.getByText(/Dermatology/i)).toBeInTheDocument();
+    expect(
+      await screen.findByRole("cell", { name: /dr\. adams/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("cell", { name: /dermatology/i })
+    ).toBeInTheDocument();
   });
 
   test("shows doctor reviews when doctor is logged in", async () => {
@@ -60,6 +76,7 @@ describe("Reviews", () => {
     sessionStorage.setItem("doctorId", "doc123");
 
     (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
       json: async () => ({
         reviews: [
           {
@@ -75,19 +92,25 @@ describe("Reviews", () => {
 
     render(<Reviews />);
 
-    expect(await screen.findByText(/John Doe/i)).toBeInTheDocument();
-    expect(screen.getByText(/Very kind/i)).toBeInTheDocument();
+    expect(
+      await screen.findByRole("cell", { name: /john doe/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/very kind/i)
+    ).toBeInTheDocument();
   });
 
   test("shows empty state when no reviews exist", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
       json: async () => ({ reviews: [] }),
     });
 
     render(<Reviews />);
 
     expect(
-      await screen.findByText(/No reviews available/i)
+      await screen.findByText(/no reviews available/i)
     ).toBeInTheDocument();
   });
 });

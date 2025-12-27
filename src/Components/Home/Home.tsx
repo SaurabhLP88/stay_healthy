@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { API_URL } from "../../config";
 //import { sendNotification } from "../../utils/notify";
 import Navbar from "../Navbar/Navbar";
@@ -18,6 +19,9 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ children, loggedIn, setLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [notification, setNotification] = useState<AppNotification | null>(null);
+
+  const location = useLocation();
+  const isLandingPage = location.pathname === "/";
 
   //console.log("Home.js Loaded"); 
 
@@ -81,7 +85,16 @@ const Home: React.FC<HomeProps> = ({ children, loggedIn, setLoggedIn }) => {
   return (    
     <div className="min-h-screen flex flex-col">
       <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} username={username} />
-      <div className="main container mx-auto px-3 md:px-4 pt-[90px] pb-[15px] md:pt-[95px] md:pb-[25px] min-h-[calc(100vh-70px)] md:min-h-[calc(100vh-70px)]">{children}</div>
+      {/*<div className="main container mx-auto px-3 md:px-4 pt-[90px] pb-[15px] md:pt-[95px] md:pb-[25px] min-h-[calc(100vh-70px)] md:min-h-[calc(100vh-70px)]">{children}</div>*/}
+      <div
+        className={`main ${
+          isLandingPage
+            ? "w-full px-0 pt-[90px] pb-[15px] md:pt-[95px] md:pb-[25px]"
+            : "container mx-auto px-3 md:px-4 pt-[90px] pb-[15px] md:pt-[95px] md:pb-[25px]"
+        } min-h-[calc(100vh-70px)] md:min-h-[calc(100vh-70px)]`}
+      >
+        {children}
+      </div>      
       <Footer />
       {loggedIn && notification && (
         <Notification

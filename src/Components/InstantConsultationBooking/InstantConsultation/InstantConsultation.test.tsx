@@ -53,9 +53,11 @@ beforeAll(() => {
   });
 });
 
+const mockSearchParams = new URLSearchParams("");
+
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useSearchParams: () => [new URLSearchParams(""), jest.fn()],
+  useSearchParams: () => [mockSearchParams, jest.fn()],
 }));
 
 describe("InstantConsultation (stable integration tests)", () => {
@@ -105,28 +107,36 @@ describe("InstantConsultation (stable integration tests)", () => {
   it("filters doctors by name", async () => {
     renderPage();
 
+    // wait for initial load
     await screen.findAllByTestId("doctor-name");
 
     fireEvent.change(screen.getByTestId("search-input"), {
       target: { value: "sharma" },
     });
 
-    const doctors = await screen.findAllByTestId("doctor-name");
-    expect(doctors).toHaveLength(1);
+    // wait until filtered result appears
+    const doctor = await screen.findByText("Dr. Sharma");
+
+    expect(doctor).toBeInTheDocument();
+    expect(screen.queryByText("Dr. Mehta")).not.toBeInTheDocument();
   });
 
   it("filters doctors by speciality", async () => {
     renderPage();
 
+    // wait for initial load
     await screen.findAllByTestId("doctor-name");
 
     fireEvent.change(screen.getByTestId("search-input"), {
       target: { value: "derma" },
     });
 
-    const doctors = await screen.findAllByTestId("doctor-name");
-    expect(doctors).toHaveLength(1);
+    const doctor = await screen.findByText("Dr. Mehta");
+
+    expect(doctor).toBeInTheDocument();
+    expect(screen.queryByText("Dr. Sharma")).not.toBeInTheDocument();
   });
+
 
   it("shows no doctors when filter returns empty", async () => {
     renderPage();

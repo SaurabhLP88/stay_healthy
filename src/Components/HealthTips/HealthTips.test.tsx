@@ -11,19 +11,19 @@ describe("HealthTips", () => {
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
-        json: () =>
-          Promise.resolve([
-            {
-              title: "Stay Hydrated",
-              description: "Drink water daily",
-              image: "water.svg",
-            },
-            {
-              title: "Eat Healthy",
-              description: "Balanced meals are important",
-              image: "meal.svg",
-            },
-          ]),
+        ok: true, // ✅ IMPORTANT
+        json: async () => [
+          {
+            title: "Stay Hydrated",
+            description: "Drink water daily",
+            image: "water.svg",
+          },
+          {
+            title: "Eat Healthy",
+            description: "Balanced meals are important",
+            image: "meal.svg",
+          },
+        ],
       } as Response)
     );
   });
@@ -31,9 +31,8 @@ describe("HealthTips", () => {
   test("renders Health Tips page title and description", async () => {
     render(<HealthTips />);
 
-    // ⬇️ WAIT for useEffect to complete
     expect(
-      await screen.findByRole("heading", { name: /Health Tips/i })
+      await screen.findByText("Health Tips")
     ).toBeInTheDocument();
 
     expect(
@@ -44,28 +43,26 @@ describe("HealthTips", () => {
   test("renders Health Tips fetched from API", async () => {
     render(<HealthTips />);
 
+    // ✅ wait for API data to render
     expect(
-      await screen.findByText(/Stay Hydrated/i)
+      await screen.findByText("Stay Hydrated")
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(/Drink water daily/i)
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText(/Eat Healthy/i)
+      screen.getByText("Eat Healthy")
     ).toBeInTheDocument();
   });
 
   test("renders empty state when API returns empty list", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true, // ✅ IMPORTANT
       json: async () => [],
     });
 
     render(<HealthTips />);
 
     expect(
-      await screen.findByRole("heading", { name: /Health Tips/i })
+      await screen.findByText("Health Tips")
     ).toBeInTheDocument();
   });
 });

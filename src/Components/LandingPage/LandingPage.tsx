@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"; // Importing the necessary m
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
 import { DoctorStats } from "../../types/DoctorStats";
+import LandingCanvas from "./LandingCanvas";
 
 import instant from "../../assets/images/instant.svg";
 import book from "../../assets/images/book.svg";
@@ -113,12 +114,16 @@ const LandingPage: React.FC = () => {
       {!showServices && role !== "doctor" && (
         <section className="flex flex-col align-middle justify-center relative min-h-[calc(100vh-190px)] text-center overflow-hidden -mx-2 px-4 md:-mx-0 md:px-0">
 
-          {/* Blobs */}
+          {/* Blobs
           <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
             <div className="blob bg-blue-800/40 blur-3xl"></div>
           </div>
           <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
             <div className="blob2 bg-blue-700/40 blur-3xl"></div>
+          </div> */}
+
+          <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+            <LandingCanvas />
           </div>
 
           <div className="flex flex-col items-center gap-6" data-aos="fade-up">
@@ -186,7 +191,7 @@ const LandingPage: React.FC = () => {
 
       {/* DOCTOR DASHBOARD */}
       {role === "doctor" && (
-        <div className="p-0">
+        <div className="px-3 md:px-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Doctor Dashboard</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
