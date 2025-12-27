@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/stay_healthy/static/css/main.58b3f405.css",
-    "main.js": "/stay_healthy/static/js/main.4f14f483.js",
+    "main.css": "/stay_healthy/static/css/main.63d06053.css",
+    "main.js": "/stay_healthy/static/js/main.fde1fd3a.js",
     "static/js/845.620824ad.chunk.js": "/stay_healthy/static/js/845.620824ad.chunk.js",
     "static/media/Physician_Doctor.mp4": "/stay_healthy/static/media/Physician_Doctor.7fe5c8e9c5ebe174efff.mp4",
     "static/media/doctor1.png": "/stay_healthy/static/media/doctor1.b38e0e26ee079d87416d.png",
@@ -18,12 +18,12 @@
     "static/media/water.svg": "/stay_healthy/static/media/water.1adc2b656516eab112d4.svg",
     "static/media/logo.svg": "/stay_healthy/static/media/logo.6ce24c58023cc2f8fd88.svg",
     "index.html": "/stay_healthy/index.html",
-    "main.58b3f405.css.map": "/stay_healthy/static/css/main.58b3f405.css.map",
-    "main.4f14f483.js.map": "/stay_healthy/static/js/main.4f14f483.js.map",
+    "main.63d06053.css.map": "/stay_healthy/static/css/main.63d06053.css.map",
+    "main.fde1fd3a.js.map": "/stay_healthy/static/js/main.fde1fd3a.js.map",
     "845.620824ad.chunk.js.map": "/stay_healthy/static/js/845.620824ad.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.58b3f405.css",
-    "static/js/main.4f14f483.js"
+    "static/css/main.63d06053.css",
+    "static/js/main.fde1fd3a.js"
   ]
 }
