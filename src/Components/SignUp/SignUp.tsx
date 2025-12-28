@@ -294,7 +294,7 @@ function SignUp({ setLoggedIn }: SignUpProps) {
 
               {formData.role === "Doctor" ? (
                 /* Doctor Email (username + fixed domain) */
-                <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                <div className="flex flex-col sm:flex-row border border-gray-300 rounded-md overflow-hidden">
                   <input
                     type="text"
                     placeholder="username"
@@ -302,7 +302,7 @@ function SignUp({ setLoggedIn }: SignUpProps) {
                     onChange={(e) => setDoctorUsername(e.target.value)}
                     className="flex-1 px-3 py-2 outline-none"
                   />
-                  <span className="px-4 py-2 bg-gray-100 border-l border-gray-300 text-gray-700 text-md whitespace-nowrap">
+                  <span className="px-3 py-1 sm:px-4 sm:py-2 bg-gray-100 sm:border-l border-gray-300 text-gray-700 text-sm whitespace-nowrap text-center">
                     {DOCTOR_EMAIL_DOMAIN}
                   </span>
                 </div>

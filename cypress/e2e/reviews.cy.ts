@@ -109,10 +109,10 @@ describe("Reviews Page (E2E)", () => {
      EMPTY STATE
   ---------------------------- */
   it("shows empty state when no reviews exist", () => {
-    cy.intercept("GET", "**/api/reviews/*", {
+    cy.intercept("GET", "**/api/reviews/patient/*", {
       statusCode: 200,
       body: { reviews: [] },
-    });
+    }).as("getEmptyReviews");
 
     cy.visit("/#/reviews", {
       onBeforeLoad(win) {
@@ -121,6 +121,7 @@ describe("Reviews Page (E2E)", () => {
       },
     });
 
+    cy.wait("@getEmptyReviews");
     cy.contains("No reviews available").should("be.visible");
   });
 

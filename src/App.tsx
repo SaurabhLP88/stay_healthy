@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Setauthtoken from "./Setauthtoken";
 import Home from "./Components/Home/Home";
@@ -66,13 +66,14 @@ function App() {
             <Route path="/health-blog" element={<HealthBlog />} />
             
             <Route 
-              path="/error-test"
+              path="/404"
               element={
                 <ErrorBoundary>
                   <CrashTest />
                 </ErrorBoundary>
               }
-            />            
+            />
+            <Route path="*" element={<Navigate to="/404" replace />} />
             <Route
               path="/review-form-test"
               element={
@@ -95,7 +96,6 @@ function App() {
                 />
               }
             />
-
             
           </Routes>
         </Home>

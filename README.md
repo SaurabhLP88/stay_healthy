@@ -156,11 +156,11 @@ To run this project locally, follow these steps:
 `npm install`
 
 ### Start the frontend server
-`npm start`
+`npm start`     
 Then open your browser and visit:  http://localhost:3000
 
 ### Run Tests
-`npm test`
+`npm test`      
 `npx cypress open`
 
 ## 🚀 Run with Docker

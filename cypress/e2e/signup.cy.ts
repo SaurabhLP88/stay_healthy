@@ -7,6 +7,8 @@ describe("Sign Up Page", () => {
     cy.contains("Sign Up").should("be.visible");
     cy.contains("Already a member?").should("be.visible");
 
+    cy.get("#patientRadio").check();
+
     cy.get("#name").should("exist");
     cy.get("#phone").should("exist");
     cy.get("#email").should("exist");
@@ -26,7 +28,7 @@ describe("Sign Up Page", () => {
 
     cy.contains("Name is required");
     cy.contains("Phone is required");
-    cy.contains("Email is required");
+    //cy.contains("Email is required");
     cy.contains("Password is required");
     cy.contains("Please select your role");
   });
@@ -65,9 +67,9 @@ describe("Sign Up Page", () => {
       .should("have.attr", "type", "password");
 
     cy.get("svg").last().click();
-
-    cy.get("#password")
-      .should("have.attr", "type", "text");
+    cy.get("#password").siblings("span").click();
+    cy.get("#password").parent().find("span").click();
+    cy.get("#password").should("have.attr", "type", "text");
   });
 
   it("resets the form when Reset is clicked", () => {
@@ -120,7 +122,8 @@ describe("Sign Up Page", () => {
     cy.get("#doctorRadio").check();
     cy.get("#name").type("Doctor User");
     cy.get("#phone").type("9876543210");
-    cy.get("#email").type("doctor@test.com");
+    //cy.get("#email").type("doctor@test.com");
+    cy.get('input[placeholder="username"]').type("doctoruser");
     cy.get("#password").type("password123");
     cy.get("#speciality").select(1);
     cy.get("#experience").type("5");

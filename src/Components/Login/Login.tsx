@@ -213,8 +213,8 @@ function Login({ setLoggedIn }: LoginProps) {
                     {formData.role === "Doctor" ? "Username" : "Email"}
                   </label>
 
-                  <div className={`flex items-center ${
-                    formData.role === "Doctor" ? "border border-gray-300 rounded-md overflow-hidden" : ""
+                  <div className={`flex flex-col sm:flex-row ${
+                    formData.role === "Doctor" ? "border border-gray-300 rounded-md overflow-hidden" : "items-center"
                   }`}>
                     <input
                       id="email"
@@ -234,7 +234,7 @@ function Login({ setLoggedIn }: LoginProps) {
 
                     {/* Show domain suffix only for Doctor */}
                     {formData.role === "Doctor" && (
-                      <span className="px-4 py-2 bg-gray-100 border-l border-gray-300 text-gray-700 text-md whitespace-nowrap">
+                      <span className="px-4 py-2 bg-gray-100 border-l border-gray-300 text-gray-700 text-md whitespace-nowrap text-center">
                         {DOCTOR_EMAIL_DOMAIN}
                       </span>
                     )}

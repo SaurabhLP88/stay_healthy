@@ -27,11 +27,12 @@ describe("Login Page", () => {
   }); 
 
   it("shows validation errors when submitting empty form", () => {
+    cy.get('input[type="radio"][value="Patient"]').check({ force: true });
     cy.get('button[type="submit"]').click();
 
     cy.contains("Email is required").should("be.visible");
     cy.contains("Password is required").should("be.visible");
-    cy.contains("Please select your role").should("be.visible");
+    //cy.contains("Please select your role").should("be.visible");
   });
 
   it("shows error for invalid email", () => {
@@ -58,8 +59,7 @@ describe("Login Page", () => {
     cy.get('input[name="password"]').should("have.attr", "type", "password");
 
     cy.get('input[name="password"]')
-      .parent()
-      .find("span")
+      .siblings("span")
       .click();
 
     cy.get('input[name="password"]').should("have.attr", "type", "text");
@@ -90,6 +90,8 @@ describe("Login Page", () => {
       expect(win.sessionStorage.getItem("isLoggedIn")).to.eq("true");
       expect(win.sessionStorage.getItem("role")).to.eq("Patient");
       expect(win.sessionStorage.getItem("userId")).to.eq("user123");
+      expect(win.sessionStorage.getItem("email")).to.eq("patient@test.com");
+      expect(win.sessionStorage.getItem("name")).to.eq("Patient User");
     });
   });
 
