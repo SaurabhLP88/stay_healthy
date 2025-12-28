@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/stay_healthy/static/css/main.63d06053.css",
-    "main.js": "/stay_healthy/static/js/main.71001980.js",
+    "main.css": "/stay_healthy/static/css/main.e7bdbb0e.css",
+    "main.js": "/stay_healthy/static/js/main.0c8e0abf.js",
     "static/js/845.620824ad.chunk.js": "/stay_healthy/static/js/845.620824ad.chunk.js",
     "static/media/Physician_Doctor.mp4": "/stay_healthy/static/media/Physician_Doctor.7fe5c8e9c5ebe174efff.mp4",
     "static/media/doctor1.png": "/stay_healthy/static/media/doctor1.b38e0e26ee079d87416d.png",
@@ -9,7 +9,7 @@
     "static/media/meal.svg": "/stay_healthy/static/media/meal.124fb0e7d086b773dfc1.svg",
     "static/media/tips.svg": "/stay_healthy/static/media/tips.a4f713a6ccb53651a2dacbf79c52b980.svg",
     "static/media/book.svg": "/stay_healthy/static/media/book.e2084f02723a6a11d23ceb488fa380e2.svg",
-    "static/media/sh-logo-01.png": "/stay_healthy/static/media/sh-logo-01.60a763bd80825a118ff4.png",
+    "static/media/sh-logo-01.png": "/stay_healthy/static/media/sh-logo-01.b363543d4664d838aa04.png",
     "static/media/exercise.svg": "/stay_healthy/static/media/exercise.489e2efc924234d9e186.svg",
     "static/media/healthcare.svg": "/stay_healthy/static/media/healthcare.a6a34bf6a675e0ed7c408293def70149.svg",
     "static/media/instant.svg": "/stay_healthy/static/media/instant.b1be21027b578cb64ab8973a005cd5db.svg",
@@ -18,12 +18,12 @@
     "static/media/water.svg": "/stay_healthy/static/media/water.8682d95a39ee798e3d0b.svg",
     "static/media/logo.svg": "/stay_healthy/static/media/logo.6ce24c58023cc2f8fd88.svg",
     "index.html": "/stay_healthy/index.html",
-    "main.63d06053.css.map": "/stay_healthy/static/css/main.63d06053.css.map",
-    "main.71001980.js.map": "/stay_healthy/static/js/main.71001980.js.map",
+    "main.e7bdbb0e.css.map": "/stay_healthy/static/css/main.e7bdbb0e.css.map",
+    "main.0c8e0abf.js.map": "/stay_healthy/static/js/main.0c8e0abf.js.map",
     "845.620824ad.chunk.js.map": "/stay_healthy/static/js/845.620824ad.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.63d06053.css",
-    "static/js/main.71001980.js"
+    "static/css/main.e7bdbb0e.css",
+    "static/js/main.0c8e0abf.js"
   ]
 }
